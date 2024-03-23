@@ -2,14 +2,13 @@
 
 import Image from 'next/image';
 
-import { ethereum, FaucetIcon } from '../assets';
-
-function onClickConnectWallet() {}
+import { ethereum, faucetIcon } from '../assets';
+import CustomConnectButton from './CustomConnectButton';
 
 const CoreFaucet = () => (
   <div className="flex flex-col justify-center px-5 py-5 mt-8 max-w-full rounded-2xl border border-solid bg-neutral-900 border-zinc-800 w-[496px]">
     <div className="flex gap-4 max-md:flex-wrap items-center">
-      <FaucetIcon />
+      <Image src={faucetIcon} width={48} height={48} alt="faucet" />
       <div className="flex flex-col flex-1 pr-4">
         <div className="text-lg font-semibold leading-7 text-white">
           WELCOME BITGET USERS!
@@ -40,16 +39,7 @@ const CoreFaucet = () => (
       />
     </label>
 
-    <div className="flex justify-center cursor-pointer items-center py-2 mt-4 text-base font-semibold leading-6 rounded-lg text-zinc-800 max-w-full">
-      <div
-        onClick={onClickConnectWallet}
-        className="bg-gradient-to-l from-green-400 via-blue-400 to-white text-center rounded-md px-10 py-3 w-full"
-      >
-        <span className="inline-block bg-gray-400 rounded-t-lg rounded-b-lg"></span>
-        <span className="inline-block ml-2 bg-gray-400 rounded-t-lg rounded-b-lg"></span>
-        Connect Wallet
-      </div>
-    </div>
+    <CustomConnectButton />
   </div>
 );
 

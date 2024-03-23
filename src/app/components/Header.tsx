@@ -1,6 +1,8 @@
 "use client";
 import Image from 'next/image';
 
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 import { plume } from '../assets';
 
 function onClickConnectWallet() {}
@@ -28,12 +30,7 @@ const Header = () => (
             Plume Testnet
           </div>
         </div>
-        <div
-          onClick={onClickConnectWallet}
-          className="cursor-pointer justify-center px-3 py-2 text-sm font-medium leading-5 text-white bg-orange-500 rounded-lg max-md:px-5"
-        >
-          Connect Wallet
-        </div>
+        <ConnectButton />
       </div>
     </div>
   </div>
