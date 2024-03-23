@@ -31,3 +31,16 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Gradient colors */
+.from-green-400 {
+  background-image: linear-gradient(to left, #33FFF3, #57D4FA);
+}
+
+.via-blue-400 {
+  background-image: linear-gradient(to left, #57D4FA, #C4C5FE);
+}
+
+.to-white {
+  background-image: linear-gradient(to left, #C4C5FE, #FAFAFA);
+}
