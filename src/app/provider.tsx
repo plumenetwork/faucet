@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { WagmiProvider } from 'wagmi';
-import { arbitrum, plumeTestnet } from 'wagmi/chains';
+import { mainnet } from 'wagmi/chains';
 
 import {
     darkTheme, getDefaultConfig, getDefaultWallets, RainbowKitProvider
@@ -19,7 +19,7 @@ const config = getDefaultConfig({
       wallets: [bitgetWallet],
     },
   ],
-  chains: [plumeTestnet],
+  chains: [mainnet],
   ssr: true,
 });
 
