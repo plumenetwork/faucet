@@ -3,11 +3,12 @@ import { useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export const CustomConnectButton = (props: {
+  verified: boolean;
   connectedAddress: string;
   setConnectedAddress: (arg0: string) => void;
 }) => {
   const handleClaimTokens = () => {};
-  const { connectedAddress, setConnectedAddress } = props;
+  const { verified, connectedAddress, setConnectedAddress } = props;
 
   return (
     <ConnectButton.Custom>
@@ -30,6 +31,7 @@ export const CustomConnectButton = (props: {
             {connected ? (
               <button
                 onClick={handleClaimTokens}
+                disabled={!verified}
                 className="gradient-button text-center rounded-md px-10 py-3 w-full"
                 type="button"
               >
