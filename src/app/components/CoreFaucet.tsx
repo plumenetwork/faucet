@@ -19,8 +19,8 @@ const CoreFaucet = () => {
 
   return (
     <>
-      <div className="flex flex-col justify-center px-5 py-5 mt-8 max-w-full rounded-2xl border border-solid bg-neutral-900 border-zinc-800 w-[496px]">
-        <div className="flex gap-4 max-md:flex-wrap items-center">
+      <div className="flex flex-col justify-center px-5 py-5 mt-8 max-w-full rounded-2xl border border-solid bg-neutral-900 border-zinc-800 md:w-[496px]">
+        <div className="flex gap-4 md:flex-wrap items-center">
           <Image src={faucetIcon} width={48} height={48} alt="faucet" />
           <div className="flex flex-col flex-1 pr-4">
             <div className="text-lg font-semibold leading-7 text-white">
@@ -38,10 +38,12 @@ const CoreFaucet = () => {
         </div>
         <label
           htmlFor="walletAddressInput"
-          className="flex gap-2.5 justify-center px-3 py-2.5 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
+          className="flex md:justify-between gap-2.5 px-3 py-2.5 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
         >
-          <Image src={ethereum} width={32} height={32} alt="ethereum" />
-          <div className="flex-2 my-auto">ETH</div>
+          <div className="flex w-auto">
+            <Image src={ethereum} width={32} height={32} alt="ethereum" />
+          </div>
+          <div className="flex-1 my-auto">ETH</div>
           <input
             type="text"
             disabled
@@ -58,7 +60,7 @@ const CoreFaucet = () => {
         options={{
           theme: "dark",
         }}
-        className="flex items-center justify-center pt-6"
+        className="flex items-center justify-center pt-14"
         siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || ""}
         onSuccess={() => setVerified(true)}
         onExpire={() => setVerified(false)}

@@ -5,7 +5,7 @@ import { linkedin, twitter, website } from '../assets';
 
 const SocialMediaBar = () => (
   <>
-    <div className="pt-8 text-xs font-medium tracking-wide leading-4 text-center capitalize text-neutral-500">
+    <div className="pt-14 text-xs font-medium tracking-wide leading-4 text-center capitalize text-neutral-500">
       FOLLOW US
     </div>
     <div className="flex gap-3 mt-4 mb-64 max-md:mb-10">
