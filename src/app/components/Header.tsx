@@ -5,8 +5,6 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 import { plume } from '../assets';
 
-function onClickConnectWallet() {}
-
 const Header = () => (
   <div className="flex flex-col justify-center self-stretch rounded-2xl border border-solid bg-neutral-900 border-zinc-800">
     <div className="flex flex-wrap justify-between px-8 py-4 max-md:px-5">
