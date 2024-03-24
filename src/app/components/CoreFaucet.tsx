@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { useAccount } from 'wagmi';
 
 import { Turnstile } from '@marsidev/react-turnstile';
 
@@ -10,7 +11,11 @@ import CustomConnectButton from './CustomConnectButton';
 
 const CoreFaucet = () => {
   const [verified, setVerified] = useState(false);
-  const [connectedAddress, setConnectedAddress] = useState("");
+  const account = useAccount();
+  const connectedAddress = account?.address;
+
+  // 'connecting' | 'reconnecting' | 'connected' | 'disconnected'
+  const connectedWalletStatus = account?.status;
 
   return (
     <>
@@ -46,11 +51,7 @@ const CoreFaucet = () => {
           />
         </label>
 
-        <CustomConnectButton
-          verified={verified}
-          connectedAddress={connectedAddress}
-          setConnectedAddress={setConnectedAddress}
-        />
+        <CustomConnectButton verified={verified} />
       </div>
       <Turnstile
         options={{

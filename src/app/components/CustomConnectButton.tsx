@@ -2,19 +2,14 @@ import { useState } from 'react';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-export const CustomConnectButton = (props: {
-  verified: boolean;
-  connectedAddress: string;
-  setConnectedAddress: (arg0: string) => void;
-}) => {
+export const CustomConnectButton = (props: { verified: boolean }) => {
   const handleClaimTokens = () => {};
-  const { verified, connectedAddress, setConnectedAddress } = props;
+  const { verified } = props;
 
   return (
     <ConnectButton.Custom>
       {({ account, chain, openConnectModal, mounted }) => {
         const connected = mounted && account && chain;
-        setConnectedAddress(connected ? account.address : "");
 
         return (
           <div
