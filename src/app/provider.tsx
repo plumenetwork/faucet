@@ -10,6 +10,8 @@ import {
 import { bitgetWallet } from '@rainbow-me/rainbowkit/wallets';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+const { wallets } = getDefaultWallets();
+
 const config = getDefaultConfig({
   appName: "Plume Network Faucet",
   projectId: process.env.NEXT_PUBLIC_RAINBOW_PROJECT_ID || "",

@@ -29,6 +29,10 @@ export const CustomConnectButton = (props: { verified: boolean }) => {
                 disabled={!verified}
                 className="gradient-button text-center rounded-md px-10 py-3 w-full"
                 type="button"
+                style={{
+                  opacity: !verified ? 0.5 : 1,
+                  cursor: !verified ? "not-allowed" : "pointer",
+                }}
               >
                 Claim Tokens
               </button>

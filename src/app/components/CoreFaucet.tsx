@@ -44,10 +44,11 @@ const CoreFaucet = () => {
           <div className="flex-2 my-auto">ETH</div>
           <input
             type="text"
+            disabled
             id="walletAddressInput"
             name="walletAddressInput"
-            className="flex-1 my-auto border-none text-gray-600 bg-transparent h-full outline-none"
-            placeholder=""
+            className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
+            value={connectedAddress || ""}
           />
         </label>
 
