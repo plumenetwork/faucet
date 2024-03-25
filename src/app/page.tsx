@@ -9,7 +9,7 @@ export default function Home() {
     <div className="bg-stone-950 pt-4 px-4 min-h-screen overflow-hidden">
       <Header />
       <div
-        className="flex flex-col items-center px-16 pt-20 sm:h-full w-full"
+        className="flex flex-col items-center px-4 pt-8 sm:px-16 sm:pt-20 sm:h-full w-full"
         style={{ backgroundImage: `url(${backgroundPattern})` }}
       >
         <CollabHeader />
