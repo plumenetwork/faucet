@@ -24,10 +24,10 @@ export const CustomConnectButton = (props: {
 
   const successToast = () => {
     return toast({
-      title: "Request Submitted",
+      title: "Request Succeeded",
       description: (
         <div className="flex flex-row text-[#D2D6DB] text-sm">
-          You’ll receive the testnet tokens in your wallet in about 1 minute.
+          You&apos;ll receive 0.00025 testnet ETH in your wallet within a minute.
         </div>
       ),
       variant: "pass",
@@ -39,8 +39,7 @@ export const CustomConnectButton = (props: {
       title: "Request Failed",
       description: (
         <div className="flex flex-row text-[#D2D6DB] text-sm">
-          You can request testnet tokens only once per hour to ensure a
-          sufficient balance for all users.
+          Please wait 24 hours between requests. The faucet may also temporarily be out of tokens.
         </div>
       ),
       variant: "fail",
