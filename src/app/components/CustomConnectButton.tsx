@@ -83,7 +83,7 @@ export const CustomConnectButton = (props: {
               <button
                 onClick={handleClaimTokens}
                 disabled={!verified}
-                className="solid-button text-center rounded-md px-10 py-3 w-full"
+                className="solid-button text-center text-white rounded-md px-10 py-3 w-full"
                 type="button"
                 style={{
                   opacity: !verified ? 0.5 : 1,
@@ -95,7 +95,7 @@ export const CustomConnectButton = (props: {
             ) : (
               <button
                 onClick={openConnectModal}
-                className="gradient-button text-center rounded-md px-10 py-3 w-full"
+                className="gradient-button text-center text-white rounded-md px-10 py-3 w-full"
                 type="button"
               >
                 Connect Bitget Wallet
