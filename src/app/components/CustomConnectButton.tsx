@@ -1,9 +1,20 @@
-import { useState } from 'react';
-
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
+import { useToast } from './ui/use-toast';
+
 export const CustomConnectButton = (props: { verified: boolean }) => {
-  const handleClaimTokens = () => {};
+  const { toast } = useToast();
+  const handleClaimTokens = () => {
+    toast({
+      title: "Request Submitted",
+      description: (
+        <div className="flex flex-row text-[#D2D6DB] text-sm">
+          You’ll receive the testnet tokens in your wallet in about 1 minute.
+        </div>
+      ),
+      variant: "pass",
+    });
+  };
   const { verified } = props;
 
   return (
