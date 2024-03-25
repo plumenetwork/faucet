@@ -2,14 +2,17 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 import { useToast } from './ui/use-toast';
 
-export const CustomConnectButton = (props: { verified: boolean, walletAddress: string | undefined }) => {
+export const CustomConnectButton = (props: {
+  verified: boolean;
+  walletAddress: string | undefined;
+}) => {
   const { toast } = useToast();
   const handleClaimTokens = () => {
     fetch("api/faucet", {
       method: "POST",
-      headers: { ['Content-Type']: "application/json" },
+      headers: { ["Content-Type"]: "application/json" },
       body: JSON.stringify({ walletAddress }),
-    })
+    });
     toast({
       title: "Request Submitted",
       description: (
@@ -43,14 +46,14 @@ export const CustomConnectButton = (props: { verified: boolean, walletAddress: s
               <button
                 onClick={handleClaimTokens}
                 disabled={!verified}
-                className="gradient-button text-center rounded-md px-10 py-3 w-full"
+                className="solid-button text-center rounded-md px-10 py-3 w-full"
                 type="button"
                 style={{
                   opacity: !verified ? 0.5 : 1,
                   cursor: !verified ? "not-allowed" : "pointer",
                 }}
               >
-                Claim Tokens
+                Get Tokens
               </button>
             ) : (
               <button

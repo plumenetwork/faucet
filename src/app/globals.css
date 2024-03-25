@@ -35,3 +35,15 @@ body {
 .gradient-button {
   background-image: linear-gradient(to right, #33FFF3, #57D4FA, #C4C5FE, #FAFAFA);
 }
+
+.solid-button {
+  background-color: #FF692E;
+  border-radius: 8px;
+}
+
+.background-image-div {
+  background-image: url(assets/background-pattern.png);
+  background-size: 800px;
+  background-repeat: no-repeat;
+  background-position-x: center;
+}
