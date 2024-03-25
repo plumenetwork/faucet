@@ -16,6 +16,8 @@ export const CustomConnectButton = (props: {
     }).then((res) => {
       if (res.status === 200) {
         successToast();
+      } else if (res.status === 429) {
+        rateLimitToast();
       } else {
         failureToast();
       }
@@ -34,12 +36,24 @@ export const CustomConnectButton = (props: {
     });
   };
 
+  const rateLimitToast = () => {
+    return toast({
+      title: "Rate Limit Exceeded",
+      description: (
+        <div className="flex flex-row text-[#D2D6DB] text-sm">
+          Please wait at least ten minutes between requests.
+        </div>
+      ),
+      variant: "fail",
+    });
+  };
+
   const failureToast = () => {
     return toast({
       title: "Request Failed",
       description: (
         <div className="flex flex-row text-[#D2D6DB] text-sm">
-          Please wait 24 hours between requests. The faucet may also temporarily be out of tokens.
+          Sorry, your request failed. The faucet may be temporarily out of tokens.
         </div>
       ),
       variant: "fail",
