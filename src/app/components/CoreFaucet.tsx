@@ -37,7 +37,7 @@ const CoreFaucet = () => {
           TOKEN
         </div>
         <label
-          htmlFor="walletAddressInput"
+          htmlFor="tokenInput"
           className="flex md:justify-between gap-2.5 px-3 py-2.5 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
         >
           <div className="flex w-auto">
@@ -47,14 +47,37 @@ const CoreFaucet = () => {
           <input
             type="text"
             disabled
-            id="walletAddressInput"
-            name="walletAddressInput"
+            id="tokenInput"
+            name="tokenInput"
             className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
-            value={connectedAddress || ""}
           />
         </label>
 
-        <CustomConnectButton verified={verified} walletAddress={connectedAddress} />
+        {connectedAddress?.toString() !== "" && (
+          <>
+            <div className="mt-6 text-sm font-medium leading-5 text-zinc-300 max-md:max-w-full">
+              YOUR WALLET ADDRESS
+            </div>
+            <label
+              htmlFor="walletAddressInput"
+              className="flex md:justify-between py-4 gap-2.5 px-3 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
+            >
+              <input
+                type="text"
+                disabled
+                id="walletAddressInput"
+                name="walletAddressInput"
+                className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
+                value={connectedAddress}
+              />
+            </label>
+          </>
+        )}
+
+        <CustomConnectButton
+          verified={verified}
+          walletAddress={connectedAddress}
+        />
       </div>
       <Turnstile
         options={{

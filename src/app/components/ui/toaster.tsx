@@ -15,7 +15,7 @@ export function Toaster() {
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, ...props }) {
         return (
-          <Toast duration={4000} key={id} {...props}>
+          <Toast duration={10000} key={id} {...props}>
             <div
               className={`relative w-[400px] ${
                 props.variant === "pass"
