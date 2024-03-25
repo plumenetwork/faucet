@@ -16,7 +16,6 @@ const config = getDefaultConfig({
   appName: "Plume Network Faucet",
   projectId: process.env.NEXT_PUBLIC_RAINBOW_PROJECT_ID || "",
   wallets: [
-    ...wallets,
     {
       groupName: "Bitget Wallet",
       wallets: [bitgetWallet],
