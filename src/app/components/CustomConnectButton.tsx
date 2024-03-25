@@ -1,17 +1,20 @@
+import { useState } from 'react';
+
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-export const CustomConnectButton = () => {
+export const CustomConnectButton = (props: {
+  verified: boolean;
+  connectedAddress: string;
+  setConnectedAddress: (arg0: string) => void;
+}) => {
+  const handleClaimTokens = () => {};
+  const { verified, connectedAddress, setConnectedAddress } = props;
+
   return (
     <ConnectButton.Custom>
-      {({
-        account,
-        chain,
-        openAccountModal,
-        openChainModal,
-        openConnectModal,
-        mounted,
-      }) => {
+      {({ account, chain, openConnectModal, mounted }) => {
         const connected = mounted && account && chain;
+        setConnectedAddress(connected ? account.address : "");
 
         return (
           <div
@@ -26,22 +29,14 @@ export const CustomConnectButton = () => {
             })}
           >
             {connected ? (
-              <div className="flex gap-4">
-                <button
-                  onClick={openChainModal}
-                  className="gradient-button text-center rounded-md px-10 py-3 w-full"
-                  type="button"
-                >
-                  {chain.name}
-                </button>
-                <button
-                  onClick={openAccountModal}
-                  className="gradient-button text-center rounded-md px-10 py-3 w-full"
-                  type="button"
-                >
-                  {account.displayName}
-                </button>
-              </div>
+              <button
+                onClick={handleClaimTokens}
+                disabled={!verified}
+                className="gradient-button text-center rounded-md px-10 py-3 w-full"
+                type="button"
+              >
+                Claim Tokens
+              </button>
             ) : (
               <button
                 onClick={openConnectModal}

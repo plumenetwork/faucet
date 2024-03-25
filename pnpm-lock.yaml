@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@marsidev/react-turnstile':
+    specifier: ^0.5.3
+    version: 0.5.3(react-dom@18.2.0)(react@18.2.0)
   '@rainbow-me/rainbowkit':
     specifier: ^2.0.2
     version: 2.0.2(@types/react@18.2.69)(react-dom@18.2.0)(react@18.2.0)(viem@2.8.18)(wagmi@2.5.12)
@@ -1860,6 +1863,16 @@ packages:
     resolution: {integrity: sha512-QuTgnG52Poic7uM1AN5yJ09QMe0O28e10XzSvWDz02TJiiKee4stsiownEIadWm8nYzyDAyT+gKzUoZmiWQtsQ==}
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.2.0
+    dev: false
+
+  /@marsidev/react-turnstile@0.5.3(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-lx3p2/56esPt8Ksr37K8uhPt/K4Mg8xaIfCV8MPKmE/1X4aHesRqZok1+L1ySQwsdWoEe5+KJOhBXka8lFBwNg==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@metamask/eth-json-rpc-provider@1.0.1:
