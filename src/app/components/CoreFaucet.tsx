@@ -54,7 +54,7 @@ const CoreFaucet = () => {
           />
         </label>
 
-        <CustomConnectButton verified={verified} />
+        <CustomConnectButton verified={verified} walletAddress={connectedAddress} />
       </div>
       <Turnstile
         options={{
