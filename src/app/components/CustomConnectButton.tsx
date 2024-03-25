@@ -7,13 +7,23 @@ export const CustomConnectButton = (props: {
   walletAddress: string | undefined;
 }) => {
   const { toast } = useToast();
+
   const handleClaimTokens = () => {
     fetch("api/faucet", {
       method: "POST",
       headers: { ["Content-Type"]: "application/json" },
       body: JSON.stringify({ walletAddress }),
+    }).then((res) => {
+      if (res.status === 200) {
+        successToast();
+      } else {
+        failureToast();
+      }
     });
-    toast({
+  };
+
+  const successToast = () => {
+    return toast({
       title: "Request Submitted",
       description: (
         <div className="flex flex-row text-[#D2D6DB] text-sm">
@@ -23,6 +33,20 @@ export const CustomConnectButton = (props: {
       variant: "pass",
     });
   };
+
+  const failureToast = () => {
+    return toast({
+      title: "Request Failed",
+      description: (
+        <div className="flex flex-row text-[#D2D6DB] text-sm">
+          You can request testnet tokens only once per hour to ensure a
+          sufficient balance for all users.
+        </div>
+      ),
+      variant: "fail",
+    });
+  };
+
   const { verified, walletAddress } = props;
 
   return (

@@ -21,7 +21,7 @@ export function Toaster() {
                 props.variant === "pass"
                   ? "rounded-xl border border-green-500"
                   : props.variant === "fail"
-                  ? "rounded-xl border border-toast-red"
+                  ? "rounded-xl border border-red-500"
                   : "rounded-xl border border-blue-500"
               } w-full bg-[#141414] p-1`}
             >
@@ -34,7 +34,7 @@ export function Toaster() {
                         props.variant === "pass"
                           ? "text-green-500"
                           : props.variant === "fail"
-                          ? "text-toast-red"
+                          ? "text-red-500"
                           : "text-blue-500"
                       }`}
                     >
