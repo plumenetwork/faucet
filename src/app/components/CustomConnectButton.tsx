@@ -2,7 +2,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 import { useToast } from './ui/use-toast';
 
-export const CustomConnectButton = (props: { verified: boolean, walletAddress: string }) => {
+export const CustomConnectButton = (props: { verified: boolean, walletAddress: string | undefined }) => {
   const { toast } = useToast();
   const handleClaimTokens = () => {
     fetch("api/faucet", {
@@ -25,7 +25,7 @@ export const CustomConnectButton = (props: { verified: boolean, walletAddress: s
   return (
     <ConnectButton.Custom>
       {({ account, chain, openConnectModal, mounted }) => {
-        const connected = mounted && account && chain;
+        const connected = mounted && account && chain && walletAddress != null;
 
         return (
           <div
