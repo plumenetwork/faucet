@@ -30,7 +30,7 @@ const Header = () => (
             </div>
           </div>
         </div>
-        <ConnectButton />
+        <ConnectButton showBalance={false} />
       </div>
     </div>
   </div>
