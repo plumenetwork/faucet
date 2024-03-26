@@ -36,9 +36,27 @@ body {
   background-image: linear-gradient(to right, #33FFF3, #57D4FA, #C4C5FE, #FAFAFA);
 }
 
+.gradient-button:hover {
+  transform: scale(1.02);
+  background-image: linear-gradient(to right, #66FFFB, #7EE4FF, #DBDBFF, #FFFFFF);
+}
+
+.gradient-button:active {
+  transform: scale(1);
+}
+
 .solid-button {
   background-color: #FF692E;
   border-radius: 8px;
+}
+
+.solid-button:hover {
+  transform: scale(1.02);
+  background-color: #D14D1F;
+}
+
+.solid-button:active {
+  transform: scale(1);
 }
 
 .background-image-div {
