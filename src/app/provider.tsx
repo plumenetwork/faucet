@@ -5,20 +5,19 @@ import { WagmiProvider } from 'wagmi';
 import { plumeTestnet } from 'wagmi/chains';
 
 import {
-    darkTheme, getDefaultConfig, getDefaultWallets, RainbowKitProvider
+  darkTheme, getDefaultConfig,
+  RainbowKitProvider
 } from '@rainbow-me/rainbowkit';
-import { bitgetWallet } from '@rainbow-me/rainbowkit/wallets';
+import { bitgetWallet, coinbaseWallet, injectedWallet, metaMaskWallet, okxWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-const { wallets } = getDefaultWallets();
 
 const config = getDefaultConfig({
   appName: "Plume Network Faucet",
   projectId: process.env.NEXT_PUBLIC_RAINBOW_PROJECT_ID || "",
   wallets: [
     {
-      groupName: "Bitget Wallet",
-      wallets: [bitgetWallet],
+      groupName: "Recommended",
+      wallets: [injectedWallet, bitgetWallet, metaMaskWallet, coinbaseWallet, okxWallet, walletConnectWallet],
     },
   ],
   chains: [plumeTestnet],
