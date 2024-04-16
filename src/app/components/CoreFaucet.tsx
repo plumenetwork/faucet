@@ -14,9 +14,6 @@ const CoreFaucet = () => {
   const account = useAccount();
   const connectedAddress = account?.address;
 
-  // 'connecting' | 'reconnecting' | 'connected' | 'disconnected'
-  const connectedWalletStatus = account?.status;
-
   return (
     <>
       <div className="flex flex-col justify-center px-5 py-5 mt-8 max-w-full rounded-2xl border border-solid bg-neutral-900 border-zinc-800 md:w-[496px]">
