@@ -6,11 +6,12 @@ import { useAccount } from 'wagmi';
 
 import { Turnstile } from '@marsidev/react-turnstile';
 
-import { bitgetNFT } from '../assets';
 import CustomConnectButton from './CustomConnectButton';
+import SuccessNFTClaim from './SuccessNFTClaim';
 
 const MintBitgetNFT = () => {
   const [verified, setVerified] = useState(false);
+  const [mintSuccessHash, setMintSuccessHash] = useState("");
   const account = useAccount();
   const connectedAddress = account?.address;
 
@@ -25,32 +26,45 @@ const MintBitgetNFT = () => {
           earn points.
         </div>
         <div className="shrink-0 mt-6 h-px border border-solid bg-zinc-800 border-zinc-800 max-md:max-w-full" />
-        <Image src={bitgetNFT} alt="Bitget NFT" width={500} height={500} />
-        {connectedAddress?.toString() !== "" && (
+        {mintSuccessHash !== "" && (
+          <SuccessNFTClaim mintSuccessHash={mintSuccessHash} />
+        )}
+        {mintSuccessHash === "" && (
           <>
-            <div className="mt-6 text-sm font-medium leading-5 text-zinc-300 max-md:max-w-full">
-              YOUR WALLET ADDRESS
-            </div>
-            <label
-              htmlFor="walletAddressInput"
-              className="flex md:justify-between py-4 gap-2.5 px-3 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
-            >
-              <input
-                type="text"
-                disabled
-                id="walletAddressInput"
-                name="walletAddressInput"
-                className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
-                value={connectedAddress}
-              />
-            </label>
+            <Image
+              src="https://assets.plumenetwork.xyz/images/nfts/plume-bitget-nft.png"
+              alt="Bitget NFT"
+              width={500}
+              height={500}
+            />
+            {connectedAddress?.toString() !== "" && (
+              <>
+                <div className="mt-6 text-sm font-medium leading-5 text-zinc-300 max-md:max-w-full">
+                  YOUR WALLET ADDRESS
+                </div>
+                <label
+                  htmlFor="walletAddressInput"
+                  className="flex md:justify-between py-4 gap-2.5 px-3 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
+                >
+                  <input
+                    type="text"
+                    disabled
+                    id="walletAddressInput"
+                    name="walletAddressInput"
+                    className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
+                    value={connectedAddress}
+                  />
+                </label>
+              </>
+            )}
+            <CustomConnectButton
+              mint={true}
+              setMintSuccessHash={setMintSuccessHash}
+              verified={verified}
+              walletAddress={connectedAddress}
+            />
           </>
         )}
-        <CustomConnectButton
-          mint={true}
-          verified={verified}
-          walletAddress={connectedAddress}
-        />
       </div>
       <Turnstile
         options={{
@@ -64,6 +78,6 @@ const MintBitgetNFT = () => {
       />
     </>
   );
-}
+};
 
 export default MintBitgetNFT;

@@ -1,5 +1,8 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useEffect } from 'react';
 import { useWriteContract } from 'wagmi';
+
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 import { abi } from '../lib/MintABI';
 import { useToast } from './ui/use-toast';
 
@@ -7,9 +10,11 @@ export const CustomConnectButton = (props: {
   mint: boolean;
   verified: boolean;
   walletAddress: string | undefined;
+  setMintSuccessHash?: (hash: string) => void;
 }) => {
-  const { data: hash, writeContract } = useWriteContract()
+  const { data: hash, writeContract } = useWriteContract();
   const { toast } = useToast();
+  const { mint, verified, walletAddress, setMintSuccessHash } = props;
 
   const handleClaimTokens = () => {
     fetch("api/faucet", {
@@ -32,8 +37,9 @@ export const CustomConnectButton = (props: {
       writeContract({
         address: process.env.NEXT_PUBLIC_MINT_CONTRACT_ADDRESS as `0x${string}`,
         abi,
-        functionName: 'mint'
+        functionName: "mint",
       });
+      setMintSuccessHash && setMintSuccessHash(String(hash));
     } catch (error) {
       console.error(error);
       mintFailureToast();
@@ -45,7 +51,8 @@ export const CustomConnectButton = (props: {
       title: "Request Succeeded",
       description: (
         <div className="flex flex-row text-[#D2D6DB] text-sm">
-          You&apos;ll receive 0.00025 testnet ETH in your wallet within a minute.
+          You&apos;ll receive 0.00025 testnet ETH in your wallet within a
+          minute.
         </div>
       ),
       variant: "pass",
@@ -69,7 +76,8 @@ export const CustomConnectButton = (props: {
       title: "Request Failed",
       description: (
         <div className="flex flex-row text-[#D2D6DB] text-sm">
-          Sorry, your request failed. The faucet may be temporarily out of tokens.
+          Sorry, your request failed. The faucet may be temporarily out of
+          tokens.
         </div>
       ),
       variant: "fail",
@@ -81,14 +89,13 @@ export const CustomConnectButton = (props: {
       title: "Request Failed",
       description: (
         <div className="flex flex-row text-[#D2D6DB] text-sm">
-          Sorry, your request failed. Please make sure your account has enough funds, and try again later.
+          Sorry, your request failed. Please make sure your account has enough
+          funds, and try again later.
         </div>
       ),
       variant: "fail",
     });
   };
-
-  const { mint, verified, walletAddress } = props;
 
   return (
     <ConnectButton.Custom>
