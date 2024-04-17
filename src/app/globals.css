@@ -76,3 +76,23 @@ body {
   background-repeat: no-repeat;
   background-position-x: center;
 }
+
+.tab-button {
+  align-self: center;
+  color: #A3A3A3;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.tab-button-active {
+  justify-content: center;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: #ffffff;
+  border-radius: 0.375rem;
+  background-color: #292929;
+}

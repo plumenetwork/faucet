@@ -14,12 +14,12 @@ function SuccessNFTClaim({ mintSuccessHash }: { mintSuccessHash: string }) {
   };
 
   return (
-    <div className="flex flex-col gap-2 justify-center items-center px-4 py-6 text-2xl font-medium leading-9 rounded-2xl bg-neutral-900 border-zinc-800 max-w-[496px]">
+    <div className="flex flex-col gap-2 justify-center items-center px-4 pt-6 text-2xl font-medium leading-9 rounded-2xl bg-neutral-900 border-zinc-800 max-w-[496px]">
       <Image
         src="https://assets.plumenetwork.xyz/images/nfts/plume-bitget-nft.png"
         alt="Bitget NFT Hidden"
-        width={500}
-        height={500}
+        width={400}
+        height={400}
       />
       <Image
         src={ringedCheckmark}
