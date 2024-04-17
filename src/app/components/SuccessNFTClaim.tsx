@@ -8,7 +8,7 @@ import { ringedCheckmark } from '../assets';
 function SuccessNFTClaim({ mintSuccessHash }: { mintSuccessHash: string }) {
   const onClickShareOnX = () => {
     window.open(
-      `https://twitter.com/intent/tweet?text=Just%20minted%20a%20Bitget%20NFT%20on%20the%20Plume%20testnet!%20&url=https://faucet.plumenetwork.com/mint&hashtags=Bitget,NFT,PlumeNetwork,WAGMI&image_src=https://i.imgur.com/z5DlK19.png&call_to_action=Share%20this%20Tweet!`,
+      `https://twitter.com/intent/tweet?text=I've%20just%20minted%20my%20Plume%20x%20Bitget%20NFT!%20Can't%20wait%20to%20see%20what%20it%20reveals%20-%20come%20claim%20yours%20now%20for%20a%20chance%20to%20earn%20more%20Plume%20and%20BWB%20points!%20&url=https://faucet.plumenetwork.com/mint&image_src=https://assets.plumenetwork.xyz/images/nfts/plume-bitget-nft.png&call_to_action=Share%20this%20Tweet!`,
       "_blank"
     );
   };
@@ -43,7 +43,7 @@ function SuccessNFTClaim({ mintSuccessHash }: { mintSuccessHash: string }) {
       <div className="flex gap-1.5 justify-center mt-2 text-sm text-blue-400">
         <Link
           href={
-            mintSuccessHash !== "" && mintSuccessHash
+            mintSuccessHash !== "" && mintSuccessHash !== "undefined"
               ? `https://testnet-explorer.plumenetwork.xyz/tx/${mintSuccessHash}`
               : "https://testnet-explorer.plumenetwork.xyz/address/0x4383B172d7102A5c74dc3AB5d53690e42b73E174"
           }

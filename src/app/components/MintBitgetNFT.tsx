@@ -11,7 +11,7 @@ import SuccessNFTClaim from './SuccessNFTClaim';
 
 const MintBitgetNFT = () => {
   const [verified, setVerified] = useState(false);
-  const [mintSuccessHash, setMintSuccessHash] = useState("empty");
+  const [mintSuccessHash, setMintSuccessHash] = useState("");
   const account = useAccount();
   const connectedAddress = account?.address;
 
@@ -26,10 +26,10 @@ const MintBitgetNFT = () => {
           earn points.
         </div>
         <div className="shrink-0 mt-6 h-px border border-solid bg-zinc-800 border-zinc-800 max-md:max-w-full" />
-        {mintSuccessHash !== "empty" && (
+        {mintSuccessHash !== "" && (
           <SuccessNFTClaim mintSuccessHash={mintSuccessHash} />
         )}
-        {mintSuccessHash === "empty" && (
+        {mintSuccessHash === "" && (
           <>
             <Image
               src="https://assets.plumenetwork.xyz/images/nfts/plume-bitget-nft.png"

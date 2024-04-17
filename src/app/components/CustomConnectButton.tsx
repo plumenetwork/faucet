@@ -39,7 +39,7 @@ export const CustomConnectButton = (props: {
         abi,
         functionName: "mint",
       });
-      hash && setMintSuccessHash && setMintSuccessHash(String(hash));
+      setMintSuccessHash && setMintSuccessHash(String(hash));
     } catch (error) {
       console.error(error);
       mintFailureToast();
