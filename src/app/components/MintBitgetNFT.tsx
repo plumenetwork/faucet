@@ -30,15 +30,17 @@ const MintBitgetNFT = () => {
         {mintSuccess && <SuccessNFTClaim />}
         {!mintSuccess && (
           <>
-            <Image
-              src={bitgetNFTHoodie}
-              alt="Bitget NFT"
-              width={500}
-              height={500}
-            />
+            <div className="flex flex-col justify-center items-center px-4 pt-6 rounded-2xl max-w-[496px]">
+              <Image
+                src={bitgetNFTHoodie}
+                alt="Bitget NFT"
+                width={400}
+                height={400}
+              />
+            </div>
             {connectedAddress?.toString() !== "" && (
-              <>
-                <div className="mt-6 text-sm font-medium leading-5 text-zinc-300 max-md:max-w-full">
+              <div className="px-4">
+                <div className=" mt-6 text-sm font-medium leading-5 text-zinc-300 max-md:max-w-full">
                   YOUR WALLET ADDRESS
                 </div>
                 <label
@@ -54,14 +56,16 @@ const MintBitgetNFT = () => {
                     value={connectedAddress}
                   />
                 </label>
-              </>
+              </div>
             )}
-            <CustomConnectButton
-              mint={true}
-              setMintSuccess={setMintSuccess}
-              verified={verified}
-              walletAddress={connectedAddress}
-            />
+            <div className="px-4">
+              <CustomConnectButton
+                mint={true}
+                setMintSuccess={setMintSuccess}
+                verified={verified}
+                walletAddress={connectedAddress}
+              />
+            </div>
           </>
         )}
       </div>
