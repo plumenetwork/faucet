@@ -10,7 +10,6 @@ import { plume } from '../assets';
 const Header = () => {
   const pathname = usePathname();
 
-  console.log(pathname);
   return (
     <div className="flex flex-col justify-center self-stretch rounded-2xl border border-solid bg-neutral-900 border-zinc-800">
       <div className="flex flex-wrap justify-between px-8 py-4 max-md:px-5">
