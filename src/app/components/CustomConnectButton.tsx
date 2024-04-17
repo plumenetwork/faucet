@@ -1,11 +1,15 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-
+import { useWriteContract } from 'wagmi';
+import { abi } from '../lib/MintABI';
+import { plume } from '../lib/plumeChain';
 import { useToast } from './ui/use-toast';
 
 export const CustomConnectButton = (props: {
+  mint: boolean;
   verified: boolean;
   walletAddress: string | undefined;
 }) => {
+  const { data: hash, writeContract } = useWriteContract()
   const { toast } = useToast();
 
   const handleClaimTokens = () => {
@@ -22,6 +26,20 @@ export const CustomConnectButton = (props: {
         failureToast();
       }
     });
+  };
+
+  const mintNft = () => {
+    try {
+      writeContract({
+        address: process.env.NEXT_PUBLIC_MINT_CONTRACT_ADDRESS as `0x${string}`,
+        abi,
+        functionName: 'mint',
+        chainId: plume.id,
+      });
+    } catch (error) {
+      console.error(error);
+      mintFailureToast();
+    }
   };
 
   const successToast = () => {
@@ -60,7 +78,19 @@ export const CustomConnectButton = (props: {
     });
   };
 
-  const { verified, walletAddress } = props;
+  const mintFailureToast = () => {
+    return toast({
+      title: "Request Failed",
+      description: (
+        <div className="flex flex-row text-[#D2D6DB] text-sm">
+          Sorry, your request failed. Please make sure your account has enough funds, and try again later.
+        </div>
+      ),
+      variant: "fail",
+    });
+  };
+
+  const { mint, verified, walletAddress } = props;
 
   return (
     <ConnectButton.Custom>
@@ -69,7 +99,7 @@ export const CustomConnectButton = (props: {
 
         return (
           <div
-            className="flex cursor-pointer items-center py-2 mt-4 text-base font-semibold leading-6 rounded-lg text-zinc-800 max-w-full"
+            className="flex flex-col gap-2 cursor-pointer items-center py-2 mt-4 text-base font-semibold leading-6 rounded-lg text-zinc-800 max-w-full"
             {...(!mounted && {
               "aria-hidden": true,
               "style": {
@@ -80,18 +110,34 @@ export const CustomConnectButton = (props: {
             })}
           >
             {connected ? (
-              <button
-                onClick={handleClaimTokens}
-                disabled={!verified}
-                className="solid-button text-center text-white rounded-md px-10 py-3 w-full"
-                type="button"
-                style={{
-                  opacity: !verified ? 0.5 : 1,
-                  cursor: !verified ? "not-allowed" : "pointer",
-                }}
-              >
-                Get Tokens
-              </button>
+              <>
+                <button
+                  onClick={handleClaimTokens}
+                  disabled={!verified}
+                  className="solid-button text-center text-white rounded-md px-10 py-3 w-full"
+                  type="button"
+                  style={{
+                    opacity: !verified ? 0.5 : 1,
+                    cursor: !verified ? "not-allowed" : "pointer",
+                  }}
+                >
+                  Get Testnet Gas Tokens
+                </button>
+                {mint && (
+                  <button
+                    onClick={mintNft}
+                    disabled={!verified}
+                    className="solid-button text-center text-white rounded-md px-10 py-3 w-full"
+                    type="button"
+                    style={{
+                      opacity: !verified ? 0.5 : 1,
+                      cursor: !verified ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    Mint NFT
+                  </button>
+                )}
+              </>
             ) : (
               <button
                 onClick={openConnectModal}

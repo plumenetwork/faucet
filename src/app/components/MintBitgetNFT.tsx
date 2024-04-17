@@ -47,6 +47,7 @@ const MintBitgetNFT = () => {
           </>
         )}
         <CustomConnectButton
+          mint={true}
           verified={verified}
           walletAddress={connectedAddress}
         />
