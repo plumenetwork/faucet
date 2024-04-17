@@ -62,7 +62,7 @@ const MintBitgetNFT = () => {
             <div className="px-4">
               <CustomConnectButton
                 mint={true}
-                setMintSuccess={setMintSuccess}
+                setMintSuccess={setMintSuccessHash}
                 verified={verified}
                 walletAddress={connectedAddress}
               />
