@@ -1,14 +1,16 @@
 import { ExternalLink, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import * as React from 'react';
 
 import { ringedCheckmark } from '../assets';
 
 function SuccessNFTClaim({ mintSuccessHash }: { mintSuccessHash: string }) {
   const onClickShareOnX = () => {
+    const tweetText = encodeURIComponent("I’ve just minted my @PlumeNetwork x @BitgetWallet NFT!\nCan’t wait to see what it reveals - come claim yours now for a chance to earn more #PlumeNetwork and #BWB points!");
+    const tweetUrl = "https://app.galxe.com/quest/PlumeNetwork/GCehethHdP";
+    const tweetHashtags = ["RWA"];
     window.open(
-      `https://twitter.com/intent/tweet?text=I've%20just%20minted%20my%20Plume%20x%20Bitget%20NFT!%20Can't%20wait%20to%20see%20what%20it%20reveals%20-%20come%20claim%20yours%20now%20for%20a%20chance%20to%20earn%20more%20Plume%20and%20BWB%20points!%20&url=https://faucet.plumenetwork.com/mint&image_src=https://assets.plumenetwork.xyz/images/nfts/plume-bitget-nft.png&call_to_action=Share%20this%20Tweet!`,
+      `https://twitter.com/intent/tweet?text=${tweetText}&url=${tweetUrl}&hashtags=${tweetHashtags.join(",")}&call_to_action=Share%20this%20Tweet!`,
       "_blank"
     );
   };
@@ -17,7 +19,7 @@ function SuccessNFTClaim({ mintSuccessHash }: { mintSuccessHash: string }) {
     <div className="flex flex-col gap-2 justify-center items-center px-4 pt-6 text-2xl font-medium leading-9 rounded-2xl bg-neutral-900 border-zinc-800 max-w-[496px]">
       <Image
         src="https://assets.plumenetwork.xyz/images/nfts/plume-bitget-nft.png"
-        alt="Bitget NFT Hidden"
+        alt="Plume x Bitget NFT Image"
         width={400}
         height={400}
       />
