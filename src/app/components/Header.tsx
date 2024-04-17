@@ -19,20 +19,18 @@ const Header = () => {
           </div>
           <Link href="/" passHref scroll={false}>
             <div
-              className={`${
-                pathname === "/" ? "tab-button-active" : "tab-button"
-              }`}
+              className={`${pathname === "/" ? "tab-button-active" : "tab-button"
+                }`}
             >
               Faucet
             </div>
           </Link>
-          <Link href="/bitget" passHref scroll={false}>
+          <Link href="/bitgetwallet" passHref scroll={false}>
             <div
-              className={`${
-                pathname === "/bitget" ? "tab-button-active" : "tab-button"
-              }`}
+              className={`${pathname === "/bitgetwallet" ? "tab-button-active" : "tab-button"
+                }`}
             >
-              Bitget NFT
+              Bitget Wallet NFT
             </div>
           </Link>
         </div>

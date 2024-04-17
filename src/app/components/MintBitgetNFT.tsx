@@ -34,7 +34,7 @@ const MintBitgetNFT = () => {
             <div className="flex flex-col justify-center items-center px-4 pt-6 rounded-2xl max-w-[496px]">
               <Image
                 src="https://assets.plumenetwork.xyz/images/nfts/plume-bitget-nft.png"
-                alt="Bitget NFT"
+                alt="Plume x Bitget NFT Image"
                 width={400}
                 height={400}
               />
