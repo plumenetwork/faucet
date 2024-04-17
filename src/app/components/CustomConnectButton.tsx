@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useWriteContract } from 'wagmi';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
@@ -9,11 +10,11 @@ export const CustomConnectButton = (props: {
   mint: boolean;
   verified: boolean;
   walletAddress: string | undefined;
-  setMintSuccess?: (value: boolean) => void;
+  setMintSuccessHash?: (hash: string) => void;
 }) => {
   const { data: hash, writeContract } = useWriteContract();
   const { toast } = useToast();
-  const { mint, verified, walletAddress, setMintSuccess } = props;
+  const { mint, verified, walletAddress, setMintSuccessHash } = props;
 
   const handleClaimTokens = () => {
     fetch("api/faucet", {
@@ -38,7 +39,7 @@ export const CustomConnectButton = (props: {
         abi,
         functionName: "mint",
       });
-      setMintSuccess && setMintSuccess(true);
+      hash && setMintSuccessHash && setMintSuccessHash(String(hash));
     } catch (error) {
       console.error(error);
       mintFailureToast();
