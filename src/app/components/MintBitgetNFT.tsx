@@ -6,13 +6,12 @@ import { useAccount } from 'wagmi';
 
 import { Turnstile } from '@marsidev/react-turnstile';
 
-import { bitgetNFTHoodie } from '../assets';
 import CustomConnectButton from './CustomConnectButton';
 import SuccessNFTClaim from './SuccessNFTClaim';
 
 const MintBitgetNFT = () => {
   const [verified, setVerified] = useState(false);
-  const [mintSuccess, setMintSuccess] = useState(false);
+  const [mintSuccessHash, setMintSuccessHash] = useState("");
   const account = useAccount();
   const connectedAddress = account?.address;
 
@@ -27,12 +26,14 @@ const MintBitgetNFT = () => {
           earn points.
         </div>
         <div className="shrink-0 mt-6 h-px border border-solid bg-zinc-800 border-zinc-800 max-md:max-w-full" />
-        {mintSuccess && <SuccessNFTClaim />}
-        {!mintSuccess && (
+        {mintSuccessHash !== "" && (
+          <SuccessNFTClaim mintSuccessHash={mintSuccessHash} />
+        )}
+        {mintSuccessHash === "" && (
           <>
             <div className="flex flex-col justify-center items-center px-4 pt-6 rounded-2xl max-w-[496px]">
               <Image
-                src={bitgetNFTHoodie}
+                src="https://assets.plumenetwork.xyz/images/nfts/plume-bitget-nft.png"
                 alt="Bitget NFT"
                 width={400}
                 height={400}
