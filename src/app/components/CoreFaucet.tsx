@@ -72,6 +72,7 @@ const CoreFaucet = () => {
         )}
 
         <CustomConnectButton
+          mint={false}
           verified={verified}
           walletAddress={connectedAddress}
         />
