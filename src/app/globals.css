@@ -66,6 +66,10 @@ body {
   background-color: #ebebeb;
 }
 
+.background-red {
+  background-image: linear-gradient(179deg, #D13832 -269.49%, #0F0F0F 99.35%);
+}
+
 .background-image-div {
   background-image: url(assets/background-pattern.png);
   background-size: 800px;
