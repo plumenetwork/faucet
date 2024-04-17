@@ -32,7 +32,7 @@ const Header = () => {
                 pathname === "/bitget" ? "tab-button-active" : "tab-button"
               }`}
             >
-              Mint
+              Bitget NFT
             </div>
           </Link>
         </div>
