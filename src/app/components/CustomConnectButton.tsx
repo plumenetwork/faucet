@@ -1,7 +1,6 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useWriteContract } from 'wagmi';
 import { abi } from '../lib/MintABI';
-import { plume } from '../lib/plumeChain';
 import { useToast } from './ui/use-toast';
 
 export const CustomConnectButton = (props: {
