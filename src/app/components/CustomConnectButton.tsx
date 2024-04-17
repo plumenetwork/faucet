@@ -32,8 +32,7 @@ export const CustomConnectButton = (props: {
       writeContract({
         address: process.env.NEXT_PUBLIC_MINT_CONTRACT_ADDRESS as `0x${string}`,
         abi,
-        functionName: 'mint',
-        chainId: plume.id,
+        functionName: 'mint'
       });
     } catch (error) {
       console.error(error);
