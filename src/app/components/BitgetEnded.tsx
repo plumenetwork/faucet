@@ -10,8 +10,8 @@ const BitgetEnded = () => {
         <Image
           src={bitgetEnded}
           alt="Bitget Campaign Ended"
-          width={96}
-          height={96}
+          width={128}
+          height={128}
         />
       </div>
       <div className="self-center text-2xl font-semibold text-white">
