@@ -13,19 +13,19 @@ const SocialMediaBar = () => (
     </div>
     <div className="flex gap-3 mt-4 mb-64 max-md:mb-10">
       <Link href="https://www.plumenetwork.xyz">
-        <World className="text-gray-400 hover:text-gray-100" width={32} height={32} alt="Plume's website" />
+        <World className="text-gray-400 hover:text-gray-100" width={32} height={32} />
       </Link>
       <Link href="https://twitter.com/plumenetwork">
-        <BrandX className="text-gray-400 hover:text-gray-100" width={32} height={32} alt="Plume on X" />
+        <BrandX className="text-gray-400 hover:text-gray-100" width={32} height={32} />
       </Link>
       <Link href="https://discord.com/invite/plume">
-        <BrandDiscord className="text-gray-400 hover:text-gray-100" width={32} height={32} alt="Plume on Discord" />
+        <BrandDiscord className="text-gray-400 hover:text-gray-100" width={32} height={32} />
       </Link>
       <Link href="https://t.me/plumenetwork">
-        <BrandTelegram className="text-gray-400 hover:text-gray-100" width={32} height={32} alt="Plume on Telegram" />
+        <BrandTelegram className="text-gray-400 hover:text-gray-100" width={32} height={32} />
       </Link>
       <Link href="https://www.linkedin.com/company/plume-network">
-        <BrandLinkedin className="text-gray-400 hover:text-gray-100" width={32} height={32} alt="Plume on LinkedIn" />
+        <BrandLinkedin className="text-gray-400 hover:text-gray-100" width={32} height={32} />
       </Link>
     </div>
   </>
