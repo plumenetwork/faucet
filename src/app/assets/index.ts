@@ -1,5 +1,6 @@
 import alertIcon from './alert-toast.svg';
 import backgroundPattern from './background-pattern.png';
+import bitgetEnded from './bitget-ended.svg';
 import bitgetIcon from './bitget-icon.png';
 import bitgetLogo from './bitget-logo.png';
 import checkmarkIcon from './check-toast.svg';
@@ -13,15 +14,16 @@ import website from './website.png';
 
 export {
   alertIcon,
-  checkmarkIcon,
-  linkedin,
-  twitter,
-  website,
-  faucetIcon,
+  backgroundPattern,
+  bitgetEnded,
   bitgetIcon,
   bitgetLogo,
+  checkmarkIcon,
   ethereum,
+  faucetIcon,
+  linkedin,
   plume,
-  backgroundPattern,
   ringedCheckmark,
+  twitter,
+  website
 };
