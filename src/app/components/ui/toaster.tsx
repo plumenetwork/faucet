@@ -1,10 +1,10 @@
 "use client";
 
-import Image from 'next/image';
 
-import { alertIcon, checkmarkIcon } from '../../assets';
+import AlertToast from '../../assets/alert-toast.svg';
+import CheckToast from '../../assets/check-toast.svg';
 import {
-    Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport
+  Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport
 } from './toast';
 import { useToast } from './use-toast';
 
@@ -17,26 +17,24 @@ export function Toaster() {
         return (
           <Toast duration={4000} key={id} {...props}>
             <div
-              className={`relative w-[400px] ${
-                props.variant === "pass"
+              className={`relative w-[400px] ${props.variant === "pass"
                   ? "rounded-xl border border-green-500"
                   : props.variant === "fail"
-                  ? "rounded-xl border border-red-500"
-                  : "rounded-xl border border-blue-500"
-              } w-full bg-[#141414] p-1`}
+                    ? "rounded-xl border border-red-500"
+                    : "rounded-xl border border-blue-500"
+                } w-full bg-[#141414] p-1`}
             >
               <div className="flex flex-row">
                 <ToastStatusIcon className="" icon={props.variant} />
                 <div className="flex w-[300px] flex-col justify-center py-2 pl-2">
                   {title && (
                     <ToastTitle
-                      className={`text-sm font-semibold leading-5 ${
-                        props.variant === "pass"
+                      className={`text-sm font-semibold leading-5 ${props.variant === "pass"
                           ? "text-green-500"
                           : props.variant === "fail"
-                          ? "text-red-500"
-                          : "text-blue-500"
-                      }`}
+                            ? "text-red-500"
+                            : "text-blue-500"
+                        }`}
                     >
                       {title}
                     </ToastTitle>
@@ -63,10 +61,10 @@ const ToastStatusIcon = ({ icon }: any) => {
   return icon !== "default" ? (
     <div className="m-1 flex min-w-[38px] self-start">
       {icon === "pass" && (
-        <Image src={checkmarkIcon} alt="check toast" width={38} height={38} />
+        <CheckToast width={38} height={38} />
       )}
       {icon === "fail" && (
-        <Image src={alertIcon} alt="alert toast" width={38} height={38} />
+        <AlertToast width={38} height={38} />
       )}
     </div>
   ) : null;
