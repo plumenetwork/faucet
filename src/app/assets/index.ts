@@ -3,14 +3,16 @@ import backgroundPattern from './background-pattern.png';
 import bitgetEnded from './bitget-ended.svg';
 import bitgetIcon from './bitget-icon.png';
 import bitgetLogo from './bitget-logo.png';
+import brandDiscord from './brand-discord.svg';
+import brandLinkedin from './brand-linkedin.svg';
+import brandTelegram from './brand-telegram.svg';
+import brandX from './brand-x.svg';
 import checkmarkIcon from './check-toast.svg';
 import ethereum from './ethereum-icon.png';
 import faucetIcon from './faucet-icon.png';
-import linkedin from './linkedin.png';
 import plume from './plume-logo.png';
 import ringedCheckmark from './ringed-checkmark.png';
-import twitter from './twitter.png';
-import website from './website.png';
+import world from './world.svg';
 
 export {
   alertIcon,
@@ -18,12 +20,14 @@ export {
   bitgetEnded,
   bitgetIcon,
   bitgetLogo,
+  brandDiscord,
+  brandLinkedin,
+  brandTelegram,
+  brandX,
   checkmarkIcon,
   ethereum,
   faucetIcon,
-  linkedin,
   plume,
   ringedCheckmark,
-  twitter,
-  website
+  world
 };
