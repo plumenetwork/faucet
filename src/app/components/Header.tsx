@@ -25,14 +25,6 @@ const Header = () => {
               Faucet
             </div>
           </Link>
-          <Link href="/bitgetwallet" passHref scroll={false}>
-            <div
-              className={`${pathname === "/bitgetwallet" ? "tab-button-active" : "tab-button"
-                }`}
-            >
-              Bitget Wallet NFT
-            </div>
-          </Link>
         </div>
         <div className="flex gap-4 self-start">
           <div className="hidden sm:block my-auto">
