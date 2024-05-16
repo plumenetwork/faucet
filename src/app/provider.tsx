@@ -8,7 +8,7 @@ import {
   darkTheme, getDefaultConfig,
   RainbowKitProvider
 } from '@rainbow-me/rainbowkit';
-import { bitgetWallet, coinbaseWallet, injectedWallet, metaMaskWallet, okxWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
+import { bitgetWallet, coinbaseWallet, foxWallet, injectedWallet, metaMaskWallet, okxWallet, trustWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const config = getDefaultConfig({
@@ -17,7 +17,7 @@ const config = getDefaultConfig({
   wallets: [
     {
       groupName: "Recommended",
-      wallets: [injectedWallet, bitgetWallet, metaMaskWallet, coinbaseWallet, okxWallet, walletConnectWallet],
+      wallets: [foxWallet, injectedWallet, bitgetWallet, metaMaskWallet, coinbaseWallet, okxWallet, trustWallet, walletConnectWallet],
     },
   ],
   chains: [plumeTestnet],

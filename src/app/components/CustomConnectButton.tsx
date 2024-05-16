@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useWriteContract } from 'wagmi';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
@@ -146,10 +145,10 @@ export const CustomConnectButton = (props: {
             ) : (
               <button
                 onClick={openConnectModal}
-                className="gradient-button text-center rounded-md px-10 py-3 w-full"
+                className="gradient-button text-center rounded-md px-10 py-3 w-full text-white"
                 type="button"
               >
-                Connect Bitget Wallet
+                Connect Fox Wallet
               </button>
             )}
           </div>

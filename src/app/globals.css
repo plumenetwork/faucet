@@ -33,12 +33,12 @@ body {
 }
 
 .gradient-button {
-  background-image: linear-gradient(to right, #33FFF3, #57D4FA, #C4C5FE, #FAFAFA);
+  background-image: linear-gradient(to right, #12FE74, #057A3A, #04592B, #057A3A, #12FE74);
 }
 
 .gradient-button:hover {
   transform: scale(1.02);
-  background-image: linear-gradient(to right, #66FFFB, #7EE4FF, #DBDBFF, #FFFFFF);
+  background-image: linear-gradient(to right, #0DBF57, #005727, #013D1C, #005727, #0DBF57);
 }
 
 .gradient-button:active {

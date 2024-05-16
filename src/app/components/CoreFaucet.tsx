@@ -21,7 +21,7 @@ const CoreFaucet = () => {
           <Image src={faucetIcon} width={48} height={48} alt="faucet" />
           <div className="flex flex-col flex-1 pr-4">
             <div className="text-lg font-semibold leading-7 text-white">
-              WELCOME BITGET WALLET USERS!
+              WELCOME FOX WALLET USERS!
             </div>
             <div className="text-sm leading-5 text-zinc-300">
               Use this faucet to get Plume testnet tokens ahead of our
