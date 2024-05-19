@@ -1,16 +1,17 @@
 "use client";
 
+import { Turnstile } from '@marsidev/react-turnstile';
+import { ExternalLink } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
-
-import { Turnstile } from '@marsidev/react-turnstile';
-
 import { faucetIcon } from '../assets';
 import OracleGameButton from './OracleGameButton';
 
 const OracleGame = () => {
   const [verified, setVerified] = useState(false);
+  const [guessSuccessHash, setGuessSuccessHash] = useState("");
   const account = useAccount();
   const connectedAddress = account?.address;
 
@@ -29,23 +30,43 @@ const OracleGame = () => {
           </div>
         </div>
         <div className="shrink-0 mt-6 h-px border border-solid bg-zinc-800 border-zinc-800 max-md:max-w-full" />
-        <label
-          htmlFor="priceGuess"
-          className="flex md:justify-between gap-1 px-3 py-2.5 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
-        >
-          <div className="my-auto">$</div>
-          <input
-            type="number"
-            id="priceGuess"
-            name="priceGuess"
-            className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
-          />
-        </label>
-        <OracleGameButton
-          mint={false}
-          verified={verified}
-          walletAddress={connectedAddress}
-        />
+        {guessSuccessHash === "" ? (
+          <>
+            <label
+              htmlFor="priceGuess"
+              className="flex md:justify-between gap-1 px-3 py-2.5 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
+            >
+              <div className="my-auto">$</div>
+              <input
+                type="number"
+                id="priceGuess"
+                name="priceGuess"
+                className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
+              />
+            </label>
+            <OracleGameButton
+              guess={true}
+              verified={verified}
+              walletAddress={connectedAddress}
+              setGuessSuccessHash={setGuessSuccessHash}
+            />
+          </>
+        ) : (
+          <div className="flex gap-1.5 justify-center mt-2 text-sm text-blue-400">
+            <Link
+              href={
+                guessSuccessHash !== "" && guessSuccessHash !== "undefined"
+                  ? `https://testnet-explorer.plumenetwork.xyz/tx/${guessSuccessHash}`
+                  : `https://testnet-explorer.plumenetwork.xyz/address/${process.env.NEXT_PUBLIC_ORACLE_GAME_CONTRACT_ADDRESS}`
+              }
+              target="_blank"
+              className="flex gap-1.5"
+            >
+              View Transaction
+            </Link>
+            <ExternalLink size={16} />
+          </div>
+        )}
       </div>
       <Turnstile
         options={{

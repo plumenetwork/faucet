@@ -1,19 +1,18 @@
-import { useWriteContract } from 'wagmi';
-
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-
-import { abi } from '../lib/MintABI';
+import { BigNumber } from 'bignumber.js';
+import { useWriteContract } from 'wagmi';
+import { abi } from '../lib/OracleGameABI';
 import { useToast } from './ui/use-toast';
 
 export const OracleGameButton = (props: {
-  mint: boolean;
+  guess: boolean;
   verified: boolean;
   walletAddress: string | undefined;
-  setMintSuccessHash?: (hash: string) => void;
+  setGuessSuccessHash: (hash: string) => void;
 }) => {
   const { data: hash, writeContract } = useWriteContract();
   const { toast } = useToast();
-  const { mint, verified, walletAddress, setMintSuccessHash } = props;
+  const { guess, verified, walletAddress, setGuessSuccessHash } = props;
 
   const handleClaimTokens = () => {
     fetch("api/faucet", {
@@ -31,17 +30,26 @@ export const OracleGameButton = (props: {
     });
   };
 
-  const mintNft = () => {
+  const guessPrice = () => {
     try {
+      const priceInput = document.getElementById('priceGuess') as HTMLInputElement;
+      const price = BigNumber(10).pow(18).multipliedBy(Number(priceInput.value)).integerValue();
       writeContract({
-        address: process.env.NEXT_PUBLIC_MINT_CONTRACT_ADDRESS as `0x${string}`,
+        address: process.env.NEXT_PUBLIC_ORACLE_GAME_CONTRACT_ADDRESS as `0x${string}`,
         abi,
-        functionName: "mint",
+        functionName: "guessPairPrice",
+        args: [price.toFixed()],
+      }, {
+        onSuccess: (hash) => {
+          setGuessSuccessHash(String(hash));
+        }, onError: (error) => {
+          console.error(error);
+          guessFailureToast();
+        }
       });
-      setMintSuccessHash && setMintSuccessHash(String(hash));
     } catch (error) {
       console.error(error);
-      mintFailureToast();
+      guessFailureToast();
     }
   };
 
@@ -83,7 +91,7 @@ export const OracleGameButton = (props: {
     });
   };
 
-  const mintFailureToast = () => {
+  const guessFailureToast = () => {
     return toast({
       title: "Request Failed",
       description: (
@@ -127,9 +135,9 @@ export const OracleGameButton = (props: {
                 >
                   Get Testnet Gas Tokens
                 </button>
-                {mint && (
+                {guess && (
                   <button
-                    onClick={mintNft}
+                    onClick={guessPrice}
                     disabled={!verified}
                     className="solid-button text-center text-white rounded-md px-10 py-3 w-full"
                     type="button"
@@ -138,17 +146,17 @@ export const OracleGameButton = (props: {
                       cursor: !verified ? "not-allowed" : "pointer",
                     }}
                   >
-                    Mint NFT
+                    Guess Price
                   </button>
                 )}
               </>
             ) : (
               <button
                 onClick={openConnectModal}
-                className="gradient-button text-center rounded-md px-10 py-3 w-full text-white"
+                className="solid-button text-center rounded-md px-10 py-3 w-full text-white"
                 type="button"
               >
-                Connect Fox Wallet
+                Connect Wallet
               </button>
             )}
           </div>
