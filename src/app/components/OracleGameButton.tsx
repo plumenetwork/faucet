@@ -5,14 +5,13 @@ import { abi } from '../lib/OracleGameABI';
 import { useToast } from './ui/use-toast';
 
 export const OracleGameButton = (props: {
-  guess: boolean;
   verified: boolean;
   walletAddress: string | undefined;
   setGuessSuccessHash: (hash: string) => void;
 }) => {
   const { data: hash, writeContract } = useWriteContract();
   const { toast } = useToast();
-  const { guess, verified, walletAddress, setGuessSuccessHash } = props;
+  const { verified, walletAddress, setGuessSuccessHash } = props;
 
   const handleClaimTokens = () => {
     fetch("api/faucet", {
@@ -50,6 +49,29 @@ export const OracleGameButton = (props: {
     } catch (error) {
       console.error(error);
       guessFailureToast();
+    }
+  };
+
+  const pullPrice = () => {
+    try {
+      const proofInput = document.getElementById('bytesProof') as HTMLInputElement;
+      const proof = proofInput.value.toString();
+      writeContract({
+        address: process.env.NEXT_PUBLIC_ORACLE_GAME_CONTRACT_ADDRESS as `0x${string}`,
+        abi,
+        functionName: "pullPairPrices",
+        args: [proof],
+      }, {
+        onSuccess: () => {
+          pullSuccessToast();
+        }, onError: (error) => {
+          console.error(error);
+          pullFailureToast();
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      pullFailureToast();
     }
   };
 
@@ -104,6 +126,31 @@ export const OracleGameButton = (props: {
     });
   };
 
+  const pullSuccessToast = () => {
+    return toast({
+      title: "Request Succeeded",
+      description: (
+        <div className="flex flex-row text-[#D2D6DB] text-sm">
+          Successfully pulled latest oracle prices.
+        </div>
+      ),
+      variant: "pass",
+    });
+  };
+
+  const pullFailureToast = () => {
+    return toast({
+      title: "Request Failed",
+      description: (
+        <div className="flex flex-row text-[#D2D6DB] text-sm">
+          Sorry, your request failed. Please make sure your account has enough
+          funds, and try again later.
+        </div>
+      ),
+      variant: "fail",
+    });
+  };
+
   return (
     <ConnectButton.Custom>
       {({ account, chain, openConnectModal, mounted }) => {
@@ -135,20 +182,53 @@ export const OracleGameButton = (props: {
                 >
                   Get Testnet Gas Tokens
                 </button>
-                {guess && (
-                  <button
-                    onClick={guessPrice}
-                    disabled={!verified}
-                    className="solid-button text-center text-white rounded-md px-10 py-3 w-full"
-                    type="button"
-                    style={{
-                      opacity: !verified ? 0.5 : 1,
-                      cursor: !verified ? "not-allowed" : "pointer",
-                    }}
-                  >
-                    Guess Price
-                  </button>
-                )}
+                <label
+                  htmlFor="priceGuess"
+                  className="flex md:justify-between w-full gap-1 px-3 py-2.5 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
+                >
+                  <div className="my-auto">$</div>
+                  <input
+                    type="number"
+                    id="priceGuess"
+                    name="priceGuess"
+                    className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
+                  />
+                </label>
+                <button
+                  onClick={guessPrice}
+                  disabled={!verified}
+                  className="solid-button text-center text-white rounded-md px-10 py-3 w-full"
+                  type="button"
+                  style={{
+                    opacity: !verified ? 0.5 : 1,
+                    cursor: !verified ? "not-allowed" : "pointer",
+                  }}
+                >
+                  Guess Price
+                </button>
+                <label
+                  htmlFor="bytesProof"
+                  className="flex md:justify-between w-full gap-1 px-3 py-2.5 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
+                >
+                  <input
+                    type="text"
+                    id="bytesProof"
+                    name="bytesProof"
+                    className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
+                  />
+                </label>
+                <button
+                  onClick={pullPrice}
+                  disabled={!verified}
+                  className="solid-button text-center text-white rounded-md px-10 py-3 w-full"
+                  type="button"
+                  style={{
+                    opacity: !verified ? 0.5 : 1,
+                    cursor: !verified ? "not-allowed" : "pointer",
+                  }}
+                >
+                  Pull Price
+                </button>
               </>
             ) : (
               <button

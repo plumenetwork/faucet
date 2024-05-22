@@ -31,26 +31,11 @@ const OracleGame = () => {
         </div>
         <div className="shrink-0 mt-6 h-px border border-solid bg-zinc-800 border-zinc-800 max-md:max-w-full" />
         {guessSuccessHash === "" ? (
-          <>
-            <label
-              htmlFor="priceGuess"
-              className="flex md:justify-between gap-1 px-3 py-2.5 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
-            >
-              <div className="my-auto">$</div>
-              <input
-                type="number"
-                id="priceGuess"
-                name="priceGuess"
-                className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
-              />
-            </label>
-            <OracleGameButton
-              guess={true}
-              verified={verified}
-              walletAddress={connectedAddress}
-              setGuessSuccessHash={setGuessSuccessHash}
-            />
-          </>
+          <OracleGameButton
+            verified={verified}
+            walletAddress={connectedAddress}
+            setGuessSuccessHash={setGuessSuccessHash}
+          />
         ) : (
           <div className="flex gap-1.5 justify-center mt-2 text-sm text-blue-400">
             <Link
