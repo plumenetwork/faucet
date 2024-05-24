@@ -1,5 +1,6 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { BigNumber } from 'bignumber.js';
+import { ChangeEvent, useCallback, useState } from 'react';
 import { useWriteContract } from 'wagmi';
 import { abi } from '../lib/OracleGameABI';
 import { useToast } from './ui/use-toast';
@@ -9,9 +10,11 @@ export const OracleGameButton = (props: {
   walletAddress: string | undefined;
   setGuessSuccessHash: (hash: string) => void;
 }) => {
-  const { data: hash, writeContract } = useWriteContract();
+  const { writeContract } = useWriteContract();
   const { toast } = useToast();
   const { verified, walletAddress, setGuessSuccessHash } = props;
+  const [priceGuess, setPriceGuess] = useState('');
+  const [bytesProof, setBytesProof] = useState('');
 
   const handleClaimTokens = () => {
     fetch("api/faucet", {
@@ -29,10 +32,85 @@ export const OracleGameButton = (props: {
     });
   };
 
-  const guessPrice = () => {
+  const successToast = useCallback(() => {
+    return toast({
+      title: "Request Succeeded",
+      description: (
+        <div className="flex flex-row text-[#D2D6DB] text-sm">
+          You&apos;ll receive 0.00025 testnet ETH in your wallet within a
+          minute.
+        </div>
+      ),
+      variant: "pass",
+    });
+  }, [toast]);
+
+  const rateLimitToast = useCallback(() => {
+    return toast({
+      title: "Rate Limit Exceeded",
+      description: (
+        <div className="flex flex-row text-[#D2D6DB] text-sm">
+          Please wait at least ten minutes between requests.
+        </div>
+      ),
+      variant: "fail",
+    });
+  }, [toast]);
+
+  const failureToast = useCallback(() => {
+    return toast({
+      title: "Request Failed",
+      description: (
+        <div className="flex flex-row text-[#D2D6DB] text-sm">
+          Sorry, your request failed. The faucet may be temporarily out of
+          tokens.
+        </div>
+      ),
+      variant: "fail",
+    });
+  }, [toast]);
+
+  const guessFailureToast = useCallback(() => {
+    return toast({
+      title: "Request Failed",
+      description: (
+        <div className="flex flex-row text-[#D2D6DB] text-sm">
+          Sorry, your request failed. Please make sure your account has enough
+          funds, and try again later.
+        </div>
+      ),
+      variant: "fail",
+    });
+  }, [toast]);
+
+  const pullSuccessToast = useCallback(() => {
+    return toast({
+      title: "Request Succeeded",
+      description: (
+        <div className="flex flex-row text-[#D2D6DB] text-sm">
+          Successfully pulled latest oracle prices.
+        </div>
+      ),
+      variant: "pass",
+    });
+  }, [toast]);
+
+  const pullFailureToast = useCallback(() => {
+    return toast({
+      title: "Request Failed",
+      description: (
+        <div className="flex flex-row text-[#D2D6DB] text-sm">
+          Sorry, your request failed. Please make sure your account has enough
+          funds, and try again later.
+        </div>
+      ),
+      variant: "fail",
+    });
+  }, [toast]);
+
+  const guessPrice = useCallback(() => {
     try {
-      const priceInput = document.getElementById('priceGuess') as HTMLInputElement;
-      const price = BigNumber(10).pow(18).multipliedBy(Number(priceInput.value)).integerValue();
+      const price = BigNumber(10).pow(18).multipliedBy(priceGuess).integerValue();
       writeContract({
         address: process.env.NEXT_PUBLIC_ORACLE_GAME_CONTRACT_ADDRESS as `0x${string}`,
         abi,
@@ -50,12 +128,11 @@ export const OracleGameButton = (props: {
       console.error(error);
       guessFailureToast();
     }
-  };
+  }, [priceGuess, guessFailureToast, setGuessSuccessHash, writeContract]);
 
-  const pullPrice = () => {
+  const pullPrice = useCallback(() => {
     try {
-      const proofInput = document.getElementById('bytesProof') as HTMLInputElement;
-      const proof = proofInput.value.toString();
+      const proof = bytesProof.toString();
       writeContract({
         address: process.env.NEXT_PUBLIC_ORACLE_GAME_CONTRACT_ADDRESS as `0x${string}`,
         abi,
@@ -73,83 +150,7 @@ export const OracleGameButton = (props: {
       console.error(error);
       pullFailureToast();
     }
-  };
-
-  const successToast = () => {
-    return toast({
-      title: "Request Succeeded",
-      description: (
-        <div className="flex flex-row text-[#D2D6DB] text-sm">
-          You&apos;ll receive 0.00025 testnet ETH in your wallet within a
-          minute.
-        </div>
-      ),
-      variant: "pass",
-    });
-  };
-
-  const rateLimitToast = () => {
-    return toast({
-      title: "Rate Limit Exceeded",
-      description: (
-        <div className="flex flex-row text-[#D2D6DB] text-sm">
-          Please wait at least ten minutes between requests.
-        </div>
-      ),
-      variant: "fail",
-    });
-  };
-
-  const failureToast = () => {
-    return toast({
-      title: "Request Failed",
-      description: (
-        <div className="flex flex-row text-[#D2D6DB] text-sm">
-          Sorry, your request failed. The faucet may be temporarily out of
-          tokens.
-        </div>
-      ),
-      variant: "fail",
-    });
-  };
-
-  const guessFailureToast = () => {
-    return toast({
-      title: "Request Failed",
-      description: (
-        <div className="flex flex-row text-[#D2D6DB] text-sm">
-          Sorry, your request failed. Please make sure your account has enough
-          funds, and try again later.
-        </div>
-      ),
-      variant: "fail",
-    });
-  };
-
-  const pullSuccessToast = () => {
-    return toast({
-      title: "Request Succeeded",
-      description: (
-        <div className="flex flex-row text-[#D2D6DB] text-sm">
-          Successfully pulled latest oracle prices.
-        </div>
-      ),
-      variant: "pass",
-    });
-  };
-
-  const pullFailureToast = () => {
-    return toast({
-      title: "Request Failed",
-      description: (
-        <div className="flex flex-row text-[#D2D6DB] text-sm">
-          Sorry, your request failed. Please make sure your account has enough
-          funds, and try again later.
-        </div>
-      ),
-      variant: "fail",
-    });
-  };
+  }, [bytesProof, pullFailureToast, pullSuccessToast, writeContract]);
 
   return (
     <ConnectButton.Custom>
@@ -191,6 +192,8 @@ export const OracleGameButton = (props: {
                     type="number"
                     id="priceGuess"
                     name="priceGuess"
+                    value={priceGuess}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setPriceGuess(e.target.value)}
                     className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
                   />
                 </label>
@@ -214,6 +217,8 @@ export const OracleGameButton = (props: {
                     type="text"
                     id="bytesProof"
                     name="bytesProof"
+                    value={bytesProof}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setBytesProof(e.target.value)}
                     className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
                   />
                 </label>
