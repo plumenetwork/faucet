@@ -14,10 +14,9 @@ export const OracleGameButton = (props: {
   const { toast } = useToast();
   const { verified, walletAddress, setGuessSuccessHash } = props;
   const [priceGuess, setPriceGuess] = useState('');
-  const [bytesProof, setBytesProof] = useState('');
 
   const handleClaimTokens = () => {
-    fetch("api/faucet", {
+    fetch("/api/faucet", {
       method: "POST",
       headers: { ["Content-Type"]: "application/json" },
       body: JSON.stringify({ walletAddress }),
@@ -31,6 +30,12 @@ export const OracleGameButton = (props: {
       }
     });
   };
+
+  const getSupraProof = () =>
+    fetch("/api/supraProof").then((res) =>
+      res.json()
+    );
+
 
   const successToast = useCallback(() => {
     return toast({
@@ -130,14 +135,18 @@ export const OracleGameButton = (props: {
     }
   }, [priceGuess, guessFailureToast, setGuessSuccessHash, writeContract]);
 
-  const pullPrice = useCallback(() => {
+  const pullPrice = useCallback(async () => {
     try {
-      const proof = bytesProof.toString();
+      const proof = await getSupraProof();
+
+      const proofBytes = Buffer.from(proof.proofBytes.data);
+      const proofBytesString = '0x' + proofBytes.toString('hex');
+
       writeContract({
         address: process.env.NEXT_PUBLIC_ORACLE_GAME_CONTRACT_ADDRESS as `0x${string}`,
         abi,
         functionName: "pullPairPrices",
-        args: [proof],
+        args: [proofBytesString],
       }, {
         onSuccess: () => {
           pullSuccessToast();
@@ -150,7 +159,7 @@ export const OracleGameButton = (props: {
       console.error(error);
       pullFailureToast();
     }
-  }, [bytesProof, pullFailureToast, pullSuccessToast, writeContract]);
+  }, [pullFailureToast, pullSuccessToast, writeContract]);
 
   return (
     <ConnectButton.Custom>
@@ -209,19 +218,7 @@ export const OracleGameButton = (props: {
                 >
                   Guess Price
                 </button>
-                <label
-                  htmlFor="bytesProof"
-                  className="flex md:justify-between w-full gap-1 px-3 py-2.5 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
-                >
-                  <input
-                    type="text"
-                    id="bytesProof"
-                    name="bytesProof"
-                    value={bytesProof}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setBytesProof(e.target.value)}
-                    className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
-                  />
-                </label>
+
                 <button
                   onClick={pullPrice}
                   disabled={!verified}
@@ -232,7 +229,7 @@ export const OracleGameButton = (props: {
                     cursor: !verified ? "not-allowed" : "pointer",
                   }}
                 >
-                  Pull Price
+                  Pull Oracle Prices
                 </button>
               </>
             ) : (
