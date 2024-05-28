@@ -19,6 +19,7 @@ export const OracleGameButton = (props: {
     fetch("/api/faucet", {
       method: "POST",
       headers: { ["Content-Type"]: "application/json" },
+      body: JSON.stringify({ walletAddress }),
     }).then((res) => {
       if (res.status === 200) {
         successToast();
@@ -31,9 +32,7 @@ export const OracleGameButton = (props: {
   };
 
   const getSupraProof = () =>
-    fetch("/api/supraProof", {
-      headers: { ["Content-Type"]: "application/json" },
-    }).then((res) =>
+    fetch("/api/supraProof").then((res) =>
       res.json()
     );
 

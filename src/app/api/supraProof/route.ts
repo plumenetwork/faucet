@@ -1,8 +1,7 @@
 import PullServiceClient from './SupraClient'
 
+const supraClient = new PullServiceClient();
 export async function GET(): Promise<Response> {
-  const supraClient = new PullServiceClient();
-
   const proof = await supraClient.getProof({
     // previous and current active pairs in the oracle game contract
     pairIndexes: [9, 10],
