@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const ratelimit = new Ratelimit({
   redis: kv,
-  limiter: Ratelimit.slidingWindow(2, '600 s'),
+  limiter: Ratelimit.slidingWindow(2, '24 h'),
 });
 
 export const config = {
@@ -13,8 +13,13 @@ export const config = {
 
 export default async function middleware(request: NextRequest) {
   const ip = request.ip ?? '127.0.0.1';
-  const { success } = await ratelimit.limit(ip);
-  return success
-    ? NextResponse.next()
-    : NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
+  const { walletAddress } = await request.json()
+
+  let { success: ipLimitSuccess } = await ratelimit.limit(ip);
+  if (!ipLimitSuccess) return NextResponse.json({ error: 'Rate limit exceeded' },{ status: 429 });
+
+  let { success: walletLimitSuccess } = await ratelimit.limit(walletAddress);
+  if (!walletLimitSuccess) return NextResponse.json({ error: 'Rate limit exceeded' },{ status: 429 });
+
+  return NextResponse.next();
 }
