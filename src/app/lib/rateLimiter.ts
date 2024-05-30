@@ -12,7 +12,7 @@ const dailyRateLimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(2, '24 h'), // 2 total successful requests per 24 hours
 });
 
-export const withRateLimiter = (method: any) => async (request: NextRequest): Promise<NextResponse> => {
+export const withRateLimiter = (handler: (req: NextRequest) => Promise<NextResponse>) => async (request: NextRequest): Promise<NextResponse> => {
   const ip = request.ip ?? '127.0.0.1';
   const json = await request.json();
   request.json = () => json;
@@ -31,7 +31,7 @@ export const withRateLimiter = (method: any) => async (request: NextRequest): Pr
     if (limits.some((success) => !success))
       return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
 
-    const response = await method(request);
+    const response = await handler(request);
 
     if (response.status === 200) {
       rateLimitUpdates.push(
