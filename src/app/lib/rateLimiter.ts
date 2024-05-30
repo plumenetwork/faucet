@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const concurrentRateLimit = new Ratelimit({
   redis: kv,
-  limiter: Ratelimit.slidingWindow(1, '24 h'), // 1 concurrent request per 24 minutes
+  limiter: Ratelimit.slidingWindow(1, '24 h'), // only 1 concurrent request
 });
 
 const dailyRateLimit = new Ratelimit({
@@ -19,27 +19,35 @@ export const withRateLimiter = (method: any) => async (request: NextRequest): Pr
   const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
 
   const limits = await Promise.all([
-    concurrentRateLimit.limit(ip).then(({success}) => success),
-    concurrentRateLimit.limit(walletAddress).then(({success}) => success),
-    dailyRateLimit.getRemaining(ip).then((remaining) => remaining > 0),
-    dailyRateLimit.getRemaining(walletAddress).then((remaining) => remaining > 0),
+    concurrentRateLimit.limit(`concurrent:${ip}`).then(({ success }) => success),
+    concurrentRateLimit.limit(`concurrent:${walletAddress}`).then(({ success }) => success),
+    dailyRateLimit.getRemaining(`daily:${ip}`).then((remaining) => remaining > 0),
+    dailyRateLimit.getRemaining(`daily:${walletAddress}`).then((remaining) => remaining > 0),
   ]);
 
-  if (limits.some(( success ) => !success))
-    return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
+  const rateLimitUpdates: Promise<any>[] = [];
 
-  const response = await method(request);
+  try {
+    if (limits.some((success) => !success))
+      return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
 
-  const rateLimitUpdates: Promise<any>[] = [
-    concurrentRateLimit.resetUsedTokens(ip),
-    concurrentRateLimit.resetUsedTokens(walletAddress),
-  ];
+    const response = await method(request);
 
-  if (response.status === 200) {
-    rateLimitUpdates.push(dailyRateLimit.limit(ip), dailyRateLimit.limit(walletAddress));
+    if (response.status === 200) {
+      rateLimitUpdates.push(
+          dailyRateLimit.limit(`daily:${ip}`),
+          dailyRateLimit.limit(`daily:${walletAddress}`),
+      );
+    }
+
+    return response;
+
+  } finally {
+    rateLimitUpdates.push(
+        concurrentRateLimit.resetUsedTokens(`concurrent:${ip}`),
+        concurrentRateLimit.resetUsedTokens(`concurrent:${walletAddress}`),
+    );
+
+    await Promise.all(rateLimitUpdates);
   }
-
-  await Promise.all(rateLimitUpdates);
-
-  return response;
 }
