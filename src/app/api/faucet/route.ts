@@ -1,4 +1,6 @@
-export async function POST(req: Request): Promise<Response> {
+import { withRateLimiter } from "@/app/lib/rateLimiter";
+
+export const POST = withRateLimiter(async (req: Request): Promise<Response> => {
   const { walletAddress } = await req.json()
   return fetch("https://dashboard.caldera.xyz/api/v0/faucet/request", {
     method: "POST",
@@ -11,4 +13,4 @@ export async function POST(req: Request): Promise<Response> {
       walletAddress
     }),
   })
-}
+})

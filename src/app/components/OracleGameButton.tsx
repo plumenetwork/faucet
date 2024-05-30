@@ -55,7 +55,7 @@ export const OracleGameButton = (props: {
       title: "Rate Limit Exceeded",
       description: (
         <div className="flex flex-row text-[#D2D6DB] text-sm">
-          Sorry, you can only claim tokens once every 24 hours.
+          Sorry, you can only claim tokens once a day.
         </div>
       ),
       variant: "fail",
