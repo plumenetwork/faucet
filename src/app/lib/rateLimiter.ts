@@ -1,6 +1,6 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
 const concurrentRateLimit = new Ratelimit({
   redis: kv,
@@ -12,7 +12,7 @@ const dailyRateLimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(2, '24 h'), // 2 total successful requests per 24 hours
 });
 
-export const withRateLimiter = (handler: (req: NextRequest) => Promise<NextResponse>) => async (request: NextRequest): Promise<NextResponse> => {
+export const withRateLimiter = (handler: (req: Request) => Promise<Response>) => async (request: NextRequest): Promise<Response> => {
   const ip = request.ip ?? '127.0.0.1';
   const json = await request.json();
   request.json = () => json;
@@ -29,7 +29,7 @@ export const withRateLimiter = (handler: (req: NextRequest) => Promise<NextRespo
 
   try {
     if (limits.some((success) => !success))
-      return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
+      return Response.json({ error: 'Rate limit exceeded' }, { status: 429 });
 
     const response = await handler(request);
 
