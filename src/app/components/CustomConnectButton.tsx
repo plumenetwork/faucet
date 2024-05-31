@@ -2,6 +2,7 @@ import { useWriteContract } from 'wagmi';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
+import { FaucetToken } from "@/app/lib/types";
 import { abi } from '../lib/MintABI';
 import { useToast } from './ui/use-toast';
 
@@ -9,17 +10,18 @@ export const CustomConnectButton = (props: {
   mint: boolean;
   verified: boolean;
   walletAddress: string | undefined;
+  token: FaucetToken | undefined;
   setMintSuccessHash?: (hash: string) => void;
 }) => {
   const { data: hash, writeContract } = useWriteContract();
   const { toast } = useToast();
-  const { mint, verified, walletAddress, setMintSuccessHash } = props;
+  const { mint, verified, walletAddress, token = FaucetToken.ETH, setMintSuccessHash } = props;
 
   const handleClaimTokens = () => {
     fetch("api/faucet", {
       method: "POST",
       headers: { ["Content-Type"]: "application/json" },
-      body: JSON.stringify({ walletAddress }),
+      body: JSON.stringify({ walletAddress, token }),
     }).then((res) => {
       if (res.status === 200) {
         successToast();
@@ -50,8 +52,9 @@ export const CustomConnectButton = (props: {
       title: "Request Succeeded",
       description: (
         <div className="flex flex-row text-[#D2D6DB] text-sm">
-          You&apos;ll receive 0.01 testnet ETH in your wallet within a
-          minute.
+          You&apos;ll receive
+          {token === FaucetToken.ETH ? ' 0.01 ' : ' 100,000 ' }
+          testnet {token} in your wallet within a minute.
         </div>
       ),
       variant: "pass",
