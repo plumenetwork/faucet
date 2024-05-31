@@ -19,12 +19,12 @@ const walletClient = createWalletClient({
 export const POST = withRateLimiter(async (req: Request): Promise<Response> => {
   const { walletAddress, token = "ETH" } = await req.json()
 
-  console.log(`Requesting ${token} for ${walletAddress}`);
-
   if (!walletAddress || typeof walletAddress !== "string" || walletAddress.length !== 42
       || !walletAddress.startsWith("0x") || !walletAddress.match(/^[0-9a-fA-FxX]+$/)) {
     return new Response("Missing walletAddress", { status: 400 });
   }
+
+  console.log(`Requesting ${token} for ${walletAddress}`);
 
   try {
     let txHash;
