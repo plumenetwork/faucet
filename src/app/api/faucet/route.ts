@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server";
 import { createWalletClient, http, parseEther } from "viem";
 import { plumeTestnet } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
@@ -16,42 +17,54 @@ const walletClient = createWalletClient({
   transport: http()
 })
 
-export const POST = withRateLimiter(async (req: Request): Promise<Response> => {
-  const { walletAddress, token = "ETH" } = await req.json()
+export const POST = withRateLimiter({
+  limiterKeys:
+      async (request: NextRequest) => {
+        const ip = request.ip ?? '127.0.0.1';
+        const json = await request.json();
+        const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
+        const token = json?.token?.toUpperCase() ?? 'ETH';
 
-  if (!walletAddress || typeof walletAddress !== "string" || walletAddress.length !== 42
-      || !walletAddress.startsWith("0x") || !walletAddress.match(/^[0-9a-fA-FxX]+$/)) {
-    return new Response("Missing walletAddress", { status: 400 });
-  }
+        return [`${token}:${ip}`, `${token}:${walletAddress}`];
+      },
+  handler:
+      async (req: Request): Promise<Response> => {
+        const { walletAddress, token = "ETH" } = await req.json()
 
-  console.log(`Requesting ${token} for ${walletAddress}`);
+        if (!walletAddress || typeof walletAddress !== "string" || walletAddress.length !== 42
+            || !walletAddress.startsWith("0x") || !walletAddress.match(/^[0-9a-fA-FxX]+$/)) {
+          return new Response("Missing walletAddress", { status: 400 });
+        }
 
-  try {
-    let txHash;
+        console.log(`Requesting ${token} for ${walletAddress}`);
 
-    if (token === "ETH") {
-      txHash = await walletClient.sendTransaction({
-        to: walletAddress as `0x${string}`,
-        value: parseEther('0.01')
-      })
-      return Response.json({ txHash }, { status: 200 });
-    }
+        try {
+          let txHash;
 
-    if (token === "USDC" || token === "DAI") {
-      // send token
-      txHash = await walletClient.writeContract({
-        address: tokenAddresses[token as "USDC" | "DAI"] as `0x${string}`,
-        abi: IERC20.abi,
-        functionName: "transfer",
-        args: [walletAddress, parseEther('0.01')]
-      })
+          if (token === "ETH") {
+            txHash = await walletClient.sendTransaction({
+              to: walletAddress as `0x${string}`,
+              value: parseEther('0.01')
+            })
+            return Response.json({ txHash }, { status: 200 });
+          }
 
-      return Response.json({ txHash }, { status: 200 });
-    }
-  } catch (e) {
-    console.error(e);
-    return new Response("Failed to send token", { status: 503 });
-  }
+          if (token === "USDC" || token === "DAI") {
+            // send token
+            txHash = await walletClient.writeContract({
+              address: tokenAddresses[token as "USDC" | "DAI"] as `0x${string}`,
+              abi: IERC20.abi,
+              functionName: "transfer",
+              args: [walletAddress, parseEther('0.01')]
+            })
 
-  return new Response("Invalid token", { status: 400 });
+            return Response.json({ txHash }, { status: 200 });
+          }
+        } catch (e) {
+          console.error(e);
+          return new Response("Failed to send token", { status: 503 });
+        }
+
+        return new Response("Invalid token", { status: 400 });
+      }
 })
