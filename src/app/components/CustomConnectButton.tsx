@@ -27,7 +27,6 @@ export const CustomConnectButton = (props: {
         successToast();
       } else if (res.status === 429) {
         rateLimitToast();
-        successToast();
       } else {
         failureToast();
       }
