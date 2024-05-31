@@ -41,11 +41,11 @@ export const POST = withRateLimiter({
             || typeof walletAddress !== "string"
             || walletAddress.length !== 42
             || !walletAddress.match(/^0x[0-9a-fA-F]+$/)) {
-          return new Response("Invalid walletAddress", { status: 400 });
+          return Response.json({ error: "Invalid walletAddress" }, { status: 400 });
         }
 
-        if (Object.values(FaucetToken).includes(token)) {
-          return new Response("Invalid token", { status: 400 });
+        if (!Object.values(FaucetToken).includes(token)) {
+          return Response.json({ error: "Invalid token" }, { status: 400 });
         }
 
         try {
@@ -59,7 +59,8 @@ export const POST = withRateLimiter({
             return Response.json({ txHash }, { status: 200 });
           }
 
-          if (token === "USDC" || token === "DAI") {
+          if ([FaucetToken.USDC, FaucetToken.USDT, FaucetToken.DAI].includes(token)) {
+            // get token decimals
             const decimals = Number(await walletClient.readContract({
               address: tokenAddresses[token] as `0x${string}`,
               abi: IERC20.abi,
@@ -73,7 +74,7 @@ export const POST = withRateLimiter({
               functionName: "transfer",
               args: [
                 walletAddress,
-                100000 * Math.pow(10, decimals)
+                (100000 * Math.pow(10, decimals)).toLocaleString('en', { useGrouping: false }),
               ]
             })
 

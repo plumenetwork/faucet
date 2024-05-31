@@ -27,6 +27,7 @@ export const CustomConnectButton = (props: {
         successToast();
       } else if (res.status === 429) {
         rateLimitToast();
+        successToast();
       } else {
         failureToast();
       }
@@ -52,8 +53,9 @@ export const CustomConnectButton = (props: {
       title: "Request Succeeded",
       description: (
         <div className="flex flex-row text-[#D2D6DB] text-sm">
-          You&apos;ll receive 0.01 testnet ETH in your wallet within a
-          minute.
+          You&apos;ll receive
+          {token === FaucetToken.ETH ? ' 0.01 ' : ' 100,000 ' }
+          testnet {token} in your wallet within a minute.
         </div>
       ),
       variant: "pass",
