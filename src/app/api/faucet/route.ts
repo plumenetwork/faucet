@@ -86,6 +86,6 @@ export const POST = withRateLimiter({
         }
 
         // Should never reach here
-        return new Response("Error", { status: 500 });
+        return new Response("Unknown token", { status: 500 });
       }
 })
