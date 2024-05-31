@@ -72,6 +72,7 @@ export const POST = withRateLimiter({
               functionName: "transfer",
               args: [
                 walletAddress,
+                // 100,000 tokens
                 (100000 * Math.pow(10, decimals)).toLocaleString('en', { useGrouping: false }),
               ]
             })
