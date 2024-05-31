@@ -1,18 +1,20 @@
 "use client";
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { Turnstile } from '@marsidev/react-turnstile';
 
-import { ethereum, faucetIcon } from '../assets';
+import { faucetIcon } from '../assets';
 import CustomConnectButton from './CustomConnectButton';
 
 const CoreFaucet = () => {
   const [verified, setVerified] = useState(false);
+
   const account = useAccount();
   const connectedAddress = account?.address;
+  const [token, setToken] = useState("ETH");
 
   return (
     <>
@@ -37,17 +39,17 @@ const CoreFaucet = () => {
           htmlFor="tokenInput"
           className="flex md:justify-between gap-2.5 px-3 py-2.5 mt-2 text-sm text-white whitespace-nowrap rounded-lg border border-solid bg-zinc-800 border-neutral-700 max-md:flex-wrap"
         >
-          <div className="flex w-auto">
-            <Image src={ethereum} width={32} height={32} alt="ethereum" />
-          </div>
-          <div className="flex-1 my-auto">ETH</div>
-          <input
-            type="text"
-            disabled
+          <select
             id="tokenInput"
             name="tokenInput"
             className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
-          />
+            value={token}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => setToken(e.target.value)}
+          >
+            <option value="ETH">ETH</option>
+            <option value="USDC">USDC</option>
+            <option value="ETH">DAI</option>
+          </select>
         </label>
 
         {connectedAddress?.toString() !== "" && (
@@ -75,6 +77,7 @@ const CoreFaucet = () => {
           mint={false}
           verified={verified}
           walletAddress={connectedAddress}
+          token={token}
         />
       </div>
       <Turnstile

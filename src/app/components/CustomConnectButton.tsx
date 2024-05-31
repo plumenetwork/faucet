@@ -9,17 +9,18 @@ export const CustomConnectButton = (props: {
   mint: boolean;
   verified: boolean;
   walletAddress: string | undefined;
+  token: string | undefined;
   setMintSuccessHash?: (hash: string) => void;
 }) => {
   const { data: hash, writeContract } = useWriteContract();
   const { toast } = useToast();
-  const { mint, verified, walletAddress, setMintSuccessHash } = props;
+  const { mint, verified, walletAddress, token = "ETH", setMintSuccessHash } = props;
 
   const handleClaimTokens = () => {
     fetch("api/faucet", {
       method: "POST",
       headers: { ["Content-Type"]: "application/json" },
-      body: JSON.stringify({ walletAddress }),
+      body: JSON.stringify({ walletAddress, token }),
     }).then((res) => {
       if (res.status === 200) {
         successToast();
