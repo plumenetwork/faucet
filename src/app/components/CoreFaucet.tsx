@@ -48,7 +48,7 @@ const CoreFaucet = () => {
           >
             <option value="ETH">ETH</option>
             <option value="USDC">USDC</option>
-            <option value="ETH">DAI</option>
+            <option value="DAI">DAI</option>
           </select>
         </label>
 
