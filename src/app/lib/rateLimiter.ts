@@ -17,12 +17,13 @@ export const withRateLimiter = (handler: (req: Request) => Promise<Response>) =>
   const json = await request.json();
   request.json = () => json;
   const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
+  const token = json?.token ?? 'ETH';
 
   const limits = await Promise.all([
-    concurrentRateLimit.limit(`concurrent:${ip}`).then(({ success }) => success),
-    concurrentRateLimit.limit(`concurrent:${walletAddress}`).then(({ success }) => success),
-    dailyRateLimit.getRemaining(`daily:${ip}`).then((remaining) => remaining > 0),
-    dailyRateLimit.getRemaining(`daily:${walletAddress}`).then((remaining) => remaining > 0),
+    concurrentRateLimit.limit(`concurrent:${token}:${ip}`).then(({ success }) => success),
+    concurrentRateLimit.limit(`concurrent:${token}:${walletAddress}`).then(({ success }) => success),
+    dailyRateLimit.getRemaining(`daily:${token}:${ip}`).then((remaining) => remaining > 0),
+    dailyRateLimit.getRemaining(`daily:${token}:${walletAddress}`).then((remaining) => remaining > 0),
   ]);
 
   const rateLimitUpdates: Promise<any>[] = [];
@@ -35,8 +36,8 @@ export const withRateLimiter = (handler: (req: Request) => Promise<Response>) =>
 
     if (response.status === 200) {
       rateLimitUpdates.push(
-          dailyRateLimit.limit(`daily:${ip}`),
-          dailyRateLimit.limit(`daily:${walletAddress}`),
+          dailyRateLimit.limit(`daily:${token}:${ip}`),
+          dailyRateLimit.limit(`daily:${token}:${walletAddress}`),
       );
     }
 
@@ -44,8 +45,8 @@ export const withRateLimiter = (handler: (req: Request) => Promise<Response>) =>
 
   } finally {
     rateLimitUpdates.push(
-        concurrentRateLimit.resetUsedTokens(`concurrent:${ip}`),
-        concurrentRateLimit.resetUsedTokens(`concurrent:${walletAddress}`),
+        concurrentRateLimit.resetUsedTokens(`concurrent:${token}:${ip}`),
+        concurrentRateLimit.resetUsedTokens(`concurrent:${token}:${walletAddress}`),
     );
 
     await Promise.all(rateLimitUpdates);
