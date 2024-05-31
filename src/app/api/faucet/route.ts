@@ -31,8 +31,10 @@ export const POST = withRateLimiter({
       async (req: Request): Promise<Response> => {
         const { walletAddress, token = "ETH" } = await req.json()
 
-        if (!walletAddress || typeof walletAddress !== "string" || walletAddress.length !== 42
-            || !walletAddress.startsWith("0x") || !walletAddress.match(/^[0-9a-fA-FxX]+$/)) {
+        if (!walletAddress
+            || typeof walletAddress !== "string"
+            || walletAddress.length !== 42
+            || !walletAddress.match(/^0x[0-9a-fA-F]+$/)) {
           return new Response("Invalid walletAddress", { status: 400 });
         }
 
