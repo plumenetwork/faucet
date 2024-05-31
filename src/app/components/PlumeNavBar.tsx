@@ -1,13 +1,12 @@
-"use client";
-
 import Link from 'next/link';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import PlumeLogo from '@/app/components/PlumeLogo';
 import PlumeLogoWithoutText from '@/app/components/PlumeLogoWithoutText';
 import { OpenInNewTabIcon } from '@/app/icons/OpenInNewTabIcon';
 import { config } from '@/app/config';
+import { FC } from 'react';
 
-const PlumeNavBar = () => {
+const PlumeNavBar: FC = () => {
   return <div className="flex flex-row justify-between bg-white text-black py-4 px-8">
     <div className="flex flex-row gap-8 sm:gap-4 items-center">
       <PlumeLogo className="hidden sm:block" />
@@ -27,7 +26,7 @@ const PlumeNavBar = () => {
 
 export default PlumeNavBar;
 
-const PlumeTestnetIndicator = () => {
+const PlumeTestnetIndicator: FC = () => {
   return <div className="hidden md:block my-auto">
     <div
       className="flex gap-1 justify-center px-2.5 py-0.5 my-auto rounded-full border border-solid bg-gray-50 border-gray-200">
