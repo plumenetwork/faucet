@@ -40,7 +40,7 @@ export const withRateLimiter = ({ limiterKeys, handler }: {
 
         if (response.status === 200) {
           rateLimitUpdates.push(
-              ...keys.map((key) => concurrentRateLimit.limit(`daily:${key}`)),
+              ...keys.map((key) =>  dailyRateLimit.limit(`daily:${key}`)),
           );
         }
 
@@ -48,7 +48,7 @@ export const withRateLimiter = ({ limiterKeys, handler }: {
 
       } finally {
         rateLimitUpdates.push(
-            ...keys.map((key) => dailyRateLimit.resetUsedTokens(`concurrent:${key}`)),
+            ...keys.map((key) => concurrentRateLimit.resetUsedTokens(`concurrent:${key}`)),
         );
 
         await Promise.all(rateLimitUpdates);
