@@ -26,7 +26,7 @@ export const POST = withRateLimiter({
         const ip = request.ip ?? '127.0.0.1';
         const json = await request.json();
         const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
-        const token: FaucetToken = json?.token?.toUpperCase() ?? 'ETH';
+        const token: FaucetToken = json?.token?.toUpperCase() ?? FaucetToken.ETH;
 
         return [`${token}:${ip}`, `${token}:${walletAddress}`];
       },
@@ -57,10 +57,7 @@ export const POST = withRateLimiter({
               value: parseEther('0.01')
             })
             return Response.json({ txHash }, { status: 200 });
-          }
-
-          // excluding ETH as it's handled above
-          if (Object.values(FaucetToken).includes(token)) {
+          } else {
             // get token decimals
             const decimals = Number(await walletClient.readContract({
               address: tokenAddresses[token] as `0x${string}`,
@@ -85,8 +82,5 @@ export const POST = withRateLimiter({
           console.error(e);
           return Response.json({ error: "Failed to send token" }, { status: 503 });
         }
-
-        // Should never reach here
-        return Response.json({ error: "Unknown token" }, { status: 500 });
       }
 })
