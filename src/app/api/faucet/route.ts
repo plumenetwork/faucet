@@ -1,21 +1,24 @@
 import { NextRequest } from "next/server";
-import { createWalletClient, http, parseEther } from "viem";
+import { createWalletClient, publicActions, http, parseEther } from "viem";
 import { plumeTestnet } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 
 import { withRateLimiter } from "@/app/lib/rateLimiter";
+import { FaucetToken } from "@/app/lib/types";
 import IERC20 from "./IERC20.json";
 
 const tokenAddresses = {
-  USDC: "0xEa237441c92CAe6FC17Caaf9a7acB3f953be4bd1",
-  DAI: "0x1aa70741167155E08bD319bE096C94eE54C6CA19",
+  [FaucetToken.ETH]: "0x0",
+  [FaucetToken.USDC]: "0xEa237441c92CAe6FC17Caaf9a7acB3f953be4bd1",
+  [FaucetToken.USDT]: "0x4632403a83fb736Ab2c76b4C32FAc9F81e2CfcE2",
+  [FaucetToken.DAI]: "0x1aa70741167155E08bD319bE096C94eE54C6CA19",
 }
 
 const walletClient = createWalletClient({
   account: privateKeyToAccount(`0x${process.env.FAUCET_ACCOUNT_PRIVATE_KEY}`),
   chain: plumeTestnet,
   transport: http()
-})
+}).extend(publicActions);
 
 export const POST = withRateLimiter({
   limiterKeys:
@@ -23,13 +26,16 @@ export const POST = withRateLimiter({
         const ip = request.ip ?? '127.0.0.1';
         const json = await request.json();
         const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
-        const token = json?.token?.toUpperCase() ?? 'ETH';
+        const token: FaucetToken = json?.token?.toUpperCase() ?? 'ETH';
 
         return [`${token}:${ip}`, `${token}:${walletAddress}`];
       },
   handler:
       async (req: Request): Promise<Response> => {
-        const { walletAddress, token = "ETH" } = await req.json()
+        const { walletAddress, token = FaucetToken.ETH }: {
+          walletAddress: `0x${string}`,
+          token: FaucetToken
+        } = await req.json()
 
         if (!walletAddress
             || typeof walletAddress !== "string"
@@ -38,7 +44,9 @@ export const POST = withRateLimiter({
           return new Response("Invalid walletAddress", { status: 400 });
         }
 
-        console.log(`Requesting ${token} for ${walletAddress}`);
+        if (Object.values(FaucetToken).includes(token)) {
+          return new Response("Invalid token", { status: 400 });
+        }
 
         try {
           let txHash;
@@ -52,12 +60,21 @@ export const POST = withRateLimiter({
           }
 
           if (token === "USDC" || token === "DAI") {
+            const decimals = Number(await walletClient.readContract({
+              address: tokenAddresses[token] as `0x${string}`,
+              abi: IERC20.abi,
+              functionName: "decimals"
+            }));
+
             // send token
             txHash = await walletClient.writeContract({
-              address: tokenAddresses[token as "USDC" | "DAI"] as `0x${string}`,
+              address: tokenAddresses[token] as `0x${string}`,
               abi: IERC20.abi,
               functionName: "transfer",
-              args: [walletAddress, parseEther('0.01')]
+              args: [
+                walletAddress,
+                100000 * Math.pow(10, decimals)
+              ]
             })
 
             return Response.json({ txHash }, { status: 200 });
@@ -67,6 +84,7 @@ export const POST = withRateLimiter({
           return new Response("Failed to send token", { status: 503 });
         }
 
-        return new Response("Invalid token", { status: 400 });
+        // Should never reach here
+        return new Response("Error", { status: 500 });
       }
 })

@@ -6,6 +6,7 @@ import { useAccount } from 'wagmi';
 
 import { Turnstile } from '@marsidev/react-turnstile';
 
+import { FaucetToken } from "@/app/lib/types";
 import { faucetIcon } from '../assets';
 import CustomConnectButton from './CustomConnectButton';
 
@@ -14,7 +15,7 @@ const CoreFaucet = () => {
 
   const account = useAccount();
   const connectedAddress = account?.address;
-  const [token, setToken] = useState("ETH");
+  const [token, setToken] = useState<FaucetToken>(FaucetToken.ETH);
 
   return (
     <>
@@ -44,10 +45,11 @@ const CoreFaucet = () => {
             name="tokenInput"
             className="flex-1 my-auto border-none text-gray-200 bg-transparent h-full outline-none"
             value={token}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) => setToken(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => setToken(e.target.value as FaucetToken)}
           >
             <option value="ETH">ETH</option>
             <option value="USDC">USDC</option>
+            <option value="USDT">USDT</option>
             <option value="DAI">DAI</option>
           </select>
         </label>

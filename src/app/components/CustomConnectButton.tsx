@@ -2,6 +2,7 @@ import { useWriteContract } from 'wagmi';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
+import { FaucetToken } from "@/app/lib/types";
 import { abi } from '../lib/MintABI';
 import { useToast } from './ui/use-toast';
 
@@ -9,12 +10,12 @@ export const CustomConnectButton = (props: {
   mint: boolean;
   verified: boolean;
   walletAddress: string | undefined;
-  token: string | undefined;
+  token: FaucetToken | undefined;
   setMintSuccessHash?: (hash: string) => void;
 }) => {
   const { data: hash, writeContract } = useWriteContract();
   const { toast } = useToast();
-  const { mint, verified, walletAddress, token = "ETH", setMintSuccessHash } = props;
+  const { mint, verified, walletAddress, token = FaucetToken.ETH, setMintSuccessHash } = props;
 
   const handleClaimTokens = () => {
     fetch("api/faucet", {

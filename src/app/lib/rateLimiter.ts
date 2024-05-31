@@ -17,13 +17,15 @@ export const withRateLimiter = ({ limiterKeys, handler }: {
   handler: (req: Request) => Promise<Response>
 }) =>
     async (request: NextRequest): Promise<Response> => {
-      // Read the request body stream and cache it
+      // Read the request body stream and cache it, because `request.json()` can only be read once.
+      // Caching it allows `limiterKeys` and the route handler to call `await request.json()` later on.
       const json = await request.json();
       request.json = () => json;
 
-      const ip = request.ip ?? '127.0.0.1';
+      if (typeof limiterKeys !== 'function')
+        throw new Error('limiterKeys must be a function');
 
-      const keys = limiterKeys ? await limiterKeys(request) || [ip] : [ip];
+      const keys = await limiterKeys(request);
 
       const limits = await Promise.all([
         ...keys.map((key) => concurrentRateLimit.limit(`concurrent:${key}`).then(({ success }) => success)),
@@ -40,7 +42,7 @@ export const withRateLimiter = ({ limiterKeys, handler }: {
 
         if (response.status === 200) {
           rateLimitUpdates.push(
-              ...keys.map((key) =>  dailyRateLimit.limit(`daily:${key}`)),
+              ...keys.map((key) => dailyRateLimit.limit(`daily:${key}`)),
           );
         }
 
