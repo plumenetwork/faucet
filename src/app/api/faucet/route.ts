@@ -59,7 +59,8 @@ export const POST = withRateLimiter({
             return Response.json({ txHash }, { status: 200 });
           }
 
-          if ([FaucetToken.USDC, FaucetToken.USDT, FaucetToken.DAI].includes(token)) {
+          // excluding ETH as it's handled above
+          if (Object.values(FaucetToken).includes(token)) {
             // get token decimals
             const decimals = Number(await walletClient.readContract({
               address: tokenAddresses[token] as `0x${string}`,
@@ -82,10 +83,10 @@ export const POST = withRateLimiter({
           }
         } catch (e) {
           console.error(e);
-          return new Response("Failed to send token", { status: 503 });
+          return Response.json({ error: "Failed to send token" }, { status: 503 });
         }
 
         // Should never reach here
-        return new Response("Unknown token", { status: 500 });
+        return Response.json({ error: "Unknown token" }, { status: 500 });
       }
 })
