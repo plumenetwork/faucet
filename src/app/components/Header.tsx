@@ -17,8 +17,9 @@ const Header = () => {
           </div>
           <Link href='/' passHref scroll={false}>
             <div
-              className={`${pathname === '/' ? 'tab-button-active' : 'tab-button'
-                }`}
+              className={`${
+                pathname === '/' ? 'tab-button-active' : 'tab-button'
+              }`}
             >
               Faucet
             </div>

@@ -8,11 +8,7 @@ export const CustomConnectButton = (props: {
   token: FaucetToken | undefined;
 }) => {
   const { toast } = useToast();
-  const {
-    verified,
-    walletAddress,
-    token = FaucetToken.ETH,
-  } = props;
+  const { verified, walletAddress, token = FaucetToken.ETH } = props;
 
   const handleClaimTokens = () => {
     fetch('api/faucet', {
