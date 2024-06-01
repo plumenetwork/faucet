@@ -1,21 +1,14 @@
-import { useWriteContract } from 'wagmi';
-
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-
 import { FaucetToken } from "@/app/lib/types";
-import { abi } from '../lib/MintABI';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useToast } from './ui/use-toast';
 
 export const CustomConnectButton = (props: {
-  mint: boolean;
   verified: boolean;
   walletAddress: string | undefined;
   token: FaucetToken | undefined;
-  setMintSuccessHash?: (hash: string) => void;
 }) => {
-  const { data: hash, writeContract } = useWriteContract();
   const { toast } = useToast();
-  const { mint, verified, walletAddress, token = FaucetToken.ETH, setMintSuccessHash } = props;
+  const { verified, walletAddress, token = FaucetToken.ETH } = props;
 
   const handleClaimTokens = () => {
     fetch("api/faucet", {
@@ -33,27 +26,13 @@ export const CustomConnectButton = (props: {
     });
   };
 
-  const mintNft = () => {
-    try {
-      writeContract({
-        address: process.env.NEXT_PUBLIC_MINT_CONTRACT_ADDRESS as `0x${string}`,
-        abi,
-        functionName: "mint",
-      });
-      setMintSuccessHash && setMintSuccessHash(String(hash));
-    } catch (error) {
-      console.error(error);
-      mintFailureToast();
-    }
-  };
-
   const successToast = () => {
     return toast({
       title: "Request Succeeded",
       description: (
         <div className="flex flex-row text-[#D2D6DB] text-sm">
           You&apos;ll receive
-          {token === FaucetToken.ETH ? ' 0.01 ' : ' 100,000 ' }
+          {token === FaucetToken.ETH ? ' 0.01 ' : ' 100,000 '}
           testnet {token} in your wallet within a minute.
         </div>
       ),
@@ -80,19 +59,6 @@ export const CustomConnectButton = (props: {
         <div className="flex flex-row text-[#D2D6DB] text-sm">
           Sorry, your request failed. The faucet may be temporarily out of
           tokens.
-        </div>
-      ),
-      variant: "fail",
-    });
-  };
-
-  const mintFailureToast = () => {
-    return toast({
-      title: "Request Failed",
-      description: (
-        <div className="flex flex-row text-[#D2D6DB] text-sm">
-          Sorry, your request failed. Please make sure your account has enough
-          funds, and try again later.
         </div>
       ),
       variant: "fail",
@@ -130,20 +96,6 @@ export const CustomConnectButton = (props: {
                 >
                   Get Testnet Gas Tokens
                 </button>
-                {mint && (
-                  <button
-                    onClick={mintNft}
-                    disabled={!verified}
-                    className="solid-button text-center text-white rounded-md px-10 py-3 w-full"
-                    type="button"
-                    style={{
-                      opacity: !verified ? 0.5 : 1,
-                      cursor: !verified ? "not-allowed" : "pointer",
-                    }}
-                  >
-                    Mint NFT
-                  </button>
-                )}
               </>
             ) : (
               <button
