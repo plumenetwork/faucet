@@ -1,11 +1,9 @@
 "use client";
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-
-import { plume } from '../assets';
+import PlumeLogo from './PlumeLogo';
 
 const Header = () => {
   const pathname = usePathname();
@@ -15,7 +13,7 @@ const Header = () => {
       <div className="flex flex-wrap justify-between px-8 py-4 max-md:px-5">
         <div className="flex items-center gap-4 font-medium whitespace-nowrap max-w-full max-md:pr-0">
           <div className="justify-center mr-3 self-start py-1.5 text-3xl text-white max-md:pl-5">
-            <Image src={plume} width={100} height={50} alt="plume" />
+            <PlumeLogo />
           </div>
           <Link href="/" passHref scroll={false}>
             <div
