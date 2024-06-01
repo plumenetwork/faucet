@@ -81,17 +81,17 @@ const CoreFaucet = () => {
           walletAddress={connectedAddress}
           token={token}
         />
+        <Turnstile
+          options={{
+            theme: "dark",
+          }}
+          className="flex items-center justify-center mx-auto"
+          siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || ""}
+          onSuccess={() => setVerified(true)}
+          onExpire={() => setVerified(false)}
+          onError={() => setVerified(false)}
+        />
       </div>
-      <Turnstile
-        options={{
-          theme: "dark",
-        }}
-        className="flex items-center justify-center pt-14"
-        siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || ""}
-        onSuccess={() => setVerified(true)}
-        onExpire={() => setVerified(false)}
-        onError={() => setVerified(false)}
-      />
     </>
   );
 };

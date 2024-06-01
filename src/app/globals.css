@@ -16,20 +16,14 @@
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+body {
+  background: #E4F1F5 url(assets/clouds.png) no-repeat 50% 50%;
 }
 
 .gradient-button {
@@ -64,17 +58,6 @@ body {
 
 .solid-button:disabled {
   background-color: #ebebeb;
-}
-
-.background-red {
-  background-image: linear-gradient(179deg, #D13832 -269.49%, #0F0F0F 99.35%);
-}
-
-.background-image-div {
-  background-image: url(assets/background-pattern.png);
-  background-size: 800px;
-  background-repeat: no-repeat;
-  background-position-x: center;
 }
 
 .tab-button {
