@@ -5,9 +5,9 @@ import SocialMediaBar from '../components/SocialMediaBar';
 
 export default function Bitget() {
   return (
-    <div className="background-red pt-4 px-4 min-h-screen overflow-hidden">
+    <div className='background-red min-h-screen overflow-hidden px-4 pt-4'>
       <Header />
-      <div className="background-image-div background-red gap-4 flex flex-col items-center px-4 pt-8">
+      <div className='background-image-div background-red flex flex-col items-center gap-4 px-4 pt-8'>
         <CollabHeader />
         <BitgetEnded />
         <SocialMediaBar />
