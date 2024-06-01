@@ -1,5 +1,5 @@
 export const config: FaucetConfig = {
-  plumeBridgeUrl: 'https://plume-testnet.calderabridge.xyz/'
+  plumeBridgeUrl: 'https://testnet-bridge.plumenetwork.xyz/'
 }
 
 type FaucetConfig = {

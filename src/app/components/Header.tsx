@@ -25,14 +25,6 @@ const Header = () => {
               Faucet
             </div>
           </Link>
-          <Link href="/oraclegame" passHref scroll={false}>
-            <div
-              className={`${pathname === "/oraclegame" ? "tab-button-active" : "tab-button"
-                }`}
-            >
-              Oracle Game
-            </div>
-          </Link>
         </div>
         <div className="flex gap-4 self-start">
           <div className="hidden sm:block my-auto">
