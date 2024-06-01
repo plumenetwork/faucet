@@ -1,4 +1,4 @@
-import { FaucetToken } from "@/app/lib/types";
+import { FaucetToken } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useToast } from './ui/use-toast';
 
@@ -8,12 +8,16 @@ export const CustomConnectButton = (props: {
   token: FaucetToken | undefined;
 }) => {
   const { toast } = useToast();
-  const { verified, walletAddress, token = FaucetToken.ETH } = props;
+  const {
+    verified,
+    walletAddress,
+    token = FaucetToken.ETH,
+  } = props;
 
   const handleClaimTokens = () => {
-    fetch("api/faucet", {
-      method: "POST",
-      headers: { ["Content-Type"]: "application/json" },
+    fetch('api/faucet', {
+      method: 'POST',
+      headers: { ['Content-Type']: 'application/json' },
       body: JSON.stringify({ walletAddress, token }),
     }).then((res) => {
       if (res.status === 200) {
@@ -28,40 +32,40 @@ export const CustomConnectButton = (props: {
 
   const successToast = () => {
     return toast({
-      title: "Request Succeeded",
+      title: 'Request Succeeded',
       description: (
-        <div className="flex flex-row text-[#D2D6DB] text-sm">
+        <div className='flex flex-row text-sm text-[#D2D6DB]'>
           You&apos;ll receive
           {token === FaucetToken.ETH ? ' 0.01 ' : ' 100,000 '}
           testnet {token} in your wallet within a minute.
         </div>
       ),
-      variant: "pass",
+      variant: 'pass',
     });
   };
 
   const rateLimitToast = () => {
     return toast({
-      title: "Rate Limit Exceeded",
+      title: 'Rate Limit Exceeded',
       description: (
-        <div className="flex flex-row text-[#D2D6DB] text-sm">
+        <div className='flex flex-row text-sm text-[#D2D6DB]'>
           Sorry, you can only claim tokens once a day.
         </div>
       ),
-      variant: "fail",
+      variant: 'fail',
     });
   };
 
   const failureToast = () => {
     return toast({
-      title: "Request Failed",
+      title: 'Request Failed',
       description: (
-        <div className="flex flex-row text-[#D2D6DB] text-sm">
+        <div className='flex flex-row text-sm text-[#D2D6DB]'>
           Sorry, your request failed. The faucet may be temporarily out of
           tokens.
         </div>
       ),
-      variant: "fail",
+      variant: 'fail',
     });
   };
 
@@ -72,13 +76,13 @@ export const CustomConnectButton = (props: {
 
         return (
           <div
-            className="flex flex-col gap-2 cursor-pointer items-center py-2 mt-4 text-base font-semibold leading-6 rounded-lg text-zinc-800 max-w-full"
+            className='mt-4 flex max-w-full cursor-pointer flex-col items-center gap-2 rounded-lg py-2 text-base font-semibold leading-6 text-zinc-800'
             {...(!mounted && {
-              "aria-hidden": true,
-              "style": {
+              'aria-hidden': true,
+              style: {
                 opacity: 0,
-                pointerEvents: "none",
-                userSelect: "none",
+                pointerEvents: 'none',
+                userSelect: 'none',
               },
             })}
           >
@@ -87,11 +91,11 @@ export const CustomConnectButton = (props: {
                 <button
                   onClick={handleClaimTokens}
                   disabled={!verified}
-                  className="solid-button text-center text-white rounded-md px-10 py-3 w-full"
-                  type="button"
+                  className='solid-button w-full rounded-md px-10 py-3 text-center text-white'
+                  type='button'
                   style={{
                     opacity: !verified ? 0.5 : 1,
-                    cursor: !verified ? "not-allowed" : "pointer",
+                    cursor: !verified ? 'not-allowed' : 'pointer',
                   }}
                 >
                   Get Testnet Gas Tokens
@@ -100,8 +104,8 @@ export const CustomConnectButton = (props: {
             ) : (
               <button
                 onClick={openConnectModal}
-                className="gradient-button text-center rounded-md px-10 py-3 w-full text-white"
-                type="button"
+                className='gradient-button w-full rounded-md px-10 py-3 text-center text-white'
+                type='button'
               >
                 Connect Fox Wallet
               </button>

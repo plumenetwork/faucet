@@ -7,35 +7,47 @@ import { config } from '@/app/config';
 import { FC } from 'react';
 
 const PlumeNavBar: FC = () => {
-  return <div className="flex flex-row justify-between bg-white text-black py-4 px-8">
-    <div className="flex flex-row gap-8 sm:gap-4 items-center">
-      <PlumeLogo className="hidden sm:block" />
-      <PlumeLogoWithoutText className="sm:hidden" />
-      <Link href="/" className="hidden sm:block bg-gray-100 px-3 py-2 rounded-lg font-lufga">Faucet</Link>
-      <Link href={config.plumeBridgeUrl} target="_blank" className="flex flex-row items-center gap-1 text-gray-500 font-lufga">
-        Bridge
-        <OpenInNewTabIcon />
-      </Link>
+  return (
+    <div className='flex flex-row justify-between bg-white px-8 py-4 text-black'>
+      <div className='flex flex-row items-center gap-8 sm:gap-4'>
+        <PlumeLogo className='hidden sm:block' />
+        <PlumeLogoWithoutText className='sm:hidden' />
+        <Link
+          href='/'
+          className='hidden rounded-lg bg-gray-100 px-3 py-2 font-lufga sm:block'
+        >
+          Faucet
+        </Link>
+        <Link
+          href={config.plumeBridgeUrl}
+          target='_blank'
+          className='flex flex-row items-center gap-1 font-lufga text-gray-500'
+        >
+          Bridge
+          <OpenInNewTabIcon />
+        </Link>
+      </div>
+      <div className='flex flex-row gap-4'>
+        <PlumeTestnetIndicator />
+        <ConnectButton showBalance={false} />
+      </div>
     </div>
-    <div className="flex flex-row gap-4">
-      <PlumeTestnetIndicator />
-      <ConnectButton showBalance={false} />
-    </div>
-  </div>
-}
+  );
+};
 
 export default PlumeNavBar;
 
 const PlumeTestnetIndicator: FC = () => {
-  return <div className="hidden md:block my-auto">
-    <div
-      className="flex gap-1 justify-center px-2.5 py-0.5 my-auto rounded-full border border-solid bg-gray-50 border-gray-200">
-      <div className="flex flex-col justify-center p-1 my-auto">
-        <div className="shrink-0 w-2 h-2 bg-green-400 rounded-full" />
-      </div>
-      <div className="text-xs font-medium leading-5 text-center text-gray-600">
-        Plume Testnet
+  return (
+    <div className='my-auto hidden md:block'>
+      <div className='my-auto flex justify-center gap-1 rounded-full border border-solid border-gray-200 bg-gray-50 px-2.5 py-0.5'>
+        <div className='my-auto flex flex-col justify-center p-1'>
+          <div className='h-2 w-2 shrink-0 rounded-full bg-green-400' />
+        </div>
+        <div className='text-center text-xs font-medium leading-5 text-gray-600'>
+          Plume Testnet
+        </div>
       </div>
     </div>
-  </div>
-}
+  );
+};
