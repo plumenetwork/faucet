@@ -1,13 +1,12 @@
 'use client';
 
-import Image from 'next/image';
 import { ChangeEvent, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { Turnstile } from '@marsidev/react-turnstile';
 
+import { FaucetIcon } from '@/app/icons/FaucetIcon';
 import { FaucetToken } from '@/app/lib/types';
-import { faucetIcon } from '../assets';
 import CustomConnectButton from './CustomConnectButton';
 
 const CoreFaucet = () => {
@@ -21,7 +20,7 @@ const CoreFaucet = () => {
     <>
       <div className='mt-8 flex max-w-full flex-col justify-center rounded-2xl border border-solid border-zinc-800 bg-neutral-900 px-5 py-5 md:w-[496px]'>
         <div className='flex items-center gap-4 md:flex-wrap'>
-          <Image src={faucetIcon} width={48} height={48} alt='faucet' />
+          <FaucetIcon />
           <div className='flex flex-1 flex-col pr-4'>
             <div className='text-lg font-semibold leading-7 text-white'>
               WELCOME FOX WALLET USERS!
@@ -78,7 +77,6 @@ const CoreFaucet = () => {
         )}
 
         <CustomConnectButton
-          mint={false}
           verified={verified}
           walletAddress={connectedAddress}
           token={token}
