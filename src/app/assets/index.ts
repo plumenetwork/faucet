@@ -15,5 +15,5 @@ export {
   ethereum,
   faucetIcon,
   plume,
-  ringedCheckmark
+  ringedCheckmark,
 };

@@ -23,16 +23,30 @@
 }
 
 body {
-  background: #E4F1F5 url(assets/clouds.png) no-repeat 50% 50%;
+  background: #e4f1f5 url(assets/clouds.png) no-repeat 50% 50%;
 }
 
 .gradient-button {
-  background-image: linear-gradient(to right, #12FE74, #057A3A, #04592B, #057A3A, #12FE74);
+  background-image: linear-gradient(
+    to right,
+    #12fe74,
+    #057a3a,
+    #04592b,
+    #057a3a,
+    #12fe74
+  );
 }
 
 .gradient-button:hover {
   transform: scale(1.02);
-  background-image: linear-gradient(to right, #0DBF57, #005727, #013D1C, #005727, #0DBF57);
+  background-image: linear-gradient(
+    to right,
+    #0dbf57,
+    #005727,
+    #013d1c,
+    #005727,
+    #0dbf57
+  );
 }
 
 .gradient-button:active {
@@ -40,7 +54,7 @@ body {
 }
 
 .solid-button {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border-radius: 8px;
   color: #000000;
   text-align: center;
@@ -62,7 +76,7 @@ body {
 
 .tab-button {
   align-self: center;
-  color: #A3A3A3;
+  color: #a3a3a3;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   padding-top: 0.5rem;
