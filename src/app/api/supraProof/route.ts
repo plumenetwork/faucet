@@ -1,7 +1,7 @@
-import {createPublicClient, http} from 'viem'
+import { createPublicClient, http } from 'viem'
 import { plumeTestnet } from 'viem/chains'
-import PullServiceClient from './SupraClient'
 import OracleGameAbi from './OracleGameAbi.json'
+import PullServiceClient from './SupraClient'
 
 const web3Client = createPublicClient({
   chain: plumeTestnet,
@@ -45,13 +45,17 @@ export async function GET(): Promise<Response> {
   }
 
   // Getting proof for active pairs from supra
-  const proof = await supraClient.getProof({
-    // previous and current active pairs in the oracle game contract
-    pairIndexes: proofPairs,
-    chainType: 'evm',
-  }).then((response: any) => {
-    return response.evm;
-  });
-
-  return Response.json(proof);
+  try {
+    const proof = await supraClient.getProof({
+      // previous and current active pairs in the oracle game contract
+      pairIndexes: proofPairs,
+      chainType: 'evm',
+    }).then((response: any) => {
+      return response.evm;
+    })
+    return Response.json(proof);
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error: "Internal server error" }, { status: 500 });
+  }
 }
