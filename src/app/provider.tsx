@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { WagmiProvider } from 'wagmi';
 import { plumeTestnet } from 'wagmi/chains';
+import colors from 'tailwindcss/colors'
 
 import {
   darkTheme, getDefaultConfig,
@@ -32,7 +33,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           theme={darkTheme({
-            accentColor: "#FF692E",
+            accentColor: colors.gray[800],
             accentColorForeground: "white",
             borderRadius: "medium",
             fontStack: "system",
