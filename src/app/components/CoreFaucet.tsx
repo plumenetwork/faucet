@@ -1,6 +1,5 @@
 "use client";
 
-import Image from 'next/image';
 import { ChangeEvent, useState } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -21,7 +20,7 @@ const CoreFaucet = () => {
     <>
       <div className="flex flex-col justify-center px-5 py-5 mt-8 max-w-full rounded-2xl border border-solid bg-neutral-900 border-zinc-800 md:w-[496px]">
         <div className="flex gap-4 md:flex-wrap items-center">
-          <Image src={FaucetIcon} width={48} height={48} alt="faucet" />
+          <FaucetIcon />
           <div className="flex flex-col flex-1 pr-4">
             <div className="text-lg font-semibold leading-7 text-white">
               WELCOME FOX WALLET USERS!
