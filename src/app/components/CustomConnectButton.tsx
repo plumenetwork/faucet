@@ -1,6 +1,7 @@
 import { FaucetToken } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useToast } from './ui/use-toast';
+import { cn } from '@/app/lib/utils';
 
 export const CustomConnectButton = (props: {
   verified: boolean;
@@ -87,15 +88,14 @@ export const CustomConnectButton = (props: {
                 <button
                   onClick={handleClaimTokens}
                   disabled={!verified}
-                  className='w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
                   type='button'
-                  style={{
-                    opacity: !verified ? 0.5 : 1,
-                    cursor: !verified ? 'not-allowed' : 'pointer',
-                    backgroundColor: '#EBBE49',
-                    boxShadow:
-                      '0px 0px 0px 2px rgba(255, 255, 255, 0.80) inset, 6px 6px 0px 0px #282828;',
-                  }}
+                  className={cn(
+                    verified ? 'opacity-100' : 'opacity-50',
+                    verified ? 'cursor-pointer' : 'cursor-not-allowed',
+                    'bg-[#ebbe49]',
+                    'shadow-[0_0_0_2px_rgba(255,255,255,0.8)_inset,6px_6px_0_0]',
+                    'w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
+                  )}
                 >
                   Get Tokens
                 </button>
@@ -103,13 +103,14 @@ export const CustomConnectButton = (props: {
             ) : (
               <button
                 onClick={openConnectModal}
-                className='w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
                 type='button'
-                style={{
-                  backgroundColor: '#EBBE49',
-                  boxShadow:
-                    '0px 0px 0px 2px rgba(255, 255, 255, 0.80) inset, 6px 6px 0px 0px #282828;',
-                }}
+                className={cn(
+                  verified ? 'opacity-100' : 'opacity-50',
+                  verified ? 'cursor-pointer' : 'cursor-not-allowed',
+                  'bg-[#ebbe49]',
+                  'shadow-[0_0_0_2px_rgba(255,255,255,0.8)_inset,6px_6px_0_0]',
+                  'w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
+                )}
               >
                 Connect Wallet
               </button>
