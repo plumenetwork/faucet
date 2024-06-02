@@ -28,33 +28,6 @@ body {
   background-color: #e4f1f5;
 }
 
-.gradient-button {
-  background-image: linear-gradient(
-    to right,
-    #12fe74,
-    #057a3a,
-    #04592b,
-    #057a3a,
-    #12fe74
-  );
-}
-
-.gradient-button:hover {
-  transform: scale(1.02);
-  background-image: linear-gradient(
-    to right,
-    #0dbf57,
-    #005727,
-    #013d1c,
-    #005727,
-    #0dbf57
-  );
-}
-
-.gradient-button:active {
-  transform: scale(1);
-}
-
 .solid-button {
   background-color: #ffffff;
   border-radius: 8px;

@@ -6,7 +6,7 @@ import { plumeTestnet } from 'wagmi/chains';
 import colors from 'tailwindcss/colors';
 
 import {
-  darkTheme,
+  lightTheme,
   getDefaultConfig,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
@@ -51,7 +51,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
-          theme={darkTheme({
+          theme={lightTheme({
             accentColor: colors.gray[800],
             accentColorForeground: 'white',
             borderRadius: 'medium',

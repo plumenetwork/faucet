@@ -72,7 +72,7 @@ export const CustomConnectButton = (props: {
 
         return (
           <div
-            className='mt-4 flex max-w-full cursor-pointer flex-col items-center gap-2 rounded-lg py-2 text-base font-semibold leading-6 text-zinc-800'
+            className='flex max-w-full cursor-pointer flex-col items-center gap-2 rounded-lg py-2 text-base font-semibold leading-6 text-zinc-800'
             {...(!mounted && {
               'aria-hidden': true,
               style: {
@@ -87,23 +87,31 @@ export const CustomConnectButton = (props: {
                 <button
                   onClick={handleClaimTokens}
                   disabled={!verified}
-                  className='solid-button w-full rounded-md px-10 py-3 text-center text-white'
+                  className='w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
                   type='button'
                   style={{
                     opacity: !verified ? 0.5 : 1,
                     cursor: !verified ? 'not-allowed' : 'pointer',
+                    backgroundColor: '#EBBE49',
+                    boxShadow:
+                      '0px 0px 0px 2px rgba(255, 255, 255, 0.80) inset, 6px 6px 0px 0px #282828;',
                   }}
                 >
-                  Get Testnet Gas Tokens
+                  Get Tokens
                 </button>
               </>
             ) : (
               <button
                 onClick={openConnectModal}
-                className='gradient-button w-full rounded-md px-10 py-3 text-center text-white'
+                className='w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
                 type='button'
+                style={{
+                  backgroundColor: '#EBBE49',
+                  boxShadow:
+                    '0px 0px 0px 2px rgba(255, 255, 255, 0.80) inset, 6px 6px 0px 0px #282828;',
+                }}
               >
-                Connect Fox Wallet
+                Connect Wallet
               </button>
             )}
           </div>

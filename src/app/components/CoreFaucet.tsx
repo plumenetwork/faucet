@@ -12,37 +12,34 @@ import CustomConnectButton from './CustomConnectButton';
 const CoreFaucet = () => {
   const [verified, setVerified] = useState(false);
 
-  const account = useAccount();
-  const connectedAddress = account?.address;
+  const { isConnected, address } = useAccount();
   const [token, setToken] = useState<FaucetToken>(FaucetToken.ETH);
 
   return (
     <>
-      <div className='mt-8 flex max-w-full flex-col justify-center rounded-2xl border border-solid border-zinc-800 bg-neutral-900 px-5 py-5 md:w-[496px]'>
-        <div className='flex items-center gap-4 md:flex-wrap'>
+      <div className='mt-8 flex max-w-full flex-col justify-center gap-2 rounded-2xl border border-solid border-gray-200 bg-neutral-50 px-5 py-5 md:w-[496px]'>
+        <div className='flex flex-col items-center gap-2 text-center'>
           <FaucetIcon />
-          <div className='flex flex-1 flex-col pr-4'>
-            <div className='text-lg font-semibold leading-7 text-white'>
-              WELCOME FOX WALLET USERS!
-            </div>
-            <div className='text-sm leading-5 text-zinc-300'>
-              Use this faucet to get Plume testnet tokens ahead of our
-              incentivized campaign.
-            </div>
+          <div className='font-lufga text-lg font-extrabold uppercase'>
+            Get Testnet Tokens
+          </div>
+          <div className='font-lufga text-sm font-medium'>
+            You can request testnet tokens only once per day to ensure a
+            sufficient balance for all users.
           </div>
         </div>
-        <div className='mt-6 h-px shrink-0 border border-solid border-zinc-800 bg-zinc-800 max-md:max-w-full' />
-        <div className='mt-6 text-sm font-medium leading-5 text-zinc-300 max-md:max-w-full'>
-          TOKEN
+        <Divider />
+        <div className='text-sm font-medium uppercase text-gray-800 max-md:max-w-full'>
+          Select a Token
         </div>
         <label
           htmlFor='tokenInput'
-          className='mt-2 flex gap-2.5 whitespace-nowrap rounded-lg border border-solid border-neutral-700 bg-zinc-800 px-3 py-2.5 text-sm text-white max-md:flex-wrap md:justify-between'
+          className='flex gap-2.5 whitespace-nowrap rounded-lg border border-solid border-neutral-700 px-3 py-2.5 text-sm text-white max-md:flex-wrap md:justify-between'
         >
           <select
             id='tokenInput'
             name='tokenInput'
-            className='my-auto h-full flex-1 border-none bg-transparent text-gray-200 outline-none'
+            className='my-auto h-full flex-1 border-none text-gray-800 outline-none'
             value={token}
             onChange={(e: ChangeEvent<HTMLSelectElement>) =>
               setToken(e.target.value as FaucetToken)
@@ -55,30 +52,29 @@ const CoreFaucet = () => {
           </select>
         </label>
 
-        {connectedAddress?.toString() !== '' && (
+        {isConnected && (
           <>
-            <div className='mt-6 text-sm font-medium leading-5 text-zinc-300 max-md:max-w-full'>
-              YOUR WALLET ADDRESS
+            <div className='text-sm font-medium uppercase leading-5 max-md:max-w-full'>
+              Your Address
             </div>
             <label
               htmlFor='walletAddressInput'
-              className='mt-2 flex gap-2.5 whitespace-nowrap rounded-lg border border-solid border-neutral-700 bg-zinc-800 px-3 py-4 text-sm text-white max-md:flex-wrap md:justify-between'
+              className='flex gap-2.5 whitespace-nowrap rounded-lg border border-solid border-neutral-700 bg-gray-50 px-3 py-3 text-sm max-md:flex-wrap md:justify-between'
             >
               <input
                 type='text'
                 disabled
                 id='walletAddressInput'
                 name='walletAddressInput'
-                className='my-auto h-full flex-1 border-none bg-transparent text-gray-200 outline-none'
-                value={connectedAddress}
+                className='text-gray-60 my-auto h-full flex-1 border-none outline-none'
+                value={address}
               />
             </label>
           </>
         )}
-
         <CustomConnectButton
           verified={verified}
-          walletAddress={connectedAddress}
+          walletAddress={address}
           token={token}
         />
         <Turnstile
@@ -97,3 +93,10 @@ const CoreFaucet = () => {
 };
 
 export default CoreFaucet;
+
+const Divider = () => (
+  <div
+    className='h-px max-md:max-w-full'
+    style={{ backgroundColor: '#E4E2DF' }}
+  />
+);
