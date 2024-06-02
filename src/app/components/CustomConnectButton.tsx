@@ -1,6 +1,7 @@
 import { FaucetToken } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useToast } from './ui/use-toast';
+import { cn } from '@/app/lib/utils';
 
 export const CustomConnectButton = (props: {
   verified: boolean;
@@ -72,7 +73,7 @@ export const CustomConnectButton = (props: {
 
         return (
           <div
-            className='mt-4 flex max-w-full cursor-pointer flex-col items-center gap-2 rounded-lg py-2 text-base font-semibold leading-6 text-zinc-800'
+            className='flex max-w-full cursor-pointer flex-col items-center gap-2 rounded-lg py-2 text-base font-semibold leading-6 text-zinc-800'
             {...(!mounted && {
               'aria-hidden': true,
               style: {
@@ -87,23 +88,31 @@ export const CustomConnectButton = (props: {
                 <button
                   onClick={handleClaimTokens}
                   disabled={!verified}
-                  className='solid-button w-full rounded-md px-10 py-3 text-center text-white'
                   type='button'
-                  style={{
-                    opacity: !verified ? 0.5 : 1,
-                    cursor: !verified ? 'not-allowed' : 'pointer',
-                  }}
+                  className={cn(
+                    verified ? 'opacity-100' : 'opacity-50',
+                    verified ? 'cursor-pointer' : 'cursor-not-allowed',
+                    'bg-[#ebbe49]',
+                    'shadow-[0_0_0_2px_rgba(255,255,255,0.8)_inset,6px_6px_0_0]',
+                    'w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
+                  )}
                 >
-                  Get Testnet Gas Tokens
+                  Get Tokens
                 </button>
               </>
             ) : (
               <button
                 onClick={openConnectModal}
-                className='gradient-button w-full rounded-md px-10 py-3 text-center text-white'
                 type='button'
+                className={cn(
+                  verified ? 'opacity-100' : 'opacity-50',
+                  verified ? 'cursor-pointer' : 'cursor-not-allowed',
+                  'bg-[#ebbe49]',
+                  'shadow-[0_0_0_2px_rgba(255,255,255,0.8)_inset,6px_6px_0_0]',
+                  'w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
+                )}
               >
-                Connect Fox Wallet
+                Connect Wallet
               </button>
             )}
           </div>
