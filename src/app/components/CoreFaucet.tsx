@@ -79,7 +79,7 @@ const CoreFaucet = () => {
         />
         <Turnstile
           options={{
-            theme: 'dark',
+            theme: 'light',
           }}
           className='mx-auto flex items-center justify-center'
           siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || ''}
