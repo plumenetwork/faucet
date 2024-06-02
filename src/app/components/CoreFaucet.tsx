@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, useState } from 'react';
+import { FC, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 import { Turnstile } from '@marsidev/react-turnstile';
@@ -8,8 +8,15 @@ import { Turnstile } from '@marsidev/react-turnstile';
 import { FaucetIcon } from '@/app/icons/FaucetIcon';
 import { FaucetToken } from '@/app/lib/types';
 import CustomConnectButton from './CustomConnectButton';
+import { Divider } from '@/app/components/Divider';
+import { TextField } from '@/app/components/TextField';
+import { RadioCard, RadioCardList } from '@/app/components/RadioCardList';
+import { UsdcIcon } from '@/app/icons/UsdcIcon';
+import { EthIcon } from '@/app/icons/EthIcon';
+import { DaiIcon } from '@/app/icons/DaiIcon';
+import { config } from '@/app/config';
 
-const CoreFaucet = () => {
+const CoreFaucet: FC = () => {
   const [verified, setVerified] = useState(false);
 
   const { isConnected, address } = useAccount();
@@ -29,48 +36,32 @@ const CoreFaucet = () => {
           </div>
         </div>
         <Divider />
-        <div className='text-sm font-medium uppercase text-gray-800 max-md:max-w-full'>
-          Select a Token
-        </div>
-        <label
-          htmlFor='tokenInput'
-          className='flex gap-2.5 whitespace-nowrap rounded-lg border border-solid border-neutral-700 px-3 py-2.5 text-sm text-white max-md:flex-wrap md:justify-between'
+        <RadioCardList
+          label='Select a Token'
+          value={token}
+          onChange={(token) => setToken(token)}
         >
-          <select
-            id='tokenInput'
-            name='tokenInput'
-            className='my-auto h-full flex-1 border-none text-gray-800 outline-none'
-            value={token}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-              setToken(e.target.value as FaucetToken)
-            }
-          >
-            <option value='ETH'>ETH</option>
-            <option value='USDC'>USDC</option>
-            <option value='USDT'>USDT</option>
-            <option value='DAI'>DAI</option>
-          </select>
-        </label>
-
+          <RadioCard
+            image={<EthIcon />}
+            value={FaucetToken.ETH}
+            label='Ether'
+            description='ETH'
+          />
+          <RadioCard
+            image={<UsdcIcon />}
+            value={FaucetToken.USDC}
+            label='USDC'
+            description='USDC'
+          />
+          <RadioCard
+            image={<DaiIcon />}
+            value={FaucetToken.DAI}
+            label='DAI'
+            description='DAI'
+          />
+        </RadioCardList>
         {isConnected && (
-          <>
-            <div className='text-sm font-medium uppercase leading-5 max-md:max-w-full'>
-              Your Address
-            </div>
-            <label
-              htmlFor='walletAddressInput'
-              className='flex gap-2.5 whitespace-nowrap rounded-lg border border-solid border-neutral-700 bg-gray-50 px-3 py-3 text-sm max-md:flex-wrap md:justify-between'
-            >
-              <input
-                type='text'
-                disabled
-                id='walletAddressInput'
-                name='walletAddressInput'
-                className='text-gray-60 my-auto h-full flex-1 border-none outline-none'
-                value={address}
-              />
-            </label>
-          </>
+          <TextField label='Your Address' value={address} disabled />
         )}
         <CustomConnectButton
           verified={verified}
@@ -82,7 +73,7 @@ const CoreFaucet = () => {
             theme: 'light',
           }}
           className='mx-auto flex items-center justify-center'
-          siteKey={process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || ''}
+          siteKey={config.cloudflareTurnstileSiteKey}
           onSuccess={() => setVerified(true)}
           onExpire={() => setVerified(false)}
           onError={() => setVerified(false)}
@@ -93,10 +84,3 @@ const CoreFaucet = () => {
 };
 
 export default CoreFaucet;
-
-const Divider = () => (
-  <div
-    className='h-px max-md:max-w-full'
-    style={{ backgroundColor: '#E4E2DF' }}
-  />
-);
