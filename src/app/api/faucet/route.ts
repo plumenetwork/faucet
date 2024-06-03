@@ -22,8 +22,9 @@ const walletClient = createWalletClient({
 
 export const POST = withRateLimiter({
   limiterKeys: async (request: NextRequest) => {
-    const ip = request.ip ?? '127.0.0.1';
+    const ip = request.headers.get('x-forwarded-for') ?? request.ip ?? '127.0.0.1';
     const json = await request.json();
+
     const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
     const token: FaucetToken = json?.token?.toUpperCase() ?? FaucetToken.ETH;
 
