@@ -1,17 +1,12 @@
-import {
-  Children,
-  cloneElement,
-  PropsWithChildren,
-  ReactElement,
-  ReactNode,
-} from 'react';
+import { cloneElement, ReactElement, ReactNode } from 'react';
 import { cn } from '@/app/lib/utils';
 
 type RadioCardListProps<T> = {
   label: string;
   value: T;
   onChange: (value: T) => void;
-} & PropsWithChildren;
+  children: ReactElement[];
+};
 
 export const RadioCardList = <T,>({
   label,
@@ -25,9 +20,9 @@ export const RadioCardList = <T,>({
         {label}
       </div>
       <div className='grid grid-cols-2 gap-2 sm:grid-cols-3'>
-        {Children.map(children, (child) =>
-          cloneElement(child as ReactElement, {
-            selected: (child as ReactElement).props.value === value,
+        {children.map((child) =>
+          cloneElement(child, {
+            selected: child.props.value === value,
             onChange: onChange,
           })
         )}
