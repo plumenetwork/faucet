@@ -15,6 +15,7 @@ import { UsdcIcon } from '@/app/icons/UsdcIcon';
 import { EthIcon } from '@/app/icons/EthIcon';
 import { DaiIcon } from '@/app/icons/DaiIcon';
 import { config } from '@/app/config';
+import { UsdtIcon } from '@/app/icons/UsdtIcon';
 
 const CoreFaucet: FC = () => {
   const [verified, setVerified] = useState(false);
@@ -58,6 +59,12 @@ const CoreFaucet: FC = () => {
             value={FaucetToken.DAI}
             label='DAI'
             description='DAI'
+          />
+          <RadioCard
+            image={<UsdtIcon />}
+            value={FaucetToken.USDT}
+            label='USDT'
+            description='USDT'
           />
         </RadioCardList>
         {isConnected && (

@@ -19,7 +19,7 @@ export const RadioCardList = <T,>({
       <div className='text-sm font-medium uppercase leading-5 max-md:max-w-full'>
         {label}
       </div>
-      <div className='grid grid-cols-2 gap-2 sm:grid-cols-3'>
+      <div className='grid grid-cols-2 gap-2 sm:grid-cols-2'>
         {children.map((child) =>
           cloneElement(child, {
             selected: child.props.value === value,
