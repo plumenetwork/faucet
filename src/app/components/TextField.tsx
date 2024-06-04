@@ -19,7 +19,7 @@ export const TextField: FC<TextFieldProps> = ({
       <input
         type='text'
         disabled={disabled}
-        className='text-gray-60 my-auto flex h-full truncate rounded-lg border border-neutral-700 bg-gray-50 px-3 py-3 text-sm outline-none disabled:border-gray-200 disabled:bg-stone-100'
+        className='text-gray-60 my-auto flex h-full truncate rounded-lg border border-neutral-700 bg-gray-50 px-3 py-3 text-sm outline-none disabled:border-gray-200 disabled:bg-stone-100 disabled:text-[#555]'
         value={value}
       />
     </div>
