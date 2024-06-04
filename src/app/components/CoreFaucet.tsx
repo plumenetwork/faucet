@@ -28,7 +28,7 @@ const CoreFaucet: FC = () => {
       <div className='flex flex-col items-center gap-2 text-center'>
         <FaucetIcon />
         <div>
-          <div className='font-lufga text-[1.5rem] font-extrabold uppercase'>
+          <div className='font-lufga text-2xl font-extrabold uppercase'>
             Get Testnet Tokens
           </div>
           <div className='font-lufga font-medium'>
