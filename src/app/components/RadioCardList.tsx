@@ -61,7 +61,9 @@ export const RadioCard = <T,>({
       <div className='flex flex-col pl-2'>
         <div className='font-lufga'>{label}</div>
         {description && (
-          <div className='font-lufga text-xs font-medium'>{description}</div>
+          <div className='font-lufga text-xs font-medium text-gray-500'>
+            {description}
+          </div>
         )}
       </div>
     </div>
