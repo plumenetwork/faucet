@@ -2,6 +2,7 @@ import { FaucetToken } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useToast } from './ui/use-toast';
 import { cn } from '@/app/lib/utils';
+import { FC, ReactNode } from 'react';
 
 export const CustomConnectButton = (props: {
   verified: boolean;
@@ -84,36 +85,13 @@ export const CustomConnectButton = (props: {
             })}
           >
             {connected ? (
-              <>
-                <button
-                  onClick={handleClaimTokens}
-                  disabled={!verified}
-                  type='button'
-                  className={cn(
-                    verified ? 'opacity-100' : 'opacity-50',
-                    verified ? 'cursor-pointer' : 'cursor-not-allowed',
-                    'bg-[#ebbe49]',
-                    'shadow-[0_0_0_2px_rgba(255,255,255,0.8)_inset,6px_6px_0_0]',
-                    'w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
-                  )}
-                >
-                  Get Tokens
-                </button>
-              </>
+              <Button onClick={handleClaimTokens} disabled={!verified}>
+                Get Tokens
+              </Button>
             ) : (
-              <button
-                onClick={openConnectModal}
-                type='button'
-                className={cn(
-                  verified ? 'opacity-100' : 'opacity-50',
-                  verified ? 'cursor-pointer' : 'cursor-not-allowed',
-                  'bg-[#ebbe49]',
-                  'shadow-[0_0_0_2px_rgba(255,255,255,0.8)_inset,6px_6px_0_0]',
-                  'w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
-                )}
-              >
+              <Button onClick={openConnectModal} disabled={!verified}>
                 Connect Wallet
-              </button>
+              </Button>
             )}
           </div>
         );
@@ -123,3 +101,27 @@ export const CustomConnectButton = (props: {
 };
 
 export default CustomConnectButton;
+
+type ButtonProps = {
+  onClick: () => void;
+  disabled?: boolean;
+  children: ReactNode;
+};
+
+const Button: FC<ButtonProps> = ({ onClick, disabled, children }) => {
+  return (
+    <button
+      onClick={onClick}
+      type='button'
+      className={cn(
+        disabled ? 'opacity-50' : 'opacity-100',
+        disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+        'bg-[#ebbe49] hover:bg-[#E3A810]',
+        'shadow-[0_0_0_2px_rgba(255,255,255,0.8)_inset,6px_6px_0_0] active:shadow-none',
+        'w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
+      )}
+    >
+      {children}
+    </button>
+  );
+};
