@@ -24,69 +24,69 @@ const CoreFaucet: FC = () => {
   const [token, setToken] = useState<FaucetToken>(FaucetToken.ETH);
 
   return (
-    <>
-      <div className='mt-8 flex max-w-full flex-col justify-center gap-2 rounded-2xl border border-solid border-gray-200 bg-neutral-50 px-5 py-5 md:w-[496px]'>
-        <div className='flex flex-col items-center gap-2 text-center'>
-          <FaucetIcon />
-          <div className='font-lufga text-lg font-extrabold uppercase'>
+    <div className='mt-8 flex max-w-full flex-col justify-center gap-4 rounded-2xl border border-solid border-gray-200 bg-neutral-50 px-5 py-5 md:w-[496px]'>
+      <div className='flex flex-col items-center gap-2 text-center'>
+        <FaucetIcon />
+        <div>
+          <div className='font-lufga text-2xl font-extrabold uppercase'>
             Get Testnet Tokens
           </div>
-          <div className='font-lufga text-sm font-medium'>
+          <div className='font-lufga font-medium'>
             You can request testnet tokens only once per day to ensure a
             sufficient balance for all users.
           </div>
         </div>
-        <Divider />
-        <RadioCardList
-          label='Select a Token'
-          value={token}
-          onChange={(token) => setToken(token)}
-        >
-          <RadioCard
-            image={<EthIcon />}
-            value={FaucetToken.ETH}
-            label='Ether'
-            description='ETH'
-          />
-          <RadioCard
-            image={<UsdcIcon />}
-            value={FaucetToken.USDC}
-            label='USDC'
-            description='USDC'
-          />
-          <RadioCard
-            image={<DaiIcon />}
-            value={FaucetToken.DAI}
-            label='DAI'
-            description='DAI'
-          />
-          <RadioCard
-            image={<UsdtIcon />}
-            value={FaucetToken.USDT}
-            label='USDT'
-            description='USDT'
-          />
-        </RadioCardList>
-        {isConnected && (
-          <TextField label='Your Address' value={address} disabled />
-        )}
-        <CustomConnectButton
-          verified={verified}
-          walletAddress={address}
-          token={token}
-        />
-        <Turnstile
-          options={{
-            theme: 'light',
-          }}
-          className='mx-auto flex items-center justify-center'
-          siteKey={config.cloudflareTurnstileSiteKey}
-          onSuccess={() => setVerified(true)}
-          onExpire={() => setVerified(false)}
-          onError={() => setVerified(false)}
-        />
       </div>
-    </>
+      <Divider />
+      <RadioCardList
+        label='Select a Token'
+        value={token}
+        onChange={(token) => setToken(token)}
+      >
+        <RadioCard
+          image={<EthIcon />}
+          value={FaucetToken.ETH}
+          label='ETH'
+          description='Plume Testnet Ether'
+        />
+        <RadioCard
+          image={<UsdcIcon />}
+          value={FaucetToken.USDC}
+          label='USDC'
+          description='Testnet USD Coin'
+        />
+        <RadioCard
+          image={<DaiIcon />}
+          value={FaucetToken.DAI}
+          label='DAI'
+          description='Testnet DAI Stablecoin'
+        />
+        <RadioCard
+          image={<UsdtIcon />}
+          value={FaucetToken.USDT}
+          label='USDT'
+          description='Testnet Tether USD'
+        />
+      </RadioCardList>
+      {isConnected && (
+        <TextField label='Your Address' value={address} disabled />
+      )}
+      <CustomConnectButton
+        verified={verified}
+        walletAddress={address}
+        token={token}
+      />
+      <Turnstile
+        options={{
+          theme: 'light',
+        }}
+        className='mx-auto flex items-center justify-center'
+        siteKey={config.cloudflareTurnstileSiteKey}
+        onSuccess={() => setVerified(true)}
+        onExpire={() => setVerified(false)}
+        onError={() => setVerified(false)}
+      />
+    </div>
   );
 };
 

@@ -15,10 +15,10 @@ export const RadioCardList = <T,>({
   children,
 }: RadioCardListProps<T>) => {
   return (
-    <>
-      <div className='text-sm font-medium uppercase leading-5 max-md:max-w-full'>
+    <div className='flex flex-col gap-2'>
+      <label className='font-lufga text-sm font-semibold uppercase leading-5 max-md:max-w-full'>
         {label}
-      </div>
+      </label>
       <div className='grid grid-cols-2 gap-2 sm:grid-cols-2'>
         {children.map((child, index) =>
           cloneElement(child, {
@@ -28,7 +28,7 @@ export const RadioCardList = <T,>({
           })
         )}
       </div>
-    </>
+    </div>
   );
 };
 
@@ -52,8 +52,8 @@ export const RadioCard = <T,>({
   return (
     <div
       className={cn(
-        'flex cursor-pointer rounded-md border bg-white p-2',
-        selected && 'border-2 border-blue-500'
+        'flex cursor-pointer rounded-md border bg-white p-2 hover:bg-gray-50',
+        selected && 'ring-2 ring-[#3F83F8]'
       )}
       onClick={() => onChange?.(value)}
     >
@@ -61,7 +61,9 @@ export const RadioCard = <T,>({
       <div className='flex flex-col pl-2'>
         <div className='font-lufga'>{label}</div>
         {description && (
-          <div className='font-lufga text-xs font-medium'>{description}</div>
+          <div className='font-lufga text-xs font-medium text-gray-500'>
+            {description}
+          </div>
         )}
       </div>
     </div>
