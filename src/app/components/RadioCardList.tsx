@@ -15,10 +15,10 @@ export const RadioCardList = <T,>({
   children,
 }: RadioCardListProps<T>) => {
   return (
-    <>
-      <div className='text-sm font-medium uppercase leading-5 max-md:max-w-full'>
+    <div className='flex flex-col gap-2'>
+      <label className='font-lufga text-sm font-semibold uppercase leading-5 max-md:max-w-full'>
         {label}
-      </div>
+      </label>
       <div className='grid grid-cols-2 gap-2 sm:grid-cols-2'>
         {children.map((child, index) =>
           cloneElement(child, {
@@ -28,7 +28,7 @@ export const RadioCardList = <T,>({
           })
         )}
       </div>
-    </>
+    </div>
   );
 };
 

@@ -14,3 +14,12 @@ export const Default: Story = {
     label: 'Label',
   },
 };
+
+export const Disabled: Story = {
+  args: {
+    label: 'Disabled Label',
+    value:
+      'Test Value with a really long string to test the overflow of the text field.',
+    disabled: true,
+  },
+};
