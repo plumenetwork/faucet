@@ -23,7 +23,7 @@ const ToastComponent = () => {
   const successToast = () => {
     toast({
       title: 'Request Succeeded',
-      description: <>Yay, the request succeeded</>,
+      description: <p>Yay, the request succeeded</p>,
       variant: 'pass',
     });
   };
