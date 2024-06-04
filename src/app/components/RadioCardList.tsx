@@ -20,10 +20,11 @@ export const RadioCardList = <T,>({
         {label}
       </div>
       <div className='grid grid-cols-2 gap-2 sm:grid-cols-2'>
-        {children.map((child) =>
+        {children.map((child, index) =>
           cloneElement(child, {
             selected: child.props.value === value,
             onChange: onChange,
+            key: index,
           })
         )}
       </div>

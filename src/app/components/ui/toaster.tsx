@@ -1,7 +1,7 @@
 'use client';
 
-import AlertToast from '../../assets/alert-toast.svg';
-import CheckToast from '../../assets/check-toast.svg';
+import { AlertToastIcon } from '../../icons/AlertToastIcon';
+import { CheckToastIcon } from '../../icons/CheckToastIcon';
 import {
   Toast,
   ToastClose,
@@ -27,7 +27,7 @@ export function Toaster() {
                   : props.variant === 'fail'
                     ? 'rounded-xl border border-red-500'
                     : 'rounded-xl border border-blue-500'
-              } w-full bg-[#141414] p-1`}
+              } w-full bg-white p-1`}
             >
               <div className='flex flex-row'>
                 <ToastStatusIcon className='' icon={props.variant} />
@@ -66,8 +66,8 @@ export function Toaster() {
 const ToastStatusIcon = ({ icon }: any) => {
   return icon !== 'default' ? (
     <div className='m-1 flex min-w-[38px] self-start'>
-      {icon === 'pass' && <CheckToast width={38} height={38} />}
-      {icon === 'fail' && <AlertToast width={38} height={38} />}
+      {icon === 'pass' && <CheckToastIcon />}
+      {icon === 'fail' && <AlertToastIcon />}
     </div>
   ) : null;
 };

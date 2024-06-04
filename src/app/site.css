@@ -1,0 +1,5 @@
+body {
+    @apply bg-cover bg-center bg-no-repeat;
+    background-image: url(assets/clouds.png);
+    background-color: #e4f1f5;
+}
