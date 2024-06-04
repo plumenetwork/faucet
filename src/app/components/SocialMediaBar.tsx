@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
-import BrandLinkedin from '../assets/brand-linkedin.svg';
-import BrandX from '../assets/brand-x.svg';
-import World from '../assets/world.svg';
+import { WorldIcon } from '../icons/WorldIcon';
+import { XBrandIcon } from '../icons/XBrandIcon';
+import { LinkedInBrandIcon } from '../icons/LinkedInBrandIcon';
 
 const SocialMediaBar = () => (
   <>
@@ -11,25 +11,13 @@ const SocialMediaBar = () => (
     </div>
     <div className='mb-64 mt-4 flex justify-center gap-3 max-md:mb-10'>
       <Link href='https://www.plumenetwork.xyz'>
-        <World
-          className='text-gray-500 hover:text-gray-600'
-          width={32}
-          height={32}
-        />
+        <WorldIcon className='text-gray-500 hover:text-gray-600' />
       </Link>
       <Link href='https://twitter.com/plumenetwork'>
-        <BrandX
-          className='text-gray-500 hover:text-gray-600'
-          width={32}
-          height={32}
-        />
+        <XBrandIcon className='text-gray-500 hover:text-gray-600' />
       </Link>
       <Link href='https://www.linkedin.com/company/plume-network'>
-        <BrandLinkedin
-          className='text-gray-500 hover:text-gray-600'
-          width={32}
-          height={32}
-        />
+        <LinkedInBrandIcon className='text-gray-500 hover:text-gray-600' />
       </Link>
     </div>
   </>
