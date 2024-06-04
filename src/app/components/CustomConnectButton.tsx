@@ -32,7 +32,7 @@ export const CustomConnectButton = (props: {
     return toast({
       title: 'Request Succeeded',
       description: (
-        <div className='flex flex-row text-sm text-[#D2D6DB]'>
+        <div className='flex flex-row text-sm text-gray-600'>
           You&apos;ll receive
           {token === FaucetToken.ETH ? ' 0.01 ' : ' 100,000 '}
           testnet {token} in your wallet within a minute.
@@ -46,7 +46,7 @@ export const CustomConnectButton = (props: {
     return toast({
       title: 'Rate Limit Exceeded',
       description: (
-        <div className='flex flex-row text-sm text-[#D2D6DB]'>
+        <div className='flex flex-row text-sm text-gray-600'>
           Sorry, you can only claim tokens once a day.
         </div>
       ),
@@ -58,7 +58,7 @@ export const CustomConnectButton = (props: {
     return toast({
       title: 'Request Failed',
       description: (
-        <div className='flex flex-row text-sm text-[#D2D6DB]'>
+        <div className='flex flex-row text-sm text-gray-600'>
           Sorry, your request failed. The faucet may be temporarily out of
           tokens.
         </div>

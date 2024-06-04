@@ -46,7 +46,7 @@ export function Toaster() {
                     </ToastTitle>
                   )}
                   {description && (
-                    <ToastDescription className='text-sm font-normal text-gray-600'>
+                    <ToastDescription className='text-sm font-normal'>
                       {description}
                     </ToastDescription>
                   )}
