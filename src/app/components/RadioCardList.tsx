@@ -53,7 +53,7 @@ export const RadioCard = <T,>({
     <div
       className={cn(
         'flex cursor-pointer rounded-md border bg-white p-2 hover:bg-gray-50',
-        selected && 'border-2 border-blue-500'
+        selected && 'ring-border-blue-500 ring-2'
       )}
       onClick={() => onChange?.(value)}
     >
