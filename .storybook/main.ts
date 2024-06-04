@@ -7,12 +7,6 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs',
     options: {},
   },
-  staticDirs: [
-    {
-      from: '../src/app/fonts',
-      to: 'src/fonts',
-    },
-  ],
   webpackFinal: async (config) => {
     const imageRule = config.module?.rules?.find((rule) => {
       const test = (rule as { test: RegExp }).test;
