@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './site.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import { Inter } from 'next/font/google';

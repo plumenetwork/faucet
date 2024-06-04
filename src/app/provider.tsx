@@ -22,9 +22,11 @@ import {
 } from '@rainbow-me/rainbowkit/wallets';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const config = getDefaultConfig({
+import { config } from '@/app/config';
+
+const wagmiConfig = getDefaultConfig({
   appName: 'Plume Network Faucet',
-  projectId: process.env.NEXT_PUBLIC_RAINBOW_PROJECT_ID || '',
+  projectId: config.rainbowProjectId,
   wallets: [
     {
       groupName: 'Recommended',
@@ -48,7 +50,7 @@ const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           theme={lightTheme({
