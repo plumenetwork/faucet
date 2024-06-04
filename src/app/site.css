@@ -1,8 +1,4 @@
 body {
     @apply bg-cover bg-center bg-no-repeat bg-[#e4f1f5];
-    background-image: url(assets/clouds-mobile.png);
-
-    @screen sm {
-        background-image: url(assets/clouds.png);
-    }
+    background-image: url(assets/clouds.png);
 }
