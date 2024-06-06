@@ -5,6 +5,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
+import { Analytics } from '@vercel/analytics/react';
 
 import { Toaster } from './components/ui/toaster';
 import { Providers } from './provider';
@@ -51,6 +52,7 @@ export default function RootLayout({
       <body className={`${inter.className} ${lufga.variable}`}>
         <Providers>{children}</Providers>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
