@@ -7,6 +7,7 @@ import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 import { Analytics } from '@vercel/analytics/react';
 
+import DatadogInit from './components/datadog-init';
 import { Toaster } from './components/ui/toaster';
 import { Providers } from './provider';
 
@@ -50,6 +51,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${inter.className} ${lufga.variable}`}>
+        <DatadogInit />
         <Providers>{children}</Providers>
         <Toaster />
         <Analytics />

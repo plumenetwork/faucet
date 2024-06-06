@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@datadog/browser-rum':
+        specifier: ^5.20.0
+        version: 5.20.0
       '@marsidev/react-turnstile':
         specifier: ^0.5.4
         version: 0.5.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -910,6 +913,20 @@ packages:
   '@colors/colors@1.5.0':
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
+
+  '@datadog/browser-core@5.20.0':
+    resolution: {integrity: sha512-L6GBde9ahUaELExsR9ypPlHiL67rrL+GByupOC7B/tykvu/rMr61URhvPayGODqHMLzTtmeRUYHNO1KICchdOA==}
+
+  '@datadog/browser-rum-core@5.20.0':
+    resolution: {integrity: sha512-5xiAESkSHEUodMzuRRKT7bd1OVWDmruCpxcdlk2VP9BaYeqNxIRLHSrMh83mPTHFvWbqLmAvRoUp9Gi2cpjS8A==}
+
+  '@datadog/browser-rum@5.20.0':
+    resolution: {integrity: sha512-UOH6l/mWPzkoYkL6n+/6/H1fCbjtgRc9HXWCAYRPiO10bn8PLeh0nLDw0AVsC287RDIz2JtqgwDjUvFDg8deLw==}
+    peerDependencies:
+      '@datadog/browser-logs': 5.20.0
+    peerDependenciesMeta:
+      '@datadog/browser-logs':
+        optional: true
 
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -8986,6 +9003,17 @@ snapshots:
 
   '@colors/colors@1.5.0':
     optional: true
+
+  '@datadog/browser-core@5.20.0': {}
+
+  '@datadog/browser-rum-core@5.20.0':
+    dependencies:
+      '@datadog/browser-core': 5.20.0
+
+  '@datadog/browser-rum@5.20.0':
+    dependencies:
+      '@datadog/browser-core': 5.20.0
+      '@datadog/browser-rum-core': 5.20.0
 
   '@discoveryjs/json-ext@0.5.7': {}
 
