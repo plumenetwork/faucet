@@ -1,7 +1,6 @@
 'use client';
 
 import { FC, useState } from 'react';
-import { useAccount } from 'wagmi';
 
 import { Turnstile } from '@marsidev/react-turnstile';
 
@@ -16,11 +15,12 @@ import { EthIcon } from '@/app/icons/EthIcon';
 import { DaiIcon } from '@/app/icons/DaiIcon';
 import { config } from '@/app/config';
 import { UsdtIcon } from '@/app/icons/UsdtIcon';
+import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
 
 const CoreFaucet: FC = () => {
   const [verified, setVerified] = useState(false);
 
-  const { isConnected, address } = useAccount();
+  const { isConnected, address } = useFaucetWallet();
   const [token, setToken] = useState<FaucetToken>(FaucetToken.ETH);
 
   return (
