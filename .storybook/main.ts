@@ -7,5 +7,9 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs',
     options: {},
   },
+  env: (config) => ({
+    ...config,
+    NEXT_PUBLIC_RAINBOW_PROJECT_ID: process.env.NEXT_PUBLIC_RAINBOW_PROJECT_ID,
+  }),
 };
 export default config;
