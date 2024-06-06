@@ -7,11 +7,10 @@ import PlumeLogoWithoutText from '@/app/components/PlumeLogoWithoutText';
 import { OpenInNewTabIcon } from '@/app/icons/OpenInNewTabIcon';
 import { config } from '@/app/config';
 import { FC } from 'react';
-import { useAccount } from 'wagmi';
-import { plumeTestnet } from 'wagmi/chains';
+import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
 
 const PlumeNavBar: FC = () => {
-  const { isConnected } = useAccount();
+  const { isConnected } = useFaucetWallet();
 
   return (
     <div className='flex flex-row justify-between bg-white px-8 py-4 text-black'>
@@ -44,8 +43,7 @@ const PlumeNavBar: FC = () => {
 export default PlumeNavBar;
 
 const PlumeTestnetIndicator: FC = () => {
-  const { chainId } = useAccount();
-  const isPlumeTestnet = chainId === plumeTestnet.id;
+  const { isPlumeTestnet } = useFaucetWallet();
 
   return (
     <div className='my-auto hidden md:block'>
