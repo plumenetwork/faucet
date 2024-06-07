@@ -7,7 +7,7 @@ export const config: FaucetConfig = {
   dataDogApplicationId: process.env.NEXT_PUBLIC_DATADOG_APPLICATION_ID || '',
   dataDogClientToken: process.env.NEXT_PUBLIC_DATADOG_CLIENT_TOKEN || '',
   dataDogService: process.env.NEXT_PUBLIC_DATADOG_SERVICE || '',
-  dataDogEnv: process.env.VERCEL_ENV || 'local',
+  dataDogEnv: process.env.NEXT_PUBLIC_DATADOG_ENV || 'local',
 };
 
 type FaucetConfig = {
