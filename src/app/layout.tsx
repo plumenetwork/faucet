@@ -39,8 +39,9 @@ const lufga = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Plume Network',
-  description: 'Plume Network Faucet',
+  title: 'Plume Network Faucet',
+  description:
+    'Plume Faucet: Your gateway to testnet tokens! Claim ETH, USDC, USDT, and DAI on the Plume testnet. Start testing your projects hassle-free.',
 };
 
 export default function RootLayout({
