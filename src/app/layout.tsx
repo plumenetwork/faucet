@@ -10,6 +10,7 @@ import { Analytics } from '@vercel/analytics/react';
 import DatadogInit from './components/datadog-init';
 import { Toaster } from './components/ui/toaster';
 import { Providers } from './provider';
+import { config } from '@/app/config';
 
 const inter = Inter({ subsets: ['latin'] });
 const lufga = localFont({
@@ -42,6 +43,7 @@ export const metadata: Metadata = {
   title: 'Plume Network Faucet',
   description:
     'Plume Faucet: Your gateway to testnet tokens! Claim ETH, USDC, USDT, and DAI on the Plume testnet. Start testing your projects hassle-free.',
+  metadataBase: new URL(config.metadataBase),
 };
 
 export default function RootLayout({
