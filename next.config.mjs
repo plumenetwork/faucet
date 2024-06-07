@@ -1,4 +1,4 @@
-import {withSentryConfig} from '@sentry/nextjs';
+import { withSentryConfig } from '@sentry/nextjs';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -44,8 +44,8 @@ export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options
 
-  org: "plume-network-inc",
-  project: "faucet",
+  org: 'plume-network-inc',
+  project: 'faucet',
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
