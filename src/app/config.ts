@@ -9,10 +9,8 @@ export const config: FaucetConfig = {
   dataDogService: process.env.NEXT_PUBLIC_DATADOG_SERVICE || '',
   dataDogEnv: process.env.NEXT_PUBLIC_DATADOG_ENV || 'local',
   metadataBase:
-    process.env.NEXT_PUBLIC_METADATA_BASE ||
-    (process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : `http://localhost:${process.env.PORT || 3000}`),
+    process.env.NEXT_PUBLIC_METADATA_BASE ??
+    `https://${process.env.VERCEL_URL ?? 'localhost:' + (process.env.PORT || 3000)}`,
 };
 
 type FaucetConfig = {
