@@ -14,11 +14,11 @@ import {
   bitgetWallet,
   coinbaseWallet,
   foxWallet,
-  injectedWallet,
   metaMaskWallet,
   okxWallet,
   trustWallet,
   walletConnectWallet,
+  zerionWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -32,12 +32,12 @@ const wagmiConfig = getDefaultConfig({
       groupName: 'Recommended',
       wallets: [
         foxWallet,
-        injectedWallet,
         bitgetWallet,
         metaMaskWallet,
         coinbaseWallet,
         okxWallet,
         trustWallet,
+        zerionWallet,
         walletConnectWallet,
       ],
     },
