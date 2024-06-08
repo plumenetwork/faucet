@@ -2,7 +2,7 @@ import { FaucetToken } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useToast } from './ui/use-toast';
 import { cn } from '@/app/lib/utils';
-import { ButtonHTMLAttributes, DetailedHTMLProps, FC } from 'react';
+import { ButtonHTMLAttributes, FC } from 'react';
 import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
 
 export const CustomConnectButton = ({
@@ -115,9 +115,9 @@ export const CustomConnectButton = ({
 
 export default CustomConnectButton;
 
-const Button: FC<
-  DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
-> = ({ disabled, children, ...props }) => {
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
+
+const Button: FC<ButtonProps> = ({ disabled, children, ...props }) => {
   return (
     <button
       className={cn(
