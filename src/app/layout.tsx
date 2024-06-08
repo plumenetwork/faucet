@@ -11,6 +11,7 @@ import DatadogInit from './components/datadog-init';
 import { Toaster } from './components/ui/toaster';
 import { Providers } from './provider';
 import { config } from '@/app/config';
+import { Suspense } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 const lufga = localFont({
@@ -55,7 +56,9 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`${inter.className} ${lufga.variable}`}>
         <DatadogInit />
-        <Providers>{children}</Providers>
+        <Suspense>
+          <Providers>{children}</Providers>
+        </Suspense>
         <Toaster />
         <Analytics />
       </body>
