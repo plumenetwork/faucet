@@ -13,15 +13,16 @@ import { RadioCard, RadioCardList } from '@/app/components/RadioCardList';
 import { UsdcIcon } from '@/app/icons/UsdcIcon';
 import { EthIcon } from '@/app/icons/EthIcon';
 import { DaiIcon } from '@/app/icons/DaiIcon';
-import { config } from '@/app/config';
 import { UsdtIcon } from '@/app/icons/UsdtIcon';
 import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
+import { useCloudflareTurnstile } from '@/app/hooks/useCloudflareTurnstile';
 
 const CoreFaucet: FC = () => {
   const [verified, setVerified] = useState(false);
-
-  const { isConnected, address } = useFaucetWallet();
   const [token, setToken] = useState<FaucetToken>(FaucetToken.ETH);
+
+  const { cloudflareTurnstileSiteKey } = useCloudflareTurnstile();
+  const { isConnected, address } = useFaucetWallet();
 
   return (
     <div className='mt-8 flex max-w-full flex-col justify-center gap-4 rounded-2xl border border-solid border-gray-200 bg-neutral-50 px-5 py-5 md:w-[496px]'>
@@ -85,7 +86,7 @@ const CoreFaucet: FC = () => {
           theme: 'light',
         }}
         className='mx-auto flex items-center justify-center'
-        siteKey={config.cloudflareTurnstileSiteKey}
+        siteKey={cloudflareTurnstileSiteKey}
         onSuccess={() => setVerified(true)}
         onExpire={() => setVerified(false)}
         onError={() => setVerified(false)}
