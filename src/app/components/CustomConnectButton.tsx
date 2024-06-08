@@ -2,7 +2,7 @@ import { FaucetToken } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useToast } from './ui/use-toast';
 import { cn } from '@/app/lib/utils';
-import { FC, ReactNode } from 'react';
+import { ButtonHTMLAttributes, FC } from 'react';
 import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
 
 export const CustomConnectButton = ({
@@ -93,11 +93,16 @@ export const CustomConnectButton = ({
               <Button
                 onClick={handleClaimTokens}
                 disabled={!verified || !isPlumeTestnet}
+                data-testid='get-tokens-button'
               >
                 Get Tokens
               </Button>
             ) : (
-              <Button onClick={openConnectModal} disabled={!verified}>
+              <Button
+                onClick={openConnectModal}
+                disabled={!verified}
+                data-testid='connect-wallet-button'
+              >
                 Connect Wallet
               </Button>
             )}
@@ -110,17 +115,11 @@ export const CustomConnectButton = ({
 
 export default CustomConnectButton;
 
-type ButtonProps = {
-  onClick: () => void;
-  disabled?: boolean;
-  children: ReactNode;
-};
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
-const Button: FC<ButtonProps> = ({ onClick, disabled, children }) => {
+const Button: FC<ButtonProps> = ({ disabled, children, ...props }) => {
   return (
     <button
-      onClick={onClick}
-      type='button'
       className={cn(
         disabled ? 'opacity-50' : 'opacity-100',
         disabled ? 'cursor-not-allowed' : 'cursor-pointer',
@@ -129,6 +128,7 @@ const Button: FC<ButtonProps> = ({ onClick, disabled, children }) => {
         'w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
       )}
       disabled={disabled}
+      {...props}
     >
       {children}
     </button>

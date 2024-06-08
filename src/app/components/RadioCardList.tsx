@@ -1,4 +1,4 @@
-import { cloneElement, ReactElement, ReactNode } from 'react';
+import { cloneElement, HTMLAttributes, ReactElement, ReactNode } from 'react';
 import { cn } from '@/app/lib/utils';
 
 type RadioCardListProps<T> = {
@@ -32,7 +32,7 @@ export const RadioCardList = <T,>({
   );
 };
 
-type RadioCardProps<T> = {
+type RadioCardProps<T> = HTMLAttributes<HTMLElement> & {
   value: T;
   label: string;
   description?: string;
@@ -48,6 +48,7 @@ export const RadioCard = <T,>({
   image,
   selected,
   onChange,
+  ...props
 }: RadioCardProps<T>) => {
   return (
     <div
@@ -56,6 +57,7 @@ export const RadioCard = <T,>({
         selected && 'ring-2 ring-[#3F83F8]'
       )}
       onClick={() => onChange?.(value)}
+      {...props}
     >
       <div className='flex items-center'>{image}</div>
       <div className='flex flex-col pl-2'>
