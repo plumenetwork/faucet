@@ -33,6 +33,11 @@ export const withRateLimiter =
     handler: (req: Request) => Promise<Response>;
   }) =>
   async (request: NextRequest): Promise<Response> => {
+    // If full rate limiter bypass is enabled for testing, continue
+    if (process.env.DANGEROUS_ENABLE_FULL_RATE_LIMITER_BYPASS) {
+      return handler(request);
+    }
+
     // If rate limiter bypass is enabled for testing and request passes basic auth, continue
     if (process.env.ENABLE_RATE_LIMITER_BYPASS && passBasicAuth(request)) {
       return handler(request);
