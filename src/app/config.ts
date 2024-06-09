@@ -14,6 +14,12 @@ export const config: FaucetConfig = {
   metadataBase:
     process.env.NEXT_PUBLIC_METADATA_BASE ??
     `https://${process.env.VERCEL_URL ?? 'localhost:' + (process.env.PORT || 3000)}`,
+  // Backdoor flags
+  enableBypassCloudflareTurnstile:
+    process.env.NEXT_PUBLIC_ENABLE_BYPASS_CLOUDFLARE_TURNSTILE === 'true',
+  enabledMockedWallet: process.env.NEXT_PUBLIC_ENABLED_MOCKED_WALLET === 'true',
+  enabledMockedWalletAccount:
+    process.env.NEXT_PUBLIC_ENABLED_MOCKED_WALLET_ACCOUNT === 'true',
 };
 
 type FaucetConfig = {
@@ -26,4 +32,8 @@ type FaucetConfig = {
   dataDogService: string;
   dataDogEnv: string;
   metadataBase: string;
+  // Backdoor flags
+  enableBypassCloudflareTurnstile: boolean;
+  enabledMockedWallet: boolean;
+  enabledMockedWalletAccount: boolean;
 };
