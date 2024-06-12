@@ -52,6 +52,7 @@ export const RadioCard = <T,>({
 }: RadioCardProps<T>) => {
   return (
     <div
+      key={`${value}`}
       className={cn(
         'flex cursor-pointer rounded-md border bg-white p-2 hover:bg-gray-50',
         selected && 'ring-2 ring-[#3F83F8]'

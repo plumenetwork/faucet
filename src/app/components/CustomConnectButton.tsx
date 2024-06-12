@@ -1,9 +1,11 @@
 import { FaucetToken } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useWriteContract } from 'wagmi';
 import { useToast } from './ui/use-toast';
 import { cn } from '@/app/lib/utils';
-import { ButtonHTMLAttributes, FC } from 'react';
+import { ButtonHTMLAttributes, FC, useState } from 'react';
 import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
+import Faucet from '@/app/abi/Faucet.json';
 
 export const CustomConnectButton = ({
   verified,
@@ -14,23 +16,58 @@ export const CustomConnectButton = ({
   walletAddress: string | undefined;
   token: FaucetToken | undefined;
 }) => {
+  const { writeContract } = useWriteContract();
   const { toast } = useToast();
   const { isPlumeTestnet } = useFaucetWallet();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleClaimTokens = () => {
-    fetch('api/faucet', {
-      method: 'POST',
-      headers: { ['Content-Type']: 'application/json' },
-      body: JSON.stringify({ walletAddress, token }),
-    }).then((res) => {
-      if (res.status === 200) {
-        successToast();
-      } else if (res.status === 429) {
-        rateLimitToast();
-      } else {
-        failureToast();
+  const handleClaimTokens = async () => {
+    try {
+      setIsLoading(true);
+
+      const signedData: { token: string, salt: string, signature: string } = await fetch('api/faucet', {
+        method: 'POST',
+        headers: { ['Content-Type']: 'application/json' },
+        body: JSON.stringify({ walletAddress, token }),
+      }).then(async (res) => {
+        if (res.status === 200) {
+          return res.json();
+        } else if (res.status === 429) {
+          rateLimitToast();
+        } else {
+          failureToast();
+        }
+      });
+
+      if (!signedData) {
+        setIsLoading(false);
+        return;
       }
-    });
+
+      const { token : tokenName, salt, signature } = signedData;
+
+      writeContract({
+        address: process.env.NEXT_PUBLIC_FAUCET_CONTRACT_ADDRESS as `0x${string}`,
+        abi: Faucet.abi,
+        functionName: "getToken",
+        args: [tokenName, salt, signature],
+      }, {
+        onSuccess: () => {
+          successToast();
+          setIsLoading(false);
+        }, onError: (error) => {
+          console.error(error);
+          if (!error.message.includes('User rejected')) {
+            failureToast();
+          }
+          setIsLoading(false);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      failureToast();
+      setIsLoading(false);
+    }
   };
 
   const successToast = () => {
@@ -39,7 +76,7 @@ export const CustomConnectButton = ({
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
           You&apos;ll receive
-          {token === FaucetToken.ETH ? ' 0.01 ' : ' 100,000 '}
+          {token === FaucetToken.ETH ? ' 0.001 ' : ' 1000 '}
           testnet {token} in your wallet within a minute.
         </div>
       ),
@@ -93,6 +130,7 @@ export const CustomConnectButton = ({
               <Button
                 onClick={handleClaimTokens}
                 disabled={!verified || !isPlumeTestnet}
+                isLoading={isLoading}
                 data-testid='get-tokens-button'
               >
                 Get Tokens
@@ -115,19 +153,20 @@ export const CustomConnectButton = ({
 
 export default CustomConnectButton;
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { isLoading?: boolean };
 
-const Button: FC<ButtonProps> = ({ disabled, children, ...props }) => {
+const Button: FC<ButtonProps> = ({ disabled, isLoading = false, children, ...props }) => {
   return (
     <button
       className={cn(
         disabled ? 'opacity-50' : 'opacity-100',
-        disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+        disabled || isLoading ? 'cursor-not-allowed' : 'cursor-pointer',
+        isLoading && 'animate-pulse',
         'bg-[#ebbe49] hover:bg-[#E3A810]',
         'shadow-[0_0_0_2px_rgba(255,255,255,0.8)_inset,6px_6px_0_0] active:shadow-none disabled:active:shadow-[0_0_0_2px_rgba(255,255,255,0.8)_inset,6px_6px_0_0]',
         'w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
       )}
-      disabled={disabled}
+      disabled={disabled || isLoading}
       {...props}
     >
       {children}

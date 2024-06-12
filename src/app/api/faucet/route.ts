@@ -1,18 +1,20 @@
 import { NextRequest } from 'next/server';
-import { createWalletClient, publicActions, http, parseEther } from 'viem';
+import {
+  createWalletClient,
+  publicActions,
+  http,
+  parseEther,
+  encodePacked,
+  toHex,
+  keccak256,
+} from 'viem';
 import { plumeTestnet } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { withRateLimiter } from '@/app/lib/rateLimiter';
 import { FaucetToken } from '@/app/lib/types';
-import IERC20 from './IERC20.json';
 
-const tokenAddresses = {
-  [FaucetToken.ETH]: '0x0',
-  [FaucetToken.USDC]: '0xEa237441c92CAe6FC17Caaf9a7acB3f953be4bd1',
-  [FaucetToken.USDT]: '0x4632403a83fb736Ab2c76b4C32FAc9F81e2CfcE2',
-  [FaucetToken.DAI]: '0x1aa70741167155E08bD319bE096C94eE54C6CA19',
-};
+const minTxCost = parseEther('0.0001');
 
 const walletClient = createWalletClient({
   account: privateKeyToAccount(`0x${process.env.FAUCET_ACCOUNT_PRIVATE_KEY}`),
@@ -31,6 +33,7 @@ export const POST = withRateLimiter({
 
     return [`${token}:${ip}`, `${token}:${walletAddress}`];
   },
+
   handler: async (req: Request): Promise<Response> => {
     const {
       walletAddress,
@@ -41,10 +44,10 @@ export const POST = withRateLimiter({
     } = await req.json();
 
     if (
-      !walletAddress ||
-      typeof walletAddress !== 'string' ||
-      walletAddress.length !== 42 ||
-      !walletAddress.match(/^0x[0-9a-fA-F]+$/)
+        !walletAddress ||
+        typeof walletAddress !== 'string' ||
+        walletAddress.length !== 42 ||
+        !walletAddress.match(/^0x[0-9a-fA-F]+$/)
     ) {
       return Response.json({ error: 'Invalid walletAddress' }, { status: 400 });
     }
@@ -54,40 +57,29 @@ export const POST = withRateLimiter({
     }
 
     try {
-      let txHash;
+      const userBalance = await walletClient.getBalance({ address: walletAddress });
 
-      if (token === 'ETH') {
-        txHash = await walletClient.sendTransaction({
+      if (userBalance < minTxCost) {
+        const hash = await walletClient.sendTransaction({
           to: walletAddress as `0x${string}`,
-          value: parseEther('0.01'),
-        });
-        return Response.json({ txHash }, { status: 200 });
-      } else {
-        // get token decimals
-        const decimals = Number(
-          await walletClient.readContract({
-            address: tokenAddresses[token] as `0x${string}`,
-            abi: IERC20.abi,
-            functionName: 'decimals',
-          })
-        );
-
-        // send token
-        txHash = await walletClient.writeContract({
-          address: tokenAddresses[token] as `0x${string}`,
-          abi: IERC20.abi,
-          functionName: 'transfer',
-          args: [
-            walletAddress,
-            // 100,000 tokens
-            (100000 * Math.pow(10, decimals)).toLocaleString('en', {
-              useGrouping: false,
-            }),
-          ],
+          value: minTxCost,
         });
 
-        return Response.json({ txHash }, { status: 200 });
+        await walletClient.waitForTransactionReceipt({
+          hash,
+          confirmations: 1,
+        })
       }
+
+      const salt = keccak256(toHex(`${Date.now()}|${Math.random()}`));
+      const encodedData = encodePacked(
+          ['address', 'string', 'bytes32'],
+          [walletAddress, token, salt]
+      )
+      const message = keccak256(encodedData);
+      const signature = await walletClient.signMessage({ message: { raw: message } });
+
+      return Response.json({ walletAddress, token, salt, signature }, { status: 200 });
     } catch (e) {
       console.error(e);
       return Response.json({ error: 'Failed to send token' }, { status: 503 });
