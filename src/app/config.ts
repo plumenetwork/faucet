@@ -17,9 +17,7 @@ export const config: FaucetConfig = {
   // Backdoor flags
   enableBypassCloudflareTurnstile:
     process.env.NEXT_PUBLIC_ENABLE_BYPASS_CLOUDFLARE_TURNSTILE === 'true',
-  enabledMockedWallet: process.env.NEXT_PUBLIC_ENABLED_MOCKED_WALLET === 'true',
-  enabledMockedWalletAccount:
-    process.env.NEXT_PUBLIC_ENABLED_MOCKED_WALLET_ACCOUNT === 'true',
+  enabledAutoWallet: process.env.NEXT_PUBLIC_ENABLED_AUTO_WALLET === 'true',
 };
 
 type FaucetConfig = {
@@ -34,6 +32,5 @@ type FaucetConfig = {
   metadataBase: string;
   // Backdoor flags
   enableBypassCloudflareTurnstile: boolean;
-  enabledMockedWallet: boolean;
-  enabledMockedWalletAccount: boolean;
+  enabledAutoWallet: boolean;
 };
