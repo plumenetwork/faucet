@@ -13,12 +13,12 @@ import {
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 
 import { config } from '@/app/config';
-import { getMockWallet } from '@/app/mockWallet/mockWallet';
 import { useBackdoorSearchParams } from '@/app/hooks/useBackdoorSearchParams';
+import { getAutoWallet } from '@/app/autoWallet/autoWallet';
 
 export const useWagmiConfig = (): { wagmiConfig: Config } => {
-  const { includeMockWallet, mockedWalletAccount } = useBackdoorSearchParams();
-  const mockWallet = getMockWallet(mockedWalletAccount);
+  const { includeAutoWallet } = useBackdoorSearchParams();
+  const autoWallet = getAutoWallet();
 
   const wagmiConfig = getDefaultConfig({
     appName: 'Plume Network Faucet',
@@ -35,7 +35,7 @@ export const useWagmiConfig = (): { wagmiConfig: Config } => {
           trustWallet,
           zerionWallet,
           walletConnectWallet,
-          ...(includeMockWallet ? [mockWallet] : []),
+          ...(includeAutoWallet ? [autoWallet] : []),
         ],
       },
     ],
