@@ -6,7 +6,7 @@ import {
   parseEther,
   encodePacked,
   toHex,
-  keccak256, recoverMessageAddress
+  keccak256,
 } from 'viem';
 import { plumeTestnet } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
@@ -14,7 +14,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { withRateLimiter } from '@/app/lib/rateLimiter';
 import { FaucetToken } from '@/app/lib/types';
 
-const minTxCost = parseEther('0.00004');
+const minTxCost = parseEther('0.0001');
 
 const walletClient = createWalletClient({
   account: privateKeyToAccount(`0x${process.env.FAUCET_ACCOUNT_PRIVATE_KEY}`),
