@@ -15,13 +15,14 @@ import { EthIcon } from '@/app/icons/EthIcon';
 import { DaiIcon } from '@/app/icons/DaiIcon';
 import { UsdtIcon } from '@/app/icons/UsdtIcon';
 import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
-import { useCloudflareTurnstile } from '@/app/hooks/useCloudflareTurnstile';
+import { useBackdoorSearchParams } from '@/app/hooks/useBackdoorSearchParams';
+import { config } from '@/app/config';
 
 const CoreFaucet: FC = () => {
   const [verified, setVerified] = useState(false);
   const [token, setToken] = useState<FaucetToken>(FaucetToken.ETH);
 
-  const { cloudflareTurnstileSiteKey } = useCloudflareTurnstile();
+  const { bypassCloudflareTurnstile } = useBackdoorSearchParams();
   const { isConnected, address } = useFaucetWallet();
 
   return (
@@ -77,20 +78,22 @@ const CoreFaucet: FC = () => {
         <TextField label='Your Address' value={address} disabled />
       )}
       <CustomConnectButton
-        verified={verified}
+        verified={verified || bypassCloudflareTurnstile}
         walletAddress={address}
         token={token}
       />
-      <Turnstile
-        options={{
-          theme: 'light',
-        }}
-        className='mx-auto flex items-center justify-center'
-        siteKey={cloudflareTurnstileSiteKey}
-        onSuccess={() => setVerified(true)}
-        onExpire={() => setVerified(false)}
-        onError={() => setVerified(false)}
-      />
+      {!bypassCloudflareTurnstile && (
+        <Turnstile
+          options={{
+            theme: 'light',
+          }}
+          className='mx-auto flex items-center justify-center'
+          siteKey={config.cloudflareTurnstileSiteKey}
+          onSuccess={() => setVerified(true)}
+          onExpire={() => setVerified(false)}
+          onError={() => setVerified(false)}
+        />
+      )}
     </div>
   );
 };

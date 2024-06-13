@@ -1,11 +1,7 @@
-const successCloudflareTurnStileSiteKey = '1x00000000000000000000AA';
-
 export const config: FaucetConfig = {
   plumeBridgeUrl: 'https://testnet-bridge.plumenetwork.xyz/',
-  successCloudflareTurnStileSiteKey,
   cloudflareTurnstileSiteKey:
-    process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY ??
-    successCloudflareTurnStileSiteKey,
+    process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || '',
   rainbowProjectId: process.env.NEXT_PUBLIC_RAINBOW_PROJECT_ID || '',
   dataDogApplicationId: process.env.NEXT_PUBLIC_DATADOG_APPLICATION_ID || '',
   dataDogClientToken: process.env.NEXT_PUBLIC_DATADOG_CLIENT_TOKEN || '',
@@ -22,7 +18,6 @@ export const config: FaucetConfig = {
 
 type FaucetConfig = {
   plumeBridgeUrl: string;
-  successCloudflareTurnStileSiteKey: string;
   cloudflareTurnstileSiteKey: string;
   rainbowProjectId: string;
   dataDogApplicationId: string;
