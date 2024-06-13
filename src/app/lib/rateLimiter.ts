@@ -4,12 +4,12 @@ import { NextRequest } from 'next/server';
 
 const concurrentRateLimit = new Ratelimit({
   redis: kv,
-  limiter: Ratelimit.slidingWindow(1, '24 h'), // only 1 concurrent request
+  limiter: Ratelimit.slidingWindow(1, '24 h'), // only 1 concurrent request per user
 });
 
 const dailyRateLimit = new Ratelimit({
   redis: kv,
-  limiter: Ratelimit.slidingWindow(2, '24 h'), // 2 total successful requests per 24 hours
+  limiter: Ratelimit.slidingWindow(2, '2 h'), // 2 total successful requests per 2 hours
 });
 
 function passBasicAuth(req: NextRequest): boolean {
@@ -30,7 +30,7 @@ export const withRateLimiter =
     handler,
   }: {
     limiterKeys: (request: NextRequest) => Promise<string[]>;
-    handler: (req: Request) => Promise<Response>;
+    handler: (req: NextRequest) => Promise<Response>;
   }) =>
   async (request: NextRequest): Promise<Response> => {
     // If full rate limiter bypass is enabled for testing, continue

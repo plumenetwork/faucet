@@ -11,6 +11,7 @@ import {
 import { plumeTestnet } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 
+import { withConcurrencyLimiter } from '@/app/lib/concurrency';
 import { withRateLimiter } from '@/app/lib/rateLimiter';
 import { FaucetToken } from '@/app/lib/types';
 
@@ -34,7 +35,7 @@ export const POST = withRateLimiter({
     return [`${token}:${ip}`, `${token}:${walletAddress}`];
   },
 
-  handler: async (req: Request): Promise<Response> => {
+  handler: withConcurrencyLimiter(async (req: Request): Promise<Response> => {
     const {
       walletAddress,
       token = FaucetToken.ETH,
@@ -84,5 +85,5 @@ export const POST = withRateLimiter({
       console.error(e);
       return Response.json({ error: 'Failed to send token' }, { status: 503 });
     }
-  },
+  }),
 });
