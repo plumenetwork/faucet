@@ -14,15 +14,18 @@ export const RadioCardList = <T,>({
   onChange,
   children,
 }: RadioCardListProps<T>) => {
+  const isMultiple = children.filter(c => c).length > 1;
+  const gridCols = isMultiple ? 'grid-cols-2' : 'grid-cols-1';
   return (
     <div className='flex flex-col gap-2'>
       <label className='font-lufga text-sm font-semibold uppercase leading-5 max-md:max-w-full'>
         {label}
       </label>
-      <div className='grid grid-cols-2 gap-2 sm:grid-cols-2'>
+      <div className={`grid ${gridCols} gap-2 max-sm:grid-cols-1`}>
         {children.map((child, index) =>
-          cloneElement(child, {
-            selected: child.props.value === value,
+          child && cloneElement(child, {
+            disabled: !isMultiple,
+            selected: isMultiple && child.props.value === value,
             onChange: onChange,
             key: index,
           })

@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { FC, ReactElement, useState } from 'react';
 
 import { Turnstile } from '@marsidev/react-turnstile';
 
@@ -41,38 +41,46 @@ const CoreFaucet: FC = () => {
       </div>
       <Divider />
       <RadioCardList
-        label='Select a Token'
+        label={`${Object.values(FaucetToken).length > 1 ? 'Select a' : ''} Token`}
         value={token}
         onChange={(token) => setToken(token)}
       >
-        <RadioCard
-          image={<EthIcon />}
-          value={FaucetToken.ETH}
-          label='ETH'
-          description='Plume Testnet Ether'
-          data-testid='eth-radio-card'
-        />
-        <RadioCard
-          image={<UsdcIcon />}
-          value={FaucetToken.USDC}
-          label='USDC'
-          description='Testnet USD Coin'
-          data-testid='usdc-radio-card'
-        />
-        <RadioCard
-          image={<DaiIcon />}
-          value={FaucetToken.DAI}
-          label='DAI'
-          description='Testnet DAI Stablecoin'
-          data-testid='dai-radio-card'
-        />
-        <RadioCard
-          image={<UsdtIcon />}
-          value={FaucetToken.USDT}
-          label='USDT'
-          description='Testnet Tether USD'
-          data-testid='usdt-radio-card'
-        />
+        {('ETH' in FaucetToken && (
+          <RadioCard
+            image={<EthIcon />}
+            value={FaucetToken.ETH}
+            label='ETH'
+            description='Plume Testnet Ether'
+            data-testid='eth-radio-card'
+          />
+        )) as ReactElement}
+        {('USDC' in FaucetToken && (
+          <RadioCard
+            image={<UsdcIcon />}
+            value={FaucetToken.USDC}
+            label='USDC'
+            description='Testnet USD Coin'
+            data-testid='usdc-radio-card'
+          />
+        )) as ReactElement}
+        {('DAI' in FaucetToken && (
+          <RadioCard
+            image={<DaiIcon />}
+            value={FaucetToken.DAI}
+            label='DAI'
+            description='Testnet DAI Stablecoin'
+            data-testid='dai-radio-card'
+          />
+        )) as ReactElement}
+        {('USDT' in FaucetToken && (
+          <RadioCard
+            image={<UsdtIcon />}
+            value={FaucetToken.USDT}
+            label='USDT'
+            description='Testnet Tether USD'
+            data-testid='usdt-radio-card'
+          />
+        )) as ReactElement}
       </RadioCardList>
       {isConnected && (
         <TextField label='Your Address' value={address} disabled />
