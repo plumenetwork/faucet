@@ -1,6 +1,6 @@
 export enum FaucetToken {
   ETH = 'ETH',
-  USDC = 'USDC',
+  // USDC = 'USDC',
   // USDT = 'USDT',
   // DAI = 'DAI',
 }
