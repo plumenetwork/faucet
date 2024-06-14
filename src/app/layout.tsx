@@ -6,6 +6,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 import { Analytics } from '@vercel/analytics/react';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 import DatadogInit from './components/datadog-init';
 import { Toaster } from './components/ui/toaster';
@@ -61,6 +62,7 @@ export default function RootLayout({
         </Suspense>
         <Toaster />
         <Analytics />
+        <GoogleAnalytics gaId='G-0Q5M0H3E1Z' />
       </body>
     </html>
   );
