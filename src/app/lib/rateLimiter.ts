@@ -2,14 +2,9 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
 import { NextRequest } from 'next/server';
 
-const concurrentRateLimit = new Ratelimit({
+const rateLimit = new Ratelimit({
   redis: kv,
-  limiter: Ratelimit.slidingWindow(1, '24 h'), // only 1 concurrent request per user
-});
-
-const dailyRateLimit = new Ratelimit({
-  redis: kv,
-  limiter: Ratelimit.slidingWindow(2, '2 h'), // 2 total successful requests per 2 hours
+  limiter: Ratelimit.slidingWindow(1, '2 h'), // 2 total successful requests per 2 hours
 });
 
 function passBasicAuth(req: NextRequest): boolean {
@@ -55,13 +50,8 @@ export const withRateLimiter =
 
     const limits = await Promise.all([
       ...keys.map((key) =>
-        concurrentRateLimit
-          .limit(`concurrent:${key}`)
-          .then(({ success }) => success)
-      ),
-      ...keys.map((key) =>
-        dailyRateLimit
-          .getRemaining(`daily:${key}`)
+        rateLimit
+          .getRemaining(key)
           .then((remaining) => remaining > 0)
       ),
     ]);
@@ -76,18 +66,12 @@ export const withRateLimiter =
 
       if (response.status === 200) {
         rateLimitUpdates.push(
-          ...keys.map((key) => dailyRateLimit.limit(`daily:${key}`))
+          ...keys.map((key) => rateLimit.limit(key))
         );
       }
 
       return response;
     } finally {
-      rateLimitUpdates.push(
-        ...keys.map((key) =>
-          concurrentRateLimit.resetUsedTokens(`concurrent:${key}`)
-        )
-      );
-
       await Promise.all(rateLimitUpdates);
     }
   };
