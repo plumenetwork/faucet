@@ -21,7 +21,10 @@ export function withConcurrencyLimiter(keyPrefix: string = 'concurrency:', limit
   const channel = `${keyPrefix}channel:${serverId}`;
 
   redis.function('LOAD', 'REPLACE', concurrencyScript);
-  redis.set('limit', limit);
+  redis.get('limit').then((value) => {
+    if (!value)
+      redis.set('limit', limit);
+  });
 
   // add server to the list of servers with expiration of 2 seconds
   // keep adding the server to the list of servers every second
@@ -59,7 +62,7 @@ function concurrencyWrapper<T extends AnyFunction>(
     }
   });
 
-  return (async function (this: ThisParameterType<T>, ...args: Parameters<T>): Promise<ReturnType<T>> {
+  return async function (this: ThisParameterType<T>, ...args: Parameters<T>): Promise<ReturnType<T>> {
     const requestId = `${serverId}:${nanoid()}`;
 
     const processImmediately = await redis.fcall('add_request', 1, '', requestId);
@@ -77,5 +80,5 @@ function concurrencyWrapper<T extends AnyFunction>(
     } finally {
       redis.fcall('complete_request', 1, '').catch(console.error);
     }
-  } as unknown) as T;
+  } as T;
 }
