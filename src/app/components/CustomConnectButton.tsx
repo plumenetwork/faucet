@@ -6,6 +6,10 @@ import { cn } from '@/app/lib/utils';
 import { ButtonHTMLAttributes, FC, useState } from 'react';
 import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
 import Faucet from '@/app/abi/Faucet.json';
+import {
+  connectWalletButtonClicked,
+  getTokensButtonClicked,
+} from '@/app/analytics';
 
 export const CustomConnectButton = ({
   verified,
@@ -25,44 +29,50 @@ export const CustomConnectButton = ({
     try {
       setIsLoading(true);
 
-      const signedData: { token: string, salt: string, signature: string } = await fetch('api/faucet', {
-        method: 'POST',
-        headers: { ['Content-Type']: 'application/json' },
-        body: JSON.stringify({ walletAddress, token }),
-      }).then(async (res) => {
-        if (res.status === 200) {
-          return res.json();
-        } else if (res.status === 429) {
-          rateLimitToast();
-        } else {
-          failureToast();
-        }
-      });
+      const signedData: { token: string; salt: string; signature: string } =
+        await fetch('api/faucet', {
+          method: 'POST',
+          headers: { ['Content-Type']: 'application/json' },
+          body: JSON.stringify({ walletAddress, token }),
+        }).then(async (res) => {
+          if (res.status === 200) {
+            return res.json();
+          } else if (res.status === 429) {
+            rateLimitToast();
+          } else {
+            failureToast();
+          }
+        });
 
       if (!signedData) {
         setIsLoading(false);
         return;
       }
 
-      const { token : tokenName, salt, signature } = signedData;
+      const { token: tokenName, salt, signature } = signedData;
 
-      writeContract({
-        address: process.env.NEXT_PUBLIC_FAUCET_CONTRACT_ADDRESS as `0x${string}`,
-        abi: Faucet.abi,
-        functionName: "getToken",
-        args: [tokenName, salt, signature],
-      }, {
-        onSuccess: () => {
-          successToast();
-          setIsLoading(false);
-        }, onError: (error) => {
-          console.error(error);
-          if (!error.message.includes('User rejected')) {
-            failureToast();
-          }
-          setIsLoading(false);
+      writeContract(
+        {
+          address: process.env
+            .NEXT_PUBLIC_FAUCET_CONTRACT_ADDRESS as `0x${string}`,
+          abi: Faucet.abi,
+          functionName: 'getToken',
+          args: [tokenName, salt, signature],
+        },
+        {
+          onSuccess: () => {
+            successToast();
+            setIsLoading(false);
+          },
+          onError: (error) => {
+            console.error(error);
+            if (!error.message.includes('User rejected')) {
+              failureToast();
+            }
+            setIsLoading(false);
+          },
         }
-      });
+      );
     } catch (error) {
       console.error(error);
       failureToast();
@@ -128,7 +138,10 @@ export const CustomConnectButton = ({
           >
             {connected ? (
               <Button
-                onClick={handleClaimTokens}
+                onClick={() => {
+                  handleClaimTokens();
+                  getTokensButtonClicked();
+                }}
                 disabled={!verified || !isPlumeTestnet}
                 isLoading={isLoading}
                 data-testid='get-tokens-button'
@@ -137,7 +150,10 @@ export const CustomConnectButton = ({
               </Button>
             ) : (
               <Button
-                onClick={openConnectModal}
+                onClick={() => {
+                  openConnectModal();
+                  connectWalletButtonClicked();
+                }}
                 disabled={!verified}
                 data-testid='connect-wallet-button'
               >
@@ -153,9 +169,16 @@ export const CustomConnectButton = ({
 
 export default CustomConnectButton;
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { isLoading?: boolean };
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  isLoading?: boolean;
+};
 
-const Button: FC<ButtonProps> = ({ disabled, isLoading = false, children, ...props }) => {
+const Button: FC<ButtonProps> = ({
+  disabled,
+  isLoading = false,
+  children,
+  ...props
+}) => {
   return (
     <button
       className={cn(
