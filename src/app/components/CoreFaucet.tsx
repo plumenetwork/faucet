@@ -17,6 +17,7 @@ import { UsdtIcon } from '@/app/icons/UsdtIcon';
 import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
 import { useBackdoorSearchParams } from '@/app/hooks/useBackdoorSearchParams';
 import { config } from '@/app/config';
+import { tokenRadioCardSelected } from '@/app/analytics';
 
 const CoreFaucet: FC = () => {
   const [verified, setVerified] = useState(false);
@@ -43,7 +44,10 @@ const CoreFaucet: FC = () => {
       <RadioCardList
         label='Select a Token'
         value={token}
-        onChange={(token) => setToken(token)}
+        onChange={(token) => {
+          setToken(token);
+          tokenRadioCardSelected(token);
+        }}
       >
         <RadioCard
           image={<EthIcon />}
