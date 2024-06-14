@@ -2,7 +2,11 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
 import { NextRequest } from 'next/server';
 
-const rateLimit = new Ratelimit({
+const concurrentRateLimit = new Ratelimit({
+  redis: kv,
+  limiter: Ratelimit.slidingWindow(1, '5 m'), // only 1 concurrent request per user
+});
+const dailyRateLimit = new Ratelimit({
   redis: kv,
   limiter: Ratelimit.slidingWindow(1, '2 h'), // 2 total successful requests per 2 hours
 });
@@ -50,8 +54,13 @@ export const withRateLimiter =
 
     const limits = await Promise.all([
       ...keys.map((key) =>
-        rateLimit
-          .getRemaining(key)
+        concurrentRateLimit
+          .limit(`concurrent:${key}`)
+          .then(({ success }) => success)
+      ),
+      ...keys.map((key) =>
+        dailyRateLimit
+          .getRemaining(`daily:${key}`)
           .then((remaining) => remaining > 0)
       ),
     ]);
@@ -66,12 +75,18 @@ export const withRateLimiter =
 
       if (response.status === 200) {
         rateLimitUpdates.push(
-          ...keys.map((key) => rateLimit.limit(key))
+          ...keys.map((key) => dailyRateLimit.limit(`daily:${key}`))
         );
       }
 
       return response;
     } finally {
+      rateLimitUpdates.push(
+        ...keys.map((key) =>
+          concurrentRateLimit.resetUsedTokens(`concurrent:${key}`)
+        )
+      );
+
       await Promise.all(rateLimitUpdates);
     }
   };
