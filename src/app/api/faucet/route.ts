@@ -11,6 +11,7 @@ import {
 import { plumeTestnet } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 
+import { withConcurrencyLimiter } from '@/app/lib/concurrency';
 import { withRateLimiter } from '@/app/lib/rateLimiter';
 import { FaucetToken } from '@/app/lib/types';
 
@@ -34,7 +35,7 @@ export const POST = withRateLimiter({
     return [`${token}:${ip}`, `${token}:${walletAddress}`];
   },
 
-  handler: async (req: Request): Promise<Response> => {
+  handler: withConcurrencyLimiter('concurrency:faucet:', 100)(async (req: Request): Promise<Response> => {
     const {
       walletAddress,
       token = FaucetToken.ETH,
@@ -44,10 +45,10 @@ export const POST = withRateLimiter({
     } = await req.json();
 
     if (
-        !walletAddress ||
-        typeof walletAddress !== 'string' ||
-        walletAddress.length !== 42 ||
-        !walletAddress.match(/^0x[0-9a-fA-F]+$/)
+      !walletAddress ||
+      typeof walletAddress !== 'string' ||
+      walletAddress.length !== 42 ||
+      !walletAddress.match(/^0x[0-9a-fA-F]+$/)
     ) {
       return Response.json({ error: 'Invalid walletAddress' }, { status: 400 });
     }
@@ -67,14 +68,14 @@ export const POST = withRateLimiter({
 
         await walletClient.waitForTransactionReceipt({
           hash,
-          confirmations: 1,
+          confirmations: 4, // ~ 1 second
         })
       }
 
       const salt = keccak256(toHex(`${Date.now()}|${Math.random()}`));
       const encodedData = encodePacked(
-          ['address', 'string', 'bytes32'],
-          [walletAddress, token, salt]
+        ['address', 'string', 'bytes32'],
+        [walletAddress, token, salt]
       )
       const message = keccak256(encodedData);
       const signature = await walletClient.signMessage({ message: { raw: message } });
@@ -84,5 +85,5 @@ export const POST = withRateLimiter({
       console.error(e);
       return Response.json({ error: 'Failed to send token' }, { status: 503 });
     }
-  },
+  }),
 });
