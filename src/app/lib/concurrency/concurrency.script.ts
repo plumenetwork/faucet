@@ -9,15 +9,10 @@ local function process_queue(keys, args)
     local channel_prefix = prefix .. 'channel:'
 
     local processing_count = tonumber(redis.call('GET', processing_key)) or 0
-    local limit = tonumber(redis.call('GET', limit_key))
+    local limit = tonumber(redis.call('GET', limit_key)) or 10
 
     if processing_count < 0 then
         processing_count = 0
-    end
-
-    if not limit then
-        redis.call('SET', limit_key, 10)
-        limit = 10
     end
 
     local request = redis.call('LPOP', queue_key)
