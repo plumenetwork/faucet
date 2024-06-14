@@ -1,6 +1,6 @@
 import { RadioCard, RadioCardList } from '@/app/components/RadioCardList';
 import { StoryFn } from '@storybook/react';
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { FaucetToken } from '@/app/lib/types';
 import { EthIcon } from '@/app/icons/EthIcon';
 import { UsdcIcon } from '@/app/icons/UsdcIcon';
@@ -22,30 +22,42 @@ export const Default: StoryFn = () => {
       value={token}
       onChange={(token) => setToken(token)}
     >
-      <RadioCard
-        image={<EthIcon />}
-        value={FaucetToken.ETH}
-        label='ETH'
-        description='Plume Testnet Ether'
-      />
-      <RadioCard
-        image={<UsdcIcon />}
-        value={FaucetToken.USDC}
-        label='USDC'
-        description='Testnet USD Coin'
-      />
-      <RadioCard
-        image={<DaiIcon />}
-        value={FaucetToken.DAI}
-        label='DAI'
-        description='Testnet DAI Stablecoin'
-      />
-      <RadioCard
-        image={<UsdtIcon />}
-        value={FaucetToken.USDT}
-        label='USDT'
-        description='Testnet Tether USD'
-      />
+      {('ETH' in FaucetToken && (
+        <RadioCard
+          image={<EthIcon />}
+          value={FaucetToken.ETH}
+          label='ETH'
+          description='Plume Testnet Ether'
+          data-testid='eth-radio-card'
+        />
+      )) as ReactElement}
+      {('USDC' in FaucetToken && (
+        <RadioCard
+          image={<UsdcIcon />}
+          value={FaucetToken.USDC}
+          label='USDC'
+          description='Testnet USD Coin'
+          data-testid='usdc-radio-card'
+        />
+      )) as ReactElement}
+      {('DAI' in FaucetToken && (
+        <RadioCard
+          image={<DaiIcon />}
+          value={FaucetToken.DAI}
+          label='DAI'
+          description='Testnet DAI Stablecoin'
+          data-testid='dai-radio-card'
+        />
+      )) as ReactElement}
+      {('USDT' in FaucetToken && (
+        <RadioCard
+          image={<UsdtIcon />}
+          value={FaucetToken.USDT}
+          label='USDT'
+          description='Testnet Tether USD'
+          data-testid='usdt-radio-card'
+        />
+      )) as ReactElement}
     </RadioCardList>
   );
 };

@@ -89,7 +89,7 @@ export const CustomConnectButton = ({
       title: 'Rate Limit Exceeded',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Sorry, you can only claim tokens once a day.
+          Sorry, you can only claim tokens once every 2 hours.
         </div>
       ),
       variant: 'fail',
