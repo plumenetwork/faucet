@@ -10,12 +10,13 @@ local function process_queue(keys, args)
     local channel_prefix = prefix .. 'channel:'
 
     local timestamp = tonumber(redis.call('GET', timestamp_key)) or 0
+    local time = tonumber(redis.call('TIME')[1])
 
     -- cleaning up dead servers from processing list once per 3 seconds
-    if timestamp + 3 <= os.time() then
+    if timestamp + 3 <= time then
         local processing_requests = redis.call('SMEMBERS', processing_key)
 
-        for request in processing_requests do
+        for _, request in ipairs(processing_requests) do
             local server = string.sub(request, 1, string.find(request, ':') - 1)
             local server_key = servers_prefix .. server
 
@@ -24,7 +25,7 @@ local function process_queue(keys, args)
             end
         end
 
-        redis.call('SET', timestamp_key, os.time())
+        redis.call('SET', timestamp_key, time)
     end
 
     local limit = tonumber(redis.call('GET', limit_key)) or 10
