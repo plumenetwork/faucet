@@ -9,7 +9,10 @@ type AnyFunction = (...args: any[]) => Promise<unknown>;
 export function withConcurrencyLimiter(keyPrefix: string = 'concurrency:', limit: number = 10) {
   if (!process.env.REDIS_HOST) {
     console.warn('Redis host is not provided. Concurrency limiter is disabled.');
-    return (fn: AnyFunction) => fn;
+
+    return function noWrap<T extends AnyFunction>(fn: T): T {
+      return fn;
+    };
   }
 
   const redisConfig = {
