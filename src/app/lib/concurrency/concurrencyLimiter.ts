@@ -79,7 +79,6 @@ function concurrencyWrapper<T extends AnyFunction>(
 
     // Complete request if the connection is closed by the client
     const abort = () => {
-      console.log('aborting request');
       if (pendingRequests[requestId]) {
         pendingRequests[requestId].reject();
         redis.fcall('complete_request', 1, '', requestId).catch(console.error);
