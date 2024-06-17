@@ -59,11 +59,11 @@ function concurrencyWrapper<T extends AnyFunction>(
   serverId: string,
   fn: T
 ): T {
-  const pendingRequests: Record<string, (value?: unknown) => void> = {};
+  const pendingRequests: Record<string, { resolve: (value?: unknown) => void, reject: (value?: unknown) => void }> = {};
 
   redisSub.on('message', (_channel, requestId) => {
     if (pendingRequests[requestId]) {
-      pendingRequests[requestId]();
+      pendingRequests[requestId].resolve();
       delete pendingRequests[requestId];
     } else {
       redis.fcall('complete_request', 1, '', requestId).catch(console.error);
@@ -73,9 +73,23 @@ function concurrencyWrapper<T extends AnyFunction>(
   return async function (this: ThisParameterType<T>, ...args: Parameters<T>): Promise<ReturnType<T>> {
     const requestId = `${serverId}:${nanoid()}`;
 
-    const waitForQueue = new Promise((resolveRequest) => {
-      pendingRequests[requestId] = resolveRequest;
+    const waitForQueue = new Promise((resolve, reject) => {
+      pendingRequests[requestId] = { resolve, reject };
     });
+
+    // Complete request if the connection is closed by the client
+    const abort = () => {
+      console.log('aborting request');
+      if (pendingRequests[requestId]) {
+        pendingRequests[requestId].reject();
+        redis.fcall('complete_request', 1, '', requestId).catch(console.error);
+        delete pendingRequests[requestId];
+      }
+    }
+    args[0].on?.('close', abort);
+    args[0].on?.('end', abort);
+    args[0].signal?.addEventListener?.('abort', abort);
+
     const processImmediately = await redis.fcall('add_request', 1, '', requestId);
 
     if (processImmediately) {

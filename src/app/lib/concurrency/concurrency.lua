@@ -68,8 +68,13 @@ local function complete_request(keys, args)
     local prefix = keys[1]
     local request = args[1]
     local processing_key = prefix .. 'processing'
+    local queue_key = prefix .. 'queue'
 
-    redis.call('SREM', processing_key, 1, request)
+    local removed = redis.call('SREM', processing_key, 1, request)
+
+    if removed == 0 then
+        redis.call('LREM', queue_key, 1, request)
+    end
 
     process_queue(keys, args)
 end
