@@ -70,7 +70,7 @@ export const POST = withRateLimiter({
 
         await walletClient.waitForTransactionReceipt({
           hash,
-          confirmations: 4, // ~ 1 second
+          confirmations: 1,
         })
       }
 
