@@ -7,8 +7,13 @@ type AnyFunction = (...args: any[]) => Promise<unknown>;
 
 
 export function withConcurrencyLimiter(keyPrefix: string = 'concurrency:', limit: number = 10) {
+  if (!process.env.REDIS_HOST) {
+    console.warn('Redis host is not provided. Concurrency limiter is disabled.');
+    return (fn: AnyFunction) => fn;
+  }
+
   const redisConfig = {
-    host: process.env.REDIS_HOST || 'localhost',
+    host: process.env.REDIS_HOST,
     port: Number(process.env.REDIS_PORT || 6379),
     password: process.env.REDIS_PASSWORD || '',
     keyPrefix,
@@ -58,19 +63,22 @@ function concurrencyWrapper<T extends AnyFunction>(
       pendingRequests[requestId]();
       delete pendingRequests[requestId];
     } else {
-      redis.fcall('complete_request', 1, '').catch(console.error);
+      redis.fcall('complete_request', 1, '', requestId).catch(console.error);
     }
   });
 
   return async function (this: ThisParameterType<T>, ...args: Parameters<T>): Promise<ReturnType<T>> {
     const requestId = `${serverId}:${nanoid()}`;
 
+    const waitForQueue = new Promise((resolveRequest) => {
+      pendingRequests[requestId] = resolveRequest;
+    });
     const processImmediately = await redis.fcall('add_request', 1, '', requestId);
 
-    if (!processImmediately) {
-      await new Promise((resolveRequest) => {
-        pendingRequests[requestId] = resolveRequest;
-      });
+    if (processImmediately) {
+      delete pendingRequests[requestId];
+    } else {
+      await waitForQueue;
     }
 
     try {
@@ -78,7 +86,7 @@ function concurrencyWrapper<T extends AnyFunction>(
     } catch (error) {
       throw error;
     } finally {
-      redis.fcall('complete_request', 1, '').catch(console.error);
+      redis.fcall('complete_request', 1, '', requestId).catch(console.error);
     }
   } as T;
 }
