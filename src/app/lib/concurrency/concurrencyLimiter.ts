@@ -85,7 +85,7 @@ function concurrencyWrapper<T extends AnyFunction>(
         redis.fcall('complete_request', 1, '', requestId).catch(console.error);
         delete pendingRequests[requestId];
       }
-    }
+    };
     args[0].on?.('close', abort);
     args[0].on?.('end', abort);
     args[0].signal?.addEventListener?.('abort', abort);
