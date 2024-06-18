@@ -12,7 +12,7 @@ local function process_queue(keys, args)
     local timestamp = tonumber(redis.call('GET', timestamp_key)) or 0
     local time = tonumber(redis.call('TIME')[1])
 
-    -- cleaning up dead servers from processing list once per 3 seconds
+    -- cleaning up dead servers from processing list at most once per 3 seconds
     if timestamp + 3 <= time then
         local processing_requests = redis.call('SMEMBERS', processing_key)
 
