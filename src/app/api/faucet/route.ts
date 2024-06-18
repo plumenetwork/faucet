@@ -17,8 +17,6 @@ import { FaucetToken } from '@/app/lib/types';
 
 const minTxCost = parseEther('0.0001');
 
-const envPrefix = process.env.NODE_ENV === 'production' ? 'prod:' : 'dev:';
-
 const walletClient = createWalletClient({
   account: privateKeyToAccount(`0x${process.env.FAUCET_ACCOUNT_PRIVATE_KEY}`),
   chain: plumeTestnet,
@@ -37,7 +35,7 @@ export const POST = withRateLimiter({
     return [`${token}:${ip}`, `${token}:${walletAddress}`];
   },
 
-  handler: withConcurrencyLimiter(`${envPrefix}concurrency:faucet:`, 100)(async (req: Request): Promise<Response> => {
+  handler: withConcurrencyLimiter(`concurrency:faucet:`, 100)(async (req: Request): Promise<Response> => {
     const {
       walletAddress,
       token = FaucetToken.ETH,
