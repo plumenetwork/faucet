@@ -29,7 +29,7 @@ export function withConcurrencyLimiter(keyPrefix: string = 'concurrency:', limit
   const channel = `${keyPrefix}channel:${serverId}`;
 
   redis.function('LOAD', 'REPLACE', concurrencyScript);
-  redis.get('limit').then((value) => {
+  redis.get('limit').then((value: any) => {
     if (!value)
       redis.set('limit', limit);
   });
@@ -61,7 +61,7 @@ function concurrencyWrapper<T extends AnyFunction>(
 ): T {
   const pendingRequests: Record<string, { resolve: (value?: unknown) => void, reject: (value?: unknown) => void }> = {};
 
-  redisSub.on('message', (_channel, requestId) => {
+  redisSub.on('message', (_channel: string, requestId: string) => {
     if (pendingRequests[requestId]) {
       pendingRequests[requestId].resolve();
       delete pendingRequests[requestId];
@@ -71,7 +71,11 @@ function concurrencyWrapper<T extends AnyFunction>(
   });
 
   return async function (this: ThisParameterType<T>, ...args: Parameters<T>): Promise<ReturnType<T>> {
-    const requestId = `${serverId}:${nanoid()}`;
+    const request = args[0];
+    let requestId = `${serverId}:${nanoid()}`;
+
+    if (request?.url)
+      requestId += `~~${request.url}`;
 
     const waitForQueue = new Promise((resolve, reject) => {
       pendingRequests[requestId] = { resolve, reject };
@@ -85,9 +89,9 @@ function concurrencyWrapper<T extends AnyFunction>(
         delete pendingRequests[requestId];
       }
     };
-    args[0].on?.('close', abort);
-    args[0].on?.('end', abort);
-    args[0].signal?.addEventListener?.('abort', abort);
+    request?.on?.('close', abort);
+    request?.on?.('end', abort);
+    request?.signal?.addEventListener?.('abort', abort);
 
     const processImmediately = await redis.fcall('add_request', 1, '', requestId);
 
