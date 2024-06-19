@@ -95,7 +95,7 @@ function concurrencyWrapper<T extends AnyFunction>(
     const abort = () => {
       if (pendingRequests[requestId]) {
         pendingRequests[requestId].reject();
-        redis.fcall('complete_request', 1, '', requestId).catch(console.error);
+        completeRequest(requestId);
         delete pendingRequests[requestId];
       }
     };
