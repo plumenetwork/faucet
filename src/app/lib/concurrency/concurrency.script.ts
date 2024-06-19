@@ -89,7 +89,6 @@ local function add_request(keys, args)
         return true -- process immediately
     else
         redis.call('RPUSH', queue_key, request)
-        redis.call('EXPIRE', queue_key, HOUR)
         process_queue(keys, args)
         return false -- wait for the queue
     end
@@ -108,11 +107,9 @@ local function complete_request(keys, args)
     end
 
     local removed = redis.call('SREM', processing_key, 1, request)
-    redis.call('EXPIRE', processing_key, HOUR)
 
     if removed == 0 then
         redis.call('LREM', queue_key, 1, request)
-        redis.call('EXPIRE', queue_key, HOUR)
     end
 
     process_queue(keys, args)
