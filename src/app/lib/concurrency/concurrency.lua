@@ -30,25 +30,33 @@ local function process_queue(keys, args)
             end
         else
             local processing_requests = redis.call('SMEMBERS', processing_key)
-            local expired_server
+            local alive_server = nil
+            local expired_server = nil
 
             for _, request in ipairs(processing_requests) do
-                local server = string.sub(request, 1, string.find(request, ':') - 1)
-                local server_key = servers_prefix .. server
+                local request_server = string.sub(request, 1, string.find(request, ':') - 1)
 
-                if server == expired_server or redis.call('EXISTS', server_key) == 0 then
-                    expired_server = server
+                if request_server == alive_server or (request_server ~= expired_server and redis.call('EXISTS', servers_prefix .. request_server) == 1) then
+                    alive_server = request_server
+                else
+                    expired_server = request_server
                     redis.call('SREM', processing_key, request)
                 end
             end
         end
 
         redis.call('SET', timestamp_key, time)
+
+        -- clean up later if server dies
+        redis.call('EXPIRE', processing_key, HOUR)
+        redis.call('EXPIRE', queue_key, HOUR)
     end
 
     local limit = tonumber(redis.call('GET', limit_key)) or 10
     local processing_count = tonumber(redis.call('SCARD', processing_key)) or 0
     local channel = server and (channel_prefix .. server)
+    local alive_server = nil
+    local expired_server = nil
 
     while processing_count < limit do
         local request = redis.call('LPOP', queue_key)
@@ -57,14 +65,16 @@ local function process_queue(keys, args)
         local request_server = server or string.sub(request, 1, string.find(request, ':') - 1)
         local request_channel = channel or channel_prefix .. request_server
 
-        redis.call('SADD', processing_key, request)
         redis.call('PUBLISH', request_channel, request)
-        processing_count = processing_count + 1
-    end
 
-    -- clean up if server is dead
-    redis.call('EXPIRE', processing_key, HOUR)
-    redis.call('EXPIRE', queue_key, HOUR)
+        if request_server == alive_server or (request_server ~= expired_server and redis.call('EXISTS', servers_prefix .. request_server) == 1) then
+            alive_server = request_server
+            redis.call('SADD', processing_key, request)
+            processing_count = processing_count + 1
+        else
+            expired_server = request_server
+        end
+    end
 end
 
 local function add_request(keys, args)

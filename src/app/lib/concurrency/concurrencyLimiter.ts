@@ -6,7 +6,7 @@ import { concurrencyScript } from './concurrency.script';
 type AnyFunction = (...args: any[]) => Promise<unknown>;
 
 
-export function withConcurrencyLimiter({ keyPrefix = 'concurrency:', limit = 10, perServer = false }) {
+export function withConcurrencyLimiter({ keyPrefix = 'concurrency:', limit = 10, perServer = false } = {}) {
   if (!process.env.REDIS_HOST) {
     console.warn('Redis host is not provided. Concurrency limiter is disabled.');
 
