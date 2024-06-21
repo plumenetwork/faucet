@@ -6,7 +6,7 @@ import { concurrencyScript } from './concurrency.script';
 type AnyFunction = (...args: any[]) => Promise<unknown>;
 
 
-export function withConcurrencyLimiter(keyPrefix: string = 'concurrency:', limit: number = 10) {
+export function withConcurrencyLimiter({ keyPrefix = 'concurrency:', limit = 10, perServer = false } = {}) {
   if (!process.env.REDIS_HOST) {
     console.warn('Redis host is not provided. Concurrency limiter is disabled.');
 
@@ -48,7 +48,7 @@ export function withConcurrencyLimiter(keyPrefix: string = 'concurrency:', limit
   });
 
   return function wrapWithConcurrency<T extends AnyFunction>(fn: T): T {
-    return concurrencyWrapper(redis, redisSub, serverId, fn);
+    return concurrencyWrapper(redis, redisSub, serverId, perServer, fn);
   };
 }
 
@@ -57,16 +57,26 @@ function concurrencyWrapper<T extends AnyFunction>(
   redis: Redis,
   redisSub: Redis,
   serverId: string,
+  perServer: boolean,
   fn: T
 ): T {
   const pendingRequests: Record<string, { resolve: (value?: unknown) => void, reject: (value?: unknown) => void }> = {};
+
+  function addRequest(requestId: string) {
+    return redis.fcall('add_request', 1, '', requestId, ...(perServer ? [serverId] : []));
+  }
+
+  function completeRequest(requestId: string) {
+    redis.fcall('complete_request', 1, '', requestId, ...(perServer ? [serverId] : []))
+      .catch(console.error);
+  }
 
   redisSub.on('message', (_channel: string, requestId: string) => {
     if (pendingRequests[requestId]) {
       pendingRequests[requestId].resolve();
       delete pendingRequests[requestId];
     } else {
-      redis.fcall('complete_request', 1, '', requestId).catch(console.error);
+      completeRequest(requestId);
     }
   });
 
@@ -85,7 +95,7 @@ function concurrencyWrapper<T extends AnyFunction>(
     const abort = () => {
       if (pendingRequests[requestId]) {
         pendingRequests[requestId].reject();
-        redis.fcall('complete_request', 1, '', requestId).catch(console.error);
+        completeRequest(requestId);
         delete pendingRequests[requestId];
       }
     };
@@ -93,7 +103,7 @@ function concurrencyWrapper<T extends AnyFunction>(
     request?.on?.('end', abort);
     request?.signal?.addEventListener?.('abort', abort);
 
-    const processImmediately = await redis.fcall('add_request', 1, '', requestId);
+    const processImmediately = await addRequest(requestId);
 
     if (processImmediately) {
       delete pendingRequests[requestId];
@@ -106,7 +116,7 @@ function concurrencyWrapper<T extends AnyFunction>(
     } catch (error) {
       throw error;
     } finally {
-      redis.fcall('complete_request', 1, '', requestId).catch(console.error);
+      completeRequest(requestId);
     }
   } as T;
 }

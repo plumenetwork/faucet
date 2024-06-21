@@ -35,7 +35,10 @@ export const POST = withRateLimiter({
     return [`${token}:${ip}`, `${token}:${walletAddress}`];
   },
 
-  handler: withConcurrencyLimiter(`concurrency:faucet:`, 100)(async (req: Request): Promise<Response> => {
+  handler: withConcurrencyLimiter({
+    keyPrefix: `concurrency:faucet:`,
+    limit: 100
+  })(async (req: Request): Promise<Response> => {
     const {
       walletAddress,
       token = FaucetToken.ETH,
