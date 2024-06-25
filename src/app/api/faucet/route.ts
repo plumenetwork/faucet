@@ -20,7 +20,7 @@ const redis = new Redis({
   host: process.env.REDIS_HOST,
   port: Number(process.env.REDIS_PORT || 6379),
   password: process.env.REDIS_PASSWORD || '',
-  keyPrefix: 'faucet:nonce:',
+  keyPrefix: 'nonce:faucet:',
 });
 
 const walletClient = createWalletClient({
@@ -91,7 +91,10 @@ export const POST = withRateLimiter({
         const hash = await walletClient.sendTransaction({
           to: walletAddress as `0x${string}`,
           value: ethAmount,
-          // nonce: nonce + 1,
+          nonce: nonce,
+        }).catch((e) => {
+          redis.decr(faucetAddress);
+          throw e;
         });
 
         await walletClient.waitForTransactionReceipt({ hash })
