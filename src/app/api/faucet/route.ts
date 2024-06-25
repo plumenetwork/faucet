@@ -14,15 +14,23 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { withConcurrencyLimiter } from '@/app/lib/concurrency';
 import { withRateLimiter } from '@/app/lib/rateLimiter';
 import { FaucetToken } from '@/app/lib/types';
+import Redis from "ioredis";
 
-const minTxCost = parseEther('0.0001');
-const ethAmount = parseEther('0.001');
+const redis = new Redis({
+  host: process.env.REDIS_HOST,
+  port: Number(process.env.REDIS_PORT || 6379),
+  password: process.env.REDIS_PASSWORD || '',
+  keyPrefix: 'faucet:nonce:',
+});
 
 const walletClient = createWalletClient({
   account: privateKeyToAccount(`0x${process.env.FAUCET_ACCOUNT_PRIVATE_KEY}`),
   chain: plumeTestnet,
   transport: http(),
 }).extend(publicActions);
+
+const minTxCost = parseEther('0.0001');
+const ethAmount = parseEther('0.001');
 
 export const POST = withRateLimiter({
   limiterKeys: async (request: NextRequest) => {
@@ -65,9 +73,25 @@ export const POST = withRateLimiter({
       const userBalance = await walletClient.getBalance({ address: walletAddress });
 
       if (userBalance < minTxCost) {
+        const [faucetAddress] = await walletClient.getAddresses();
+
+        let nonce ;
+        const [walletNonce, redisNonce] = await Promise.all([
+          await walletClient.getTransactionCount({ address: faucetAddress }),
+          await redis.incr(faucetAddress)
+        ]);
+
+        if (walletNonce >= redisNonce) {
+          redis.incrby(faucetAddress, walletNonce - redisNonce + 1);
+          nonce = walletNonce + 1;
+        } else {
+          nonce = redisNonce;
+        }
+
         const hash = await walletClient.sendTransaction({
           to: walletAddress as `0x${string}`,
           value: ethAmount,
+          nonce,
         });
 
         await walletClient.waitForTransactionReceipt({ hash })
