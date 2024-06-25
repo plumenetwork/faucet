@@ -31,7 +31,7 @@ export const CustomConnectButton = ({
     try {
       setIsLoading(true);
 
-      const signedData: { token: string; salt: string; signature: string } =
+      const signedData: { tokenSent: boolean, token: string; salt: string; signature: string } =
         await fetch('api/faucet', {
           method: 'POST',
           headers: { ['Content-Type']: 'application/json' },
@@ -47,6 +47,12 @@ export const CustomConnectButton = ({
         });
 
       if (!signedData) {
+        setIsLoading(false);
+        return;
+      }
+
+      if (signedData.tokenSent) {
+        successToast();
         setIsLoading(false);
         return;
       }
