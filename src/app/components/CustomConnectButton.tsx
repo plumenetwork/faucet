@@ -1,6 +1,7 @@
 import { FaucetToken } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useWriteContract } from 'wagmi';
+import { useConfig, useWriteContract } from 'wagmi';
+import { getBalance} from "@wagmi/core";
 import { useToast } from './ui/use-toast';
 import { cn } from '@/app/lib/utils';
 import { ButtonHTMLAttributes, FC, useState } from 'react';
@@ -21,6 +22,7 @@ export const CustomConnectButton = ({
   token: FaucetToken | undefined;
 }) => {
   const { writeContract } = useWriteContract();
+  const config = useConfig();
   const { toast } = useToast();
   const { isPlumeTestnet } = useFaucetWallet();
   const [isLoading, setIsLoading] = useState(false);
@@ -48,6 +50,10 @@ export const CustomConnectButton = ({
         setIsLoading(false);
         return;
       }
+
+      // @ts-ignore
+      await getBalance(config, { address: walletAddress });
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       const { token: tokenName, salt, signature } = signedData;
 

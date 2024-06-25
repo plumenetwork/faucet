@@ -15,7 +15,7 @@ import { withConcurrencyLimiter } from '@/app/lib/concurrency';
 import { withRateLimiter } from '@/app/lib/rateLimiter';
 import { FaucetToken } from '@/app/lib/types';
 
-const minTxCost = parseEther('0.0001');
+const minTxCost = parseEther('0.005');
 
 const walletClient = createWalletClient({
   account: privateKeyToAccount(`0x${process.env.FAUCET_ACCOUNT_PRIVATE_KEY}`),
@@ -71,7 +71,7 @@ export const POST = withRateLimiter({
 
         await walletClient.waitForTransactionReceipt({ hash })
         // wait 1 second for the transaction to propagate through RPC nodes
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
 
       const salt = keccak256(toHex(`${Date.now()}|${Math.random()}`));
