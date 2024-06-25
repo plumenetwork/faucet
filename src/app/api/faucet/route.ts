@@ -82,7 +82,7 @@ export const POST = withRateLimiter({
         ]);
 
         if (walletNonce > redisNonce) {
-          redis.incrby(faucetAddress, walletNonce - redisNonce);
+          redis.set(faucetAddress, walletNonce);
           nonce = walletNonce;
         } else {
           nonce = redisNonce;
@@ -91,7 +91,7 @@ export const POST = withRateLimiter({
         const hash = await walletClient.sendTransaction({
           to: walletAddress as `0x${string}`,
           value: ethAmount,
-          nonce: nonce,
+          nonce,
         }).catch((e) => {
           redis.decr(faucetAddress);
           throw e;
