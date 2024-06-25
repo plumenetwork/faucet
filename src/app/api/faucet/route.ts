@@ -91,7 +91,7 @@ export const POST = withRateLimiter({
         const hash = await walletClient.sendTransaction({
           to: walletAddress as `0x${string}`,
           value: ethAmount,
-          nonce: nonce + 1,
+          // nonce: nonce + 1,
         });
 
         await walletClient.waitForTransactionReceipt({ hash })
