@@ -15,7 +15,8 @@ import { withConcurrencyLimiter } from '@/app/lib/concurrency';
 import { withRateLimiter } from '@/app/lib/rateLimiter';
 import { FaucetToken } from '@/app/lib/types';
 
-const minTxCost = parseEther('0.005');
+const minTxCost = parseEther('0.0001');
+const ethAmount = parseEther('0.001');
 
 const walletClient = createWalletClient({
   account: privateKeyToAccount(`0x${process.env.FAUCET_ACCOUNT_PRIVATE_KEY}`),
@@ -66,7 +67,7 @@ export const POST = withRateLimiter({
       if (userBalance < minTxCost) {
         const hash = await walletClient.sendTransaction({
           to: walletAddress as `0x${string}`,
-          value: minTxCost,
+          value: ethAmount,
         });
 
         await walletClient.waitForTransactionReceipt({ hash })
