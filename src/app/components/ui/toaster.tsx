@@ -11,6 +11,7 @@ import {
   ToastViewport,
 } from './toast';
 import { useToast } from './use-toast';
+import { UsdcIcon } from "@/app/icons/UsdcIcon";
 
 export function Toaster() {
   const { toasts } = useToast();
@@ -64,10 +65,11 @@ export function Toaster() {
 }
 
 const ToastStatusIcon = ({ icon }: any) => {
-  return icon !== 'default' ? (
+  return (
     <div className='m-1 flex min-w-[38px] self-start'>
-      {icon === 'pass' && <CheckToastIcon />}
-      {icon === 'fail' && <AlertToastIcon />}
+      {icon === 'default' && <UsdcIcon/>}
+      {icon === 'pass' && <CheckToastIcon/>}
+      {icon === 'fail' && <AlertToastIcon/>}
     </div>
-  ) : null;
+  )
 };
