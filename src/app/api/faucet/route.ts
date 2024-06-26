@@ -71,6 +71,7 @@ export const POST = withRateLimiter({
 
     try {
       const userBalance = await walletClient.getBalance({ address: walletAddress });
+      let tokenDrip = false;
 
       if (userBalance < minTxCost) {
         const [faucetAddress] = await walletClient.getAddresses();
@@ -106,7 +107,7 @@ export const POST = withRateLimiter({
         // wait 1 second for the transaction to propagate through RPC nodes
         await new Promise((resolve) => setTimeout(resolve, 100));
 
-        return Response.json({ tokenSent: true }, { status: 200 });
+        tokenDrip = true;
       }
 
       const salt = keccak256(toHex(`${Date.now()}|${Math.random()}`));
@@ -117,7 +118,7 @@ export const POST = withRateLimiter({
       const message = keccak256(encodedData);
       const signature = await walletClient.signMessage({ message: { raw: message } });
 
-      return Response.json({ walletAddress, token, salt, signature }, { status: 200 });
+      return Response.json({ tokenDrip, walletAddress, token, salt, signature }, { status: 200 });
     } catch (e) {
       console.error(e);
       return Response.json({ error: 'Failed to send token' }, { status: 503 });

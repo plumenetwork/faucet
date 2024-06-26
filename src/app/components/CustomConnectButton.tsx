@@ -12,6 +12,13 @@ import {
   getTokensButtonClicked,
 } from '@/app/analytics';
 
+type SignedData = {
+  tokenDrip: boolean;
+  token: string;
+  salt: string;
+  signature: string;
+};
+
 export const CustomConnectButton = ({
   verified,
   walletAddress,
@@ -26,12 +33,14 @@ export const CustomConnectButton = ({
   const { toast } = useToast();
   const { isPlumeTestnet } = useFaucetWallet();
   const [isLoading, setIsLoading] = useState(false);
+  const [signedData, setSignedData] = useState<SignedData | null>(null);
 
   const handleClaimTokens = async () => {
     try {
       setIsLoading(true);
+      submitToast();
 
-      const signedData: { tokenSent: boolean, token: string; salt: string; signature: string } =
+      const data: SignedData = signedData ||
         await fetch('api/faucet', {
           method: 'POST',
           headers: { ['Content-Type']: 'application/json' },
@@ -46,22 +55,19 @@ export const CustomConnectButton = ({
           }
         });
 
-      if (!signedData) {
+      if (!data) {
         setIsLoading(false);
         return;
       }
 
-      if (signedData.tokenSent) {
+      if (data.tokenDrip) {
         successToast();
+        setSignedData({...data, tokenDrip: false});
         setIsLoading(false);
         return;
       }
 
-      // @ts-ignore
-      await getBalance(config, { address: walletAddress });
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      const { token: tokenName, salt, signature } = signedData;
+      const { token: tokenName, salt, signature } = data;
 
       writeContract(
         {
@@ -75,6 +81,7 @@ export const CustomConnectButton = ({
           onSuccess: () => {
             successToast();
             setIsLoading(false);
+            setSignedData(null);
           },
           onError: (error) => {
             console.error(error);
@@ -92,9 +99,21 @@ export const CustomConnectButton = ({
     }
   };
 
+  const submitToast = () => {
+    return toast({
+      title: 'Working on it',
+      description: (
+        <div className='flex flex-row text-sm text-gray-600'>
+          We are getting your tokens. This may take a few seconds.
+        </div>
+      ),
+      variant: 'default',
+    });
+  };
+
   const successToast = () => {
     return toast({
-      title: 'Request Succeeded',
+      title: 'Mission accomplished',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
           You&apos;ll receive
@@ -108,9 +127,9 @@ export const CustomConnectButton = ({
 
   const rateLimitToast = () => {
     return toast({
-      title: 'Rate Limit Exceeded',
+      title: 'Whoosh! Slow down!',
       description: (
-        <div className='flex flex-row text-sm text-gray-600 pr-4'>
+        <div className='flex flex-row text-sm text-gray-600'>
           Sorry, you can only claim tokens once every 2 hours.
         </div>
       ),
@@ -120,11 +139,10 @@ export const CustomConnectButton = ({
 
   const failureToast = () => {
     return toast({
-      title: 'Request Failed',
+      title: 'Oops! Something went wrong...',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Sorry, your request failed. The faucet may be temporarily out of
-          tokens.
+          Our system is under heavy load. Please try again later.
         </div>
       ),
       variant: 'fail',
@@ -158,7 +176,10 @@ export const CustomConnectButton = ({
                 isLoading={isLoading}
                 data-testid='get-tokens-button'
               >
-                Get Tokens
+                { signedData
+                  ? "Get Some More Tokens"
+                  : "Get Tokens"
+                }
               </Button>
             ) : (
               <Button
