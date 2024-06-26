@@ -76,10 +76,10 @@ export const POST = withRateLimiter({
       if (userBalance < minTxCost) {
         const [faucetAddress] = await walletClient.getAddresses();
 
-        let nonce ;
+        let nonce;
         const [walletNonce, redisNonce] = await Promise.all([
-          await walletClient.getTransactionCount({ address: faucetAddress }),
-          await redis.incr(faucetAddress)
+          walletClient.getTransactionCount({ address: faucetAddress }),
+          redis.incr(faucetAddress)
         ]);
 
         if (walletNonce > redisNonce) {
