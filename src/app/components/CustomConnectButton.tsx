@@ -143,6 +143,7 @@ export const CustomConnectButton = ({
         </div>
       ),
       variant: 'fail',
+      duration: 10000,
     });
   };
 
@@ -155,6 +156,7 @@ export const CustomConnectButton = ({
         </div>
       ),
       variant: 'fail',
+      duration: 10000,
     });
   };
 
