@@ -96,7 +96,7 @@ export const POST = withRateLimiter({
           const latestWalletNonce = await walletClient.getTransactionCount({ address: faucetAddress });
 
           if (latestWalletNonce < nonce) {
-            redis.set(faucetAddress, latestWalletNonce);
+            redis.set(faucetAddress, latestWalletNonce - 1);
           }
 
           throw e;
