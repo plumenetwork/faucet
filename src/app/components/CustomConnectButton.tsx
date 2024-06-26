@@ -112,6 +112,7 @@ export const CustomConnectButton = ({
         </div>
       ),
       variant: 'default',
+      duration: 10000,
     });
   };
 
@@ -126,6 +127,7 @@ export const CustomConnectButton = ({
         </div>
       ),
       variant: 'pass',
+      duration: 10000,
     });
   };
 
@@ -143,7 +145,7 @@ export const CustomConnectButton = ({
 
   const failureToast = () => {
     return toast({
-      title: 'Oops! Something went wrong.',
+      title: 'Oops! Something went wrong',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
           Our system is under heavy load. Please try again later.
