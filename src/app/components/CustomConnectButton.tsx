@@ -61,13 +61,16 @@ export const CustomConnectButton = ({
       }
 
       if (data.tokenDrip) {
+        // try to refresh wallet balance
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        // @ts-ignore
+        await getBalance(config, { address: walletAddress });
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
         successToast();
         setSignedData({...data, tokenDrip: false});
         setIsLoading(false);
 
-        // try to refresh wallet balance
-        // @ts-ignore
-        await getBalance(config, { address: walletAddress });
         return;
       }
 
@@ -136,7 +139,7 @@ export const CustomConnectButton = ({
       title: 'Whoosh! Slow down!',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Sorry, you can only claim tokens once every 2 hours.
+          Sorry, you can only claim tokens once every half an hour.
         </div>
       ),
       variant: 'fail',
