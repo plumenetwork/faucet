@@ -102,9 +102,11 @@ export const POST = withRateLimiter({
           throw e;
         });
 
-        await walletClient.waitForTransactionReceipt({ hash })
+        await walletClient.waitForTransactionReceipt({ hash });
         // wait 1 second for the transaction to propagate through RPC nodes
         await new Promise((resolve) => setTimeout(resolve, 100));
+
+        return Response.json({ tokenSent: true }, { status: 200 });
       }
 
       const salt = keccak256(toHex(`${Date.now()}|${Math.random()}`));
