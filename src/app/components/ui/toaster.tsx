@@ -11,8 +11,6 @@ import {
   ToastViewport,
 } from './toast';
 import { useToast } from './use-toast';
-import { FaucetIcon } from "@/app/icons/FaucetIcon";
-import { EthIcon } from "@/app/icons/EthIcon";
 import { UsdcIcon } from "@/app/icons/UsdcIcon";
 
 export function Toaster() {
