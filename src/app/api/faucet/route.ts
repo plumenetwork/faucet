@@ -92,8 +92,13 @@ export const POST = withRateLimiter({
           to: walletAddress as `0x${string}`,
           value: ethAmount,
           nonce,
-        }).catch((e) => {
-          redis.decr(faucetAddress);
+        }).catch(async (e) => {
+          const latestWalletNonce = await walletClient.getTransactionCount({ address: faucetAddress });
+
+          if (latestWalletNonce < nonce) {
+            redis.set(faucetAddress, latestWalletNonce);
+          }
+
           throw e;
         });
 
