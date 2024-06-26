@@ -64,6 +64,10 @@ export const CustomConnectButton = ({
         successToast();
         setSignedData({...data, tokenDrip: false});
         setIsLoading(false);
+
+        // try to refresh wallet balance
+        // @ts-ignore
+        await getBalance(config, { address: walletAddress });
         return;
       }
 
@@ -139,7 +143,7 @@ export const CustomConnectButton = ({
 
   const failureToast = () => {
     return toast({
-      title: 'Oops! Something went wrong...',
+      title: 'Oops! Something went wrong.',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
           Our system is under heavy load. Please try again later.
