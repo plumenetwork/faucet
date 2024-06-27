@@ -23,7 +23,8 @@ const CoreFaucet: FC = () => {
   const [verified, setVerified] = useState(false);
   const [token, setToken] = useState<FaucetToken>(FaucetToken.ETH);
 
-  const { bypassCloudflareTurnstile } = useBackdoorSearchParams();
+  const bypassCloudflareTurnstile = config.enableBypassCloudflareTurnstile;
+//  const { bypassCloudflareTurnstile } = useBackdoorSearchParams();
   const { isConnected, address } = useFaucetWallet();
 
   return (
