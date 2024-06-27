@@ -139,7 +139,7 @@ export const CustomConnectButton = ({
       title: 'Whoosh! Slow down!',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Sorry, you can only claim tokens once every half hour.
+          Sorry, you can only claim tokens once every 10 minutes.
         </div>
       ),
       variant: 'fail',
