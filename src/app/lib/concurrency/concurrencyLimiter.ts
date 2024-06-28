@@ -128,7 +128,9 @@ function concurrencyWrapper<T extends AnyFunction>(
     request?.signal?.addEventListener?.('abort', () => abortRequest(requestId));
 
     return waitForRequest(requestId)
-      .then(() => fn.apply(this, args))
+      .then(() =>
+        fn.apply(this, args)
+      )
       .finally(() =>
         completeRequest(requestId)
       ) as Promise<ReturnType<T>>;
