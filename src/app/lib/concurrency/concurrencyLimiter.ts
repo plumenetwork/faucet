@@ -66,7 +66,6 @@ export function withConcurrencyLimiter({
       pendingRequests[requestId] = { resolve, reject };
     });
 
-
     return redis.fcall('add_request', 1, '', requestId, ...(perServer ? [serverId] : []))
       .then((processImmediately) => {
         if (processImmediately) {
@@ -86,7 +85,7 @@ export function withConcurrencyLimiter({
 
   function abortRequest(requestId: string) {
     if (pendingRequests[requestId]) {
-      pendingRequests[requestId].reject();
+      pendingRequests[requestId].reject(`Concurrency aborted on client disconnect: ${requestId}`);
       completeRequest(requestId);
     }
   }
