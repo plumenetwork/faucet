@@ -11,9 +11,9 @@ type FunctionWithRedis = {
 
 
 export function withConcurrencyLimiter({
-  keyPrefix = 'concurrency:',
-  limit = 10,
-  perServer = false
+   keyPrefix = 'concurrency:',
+   limit = 10,
+   perServer = false
 } = {}): FunctionWithRedis {
   if (!process.env.REDIS_HOST) {
     console.warn('Redis host is not provided. Concurrency limiter is disabled.');
@@ -128,9 +128,9 @@ function concurrencyWrapper<T extends AnyFunction>(
     request?.signal?.addEventListener?.('abort', () => abortRequest(requestId));
 
     return waitForRequest(requestId)
-      .then(() => (fn.apply(this, args)))
-      .finally(() => {
-        completeRequest(requestId);
-      }) as Promise<ReturnType<T>>;
+      .then(() => fn.apply(this, args))
+      .finally(() =>
+        completeRequest(requestId)
+      ) as Promise<ReturnType<T>>;
   } as T;
 }
