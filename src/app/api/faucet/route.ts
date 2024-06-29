@@ -71,7 +71,7 @@ export const POST = withRateLimiter({
 
     try {
       const userBalance = await walletClient.getBalance({ address: walletAddress });
-      let tokenDrip = false;
+      let tokenDrip = '';
 
       if (userBalance < minTxCost) {
         const [faucetAddress] = await walletClient.getAddresses();
@@ -110,7 +110,7 @@ export const POST = withRateLimiter({
         // wait 200 milliseconds for the block to propagate through RPC nodes
         await new Promise((resolve) => setTimeout(resolve, 200));
 
-        tokenDrip = true;
+        tokenDrip = hash;
       }
 
       const salt = keccak256(toHex(`${Date.now()}|${Math.random()}`));
