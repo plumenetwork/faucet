@@ -1,7 +1,7 @@
 import { FaucetToken } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useConfig, useWriteContract } from 'wagmi';
-import { getBalance} from "@wagmi/core";
+import { getBalance, waitForTransactionReceipt } from "@wagmi/core";
 import { useToast } from './ui/use-toast';
 import { cn } from '@/app/lib/utils';
 import { ButtonHTMLAttributes, FC, useState } from 'react';
@@ -13,7 +13,7 @@ import {
 } from '@/app/analytics';
 
 type SignedData = {
-  tokenDrip: boolean;
+  tokenDrip: string;
   token: string;
   salt: string;
   signature: string;
@@ -62,13 +62,15 @@ export const CustomConnectButton = ({
 
       if (data.tokenDrip) {
         // try to refresh wallet balance
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        // @ts-ignore
+        await waitForTransactionReceipt(config, { hash: data.tokenDrip });
+        await new Promise((resolve) => setTimeout(resolve, 100));
         // @ts-ignore
         await getBalance(config, { address: walletAddress });
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         successToast();
-        setSignedData({...data, tokenDrip: false});
+        setSignedData({...data, tokenDrip: ''});
         setIsLoading(false);
 
         return;
