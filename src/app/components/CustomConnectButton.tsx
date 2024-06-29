@@ -11,6 +11,7 @@ import {
   connectWalletButtonClicked,
   getTokensButtonClicked,
 } from '@/app/analytics';
+import { config } from '@/app/config';
 
 type SignedData = {
   tokenDrip: string;
@@ -29,7 +30,7 @@ export const CustomConnectButton = ({
   token: FaucetToken | undefined;
 }) => {
   const { writeContract } = useWriteContract();
-  const config = useConfig();
+  const wagmiConfig = useConfig();
   const { toast } = useToast();
   const { isPlumeTestnet } = useFaucetWallet();
   const [isLoading, setIsLoading] = useState(false);
@@ -64,10 +65,10 @@ export const CustomConnectButton = ({
       if (data.tokenDrip) {
         // try to refresh wallet balance
         // @ts-ignore
-        await waitForTransactionReceipt(config, { hash: data.tokenDrip });
+        await waitForTransactionReceipt(wagmiConfig, { hash: data.tokenDrip });
         await new Promise((resolve) => setTimeout(resolve, 100));
         // @ts-ignore
-        await getBalance(config, { address: walletAddress });
+        await getBalance(wagmiConfig, { address: walletAddress });
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         successToast();
@@ -81,8 +82,7 @@ export const CustomConnectButton = ({
 
       writeContract(
         {
-          address: process.env
-            .NEXT_PUBLIC_FAUCET_CONTRACT_ADDRESS as `0x${string}`,
+          address: config.faucetContractAddress,
           abi: Faucet.abi,
           functionName: 'getToken',
           args: [tokenName, salt, signature],
