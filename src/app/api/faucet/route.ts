@@ -78,7 +78,7 @@ export const POST = withRateLimiter({
 
         let nonce;
         const [walletNonce, redisNonce] = await Promise.all([
-          walletClient.getTransactionCount({ address: faucetAddress }),
+          walletClient.getTransactionCount({ address: faucetAddress, blockTag: 'pending' }),
           redis.incr(faucetAddress)
         ]);
 
@@ -94,7 +94,7 @@ export const POST = withRateLimiter({
           value: ethAmount,
           nonce,
         }).catch(async (e) => {
-          const latestWalletNonce = await walletClient.getTransactionCount({ address: faucetAddress });
+          const latestWalletNonce = await walletClient.getTransactionCount({ address: faucetAddress, blockTag: 'pending' });
 
           if (latestWalletNonce < nonce) {
             redis.set(faucetAddress, latestWalletNonce - 1);
@@ -102,6 +102,9 @@ export const POST = withRateLimiter({
 
           throw e;
         });
+
+        // wait 50 milliseconds for the TX to propagate through RPC replicas
+        await new Promise((resolve) => setTimeout(resolve, 50));
 
         await walletClient.waitForTransactionReceipt({ hash });
         // wait 1 second for the transaction to propagate through RPC nodes
