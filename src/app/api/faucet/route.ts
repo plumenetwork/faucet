@@ -14,7 +14,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { withConcurrencyLimiter } from '@/app/lib/concurrency';
 import { withRateLimiter } from '@/app/lib/rateLimiter';
 import { FaucetToken } from '@/app/lib/types';
-import Redis from "ioredis";
+import Redis from 'ioredis';
 
 const redis = new Redis({
   host: process.env.REDIS_HOST,
@@ -46,7 +46,7 @@ export const POST = withRateLimiter({
 
   handler: withConcurrencyLimiter({
     keyPrefix: `concurrency:faucet:`,
-    limit: 100
+    limit: 100,
   })(async (req: Request): Promise<Response> => {
     const {
       walletAddress,
@@ -70,7 +70,9 @@ export const POST = withRateLimiter({
     }
 
     try {
-      const userBalance = await walletClient.getBalance({ address: walletAddress });
+      const userBalance = await walletClient.getBalance({
+        address: walletAddress,
+      });
       let tokenDrip = '';
 
       if (userBalance < minTxCost) {
@@ -78,8 +80,11 @@ export const POST = withRateLimiter({
 
         let nonce;
         const [walletNonce, redisNonce] = await Promise.all([
-          walletClient.getTransactionCount({ address: faucetAddress, blockTag: 'pending' }),
-          redis.incr(faucetAddress)
+          walletClient.getTransactionCount({
+            address: faucetAddress,
+            blockTag: 'pending',
+          }),
+          redis.incr(faucetAddress),
         ]);
 
         if (walletNonce > redisNonce) {
@@ -89,19 +94,24 @@ export const POST = withRateLimiter({
           nonce = redisNonce;
         }
 
-        const hash = await walletClient.sendTransaction({
-          to: walletAddress as `0x${string}`,
-          value: ethAmount,
-          nonce,
-        }).catch(async (e) => {
-          const latestWalletNonce = await walletClient.getTransactionCount({ address: faucetAddress, blockTag: 'pending' });
+        const hash = await walletClient
+          .sendTransaction({
+            to: walletAddress as `0x${string}`,
+            value: ethAmount,
+            nonce,
+          })
+          .catch(async (e) => {
+            const latestWalletNonce = await walletClient.getTransactionCount({
+              address: faucetAddress,
+              blockTag: 'pending',
+            });
 
-          if (latestWalletNonce < nonce) {
-            redis.set(faucetAddress, latestWalletNonce - 1);
-          }
+            if (latestWalletNonce < nonce) {
+              redis.set(faucetAddress, latestWalletNonce - 1);
+            }
 
-          throw e;
-        });
+            throw e;
+          });
 
         // wait 100 milliseconds for the TX to propagate through mem-pool
         await new Promise((resolve) => setTimeout(resolve, 100));
@@ -117,11 +127,16 @@ export const POST = withRateLimiter({
       const encodedData = encodePacked(
         ['address', 'string', 'bytes32'],
         [walletAddress, token, salt]
-      )
+      );
       const message = keccak256(encodedData);
-      const signature = await walletClient.signMessage({ message: { raw: message } });
+      const signature = await walletClient.signMessage({
+        message: { raw: message },
+      });
 
-      return Response.json({ tokenDrip, walletAddress, token, salt, signature }, { status: 200 });
+      return Response.json(
+        { tokenDrip, walletAddress, token, salt, signature },
+        { status: 200 }
+      );
     } catch (e) {
       console.error(e);
       return Response.json({ error: 'Failed to send token' }, { status: 503 });
