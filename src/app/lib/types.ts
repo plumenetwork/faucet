@@ -10,7 +10,11 @@ export enum FaucetTokenType {
   STRWA = 'stRWA'
 }
 
-const FaucetToken: { [key in FaucetTokenType]?: string } = {
+type EthFaucetToken = {
+  ETH: FaucetTokenType.ETH,
+}
+
+const FaucetToken: EthFaucetToken & { [key in FaucetTokenType]?: string } = {
   ETH: FaucetTokenType.ETH,
 }
 

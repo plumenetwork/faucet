@@ -1,4 +1,4 @@
-import { FaucetToken } from '@/app/lib/types';
+import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useConfig, useWriteContract } from 'wagmi';
 import { getBalance } from '@wagmi/core';
@@ -26,7 +26,7 @@ export const CustomConnectButton = ({
 }: {
   verified: boolean;
   walletAddress: string | undefined;
-  token: FaucetToken | undefined;
+  token: FaucetTokenType;
 }) => {
   const { writeContract } = useWriteContract();
   const config = useConfig();

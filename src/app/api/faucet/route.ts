@@ -50,10 +50,10 @@ export const POST = withRateLimiter({
   })(async (req: Request): Promise<Response> => {
     const {
       walletAddress,
-      token,
+      token = FaucetToken.ETH,
     }: {
       walletAddress: `0x${string}`;
-      token: FaucetTokenType | undefined;
+      token: FaucetTokenType;
     } = await req.json();
 
     if (
@@ -65,7 +65,7 @@ export const POST = withRateLimiter({
       return Response.json({ error: 'Invalid walletAddress' }, { status: 400 });
     }
 
-    if (token === undefined || !Object.values(FaucetToken).includes(token)) {
+    if (!Object.values(FaucetToken).includes(token)) {
       return Response.json({ error: 'Invalid token' }, { status: 400 });
     }
 
