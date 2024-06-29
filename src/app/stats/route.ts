@@ -8,7 +8,6 @@ export const GET = async (request: Request) => {
     faucetContract: {
       address: config.faucetContractAddress,
       balance: faucetBalance,
-      isBalanceLow: faucetBalance < config.faucetMinBalance,
     },
   };
 
