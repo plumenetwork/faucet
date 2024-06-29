@@ -6,10 +6,11 @@ export const config: FaucetConfig = {
   metadataBase:
     process.env.NEXT_PUBLIC_METADATA_BASE ??
     `https://${process.env.VERCEL_URL ?? 'localhost:' + (process.env.PORT || 3000)}`,
+  enabledUsdc: process.env.NEXT_PUBLIC_ENABLED_USDC === 'true',
   // Backdoor flags
   enableBypassCloudflareTurnstile:
     process.env.NEXT_PUBLIC_ENABLE_BYPASS_CLOUDFLARE_TURNSTILE === 'true',
-  enabledAutoWallet: process.env.NEXT_PUBLIC_ENABLED_AUTO_WALLET === 'true',
+  enabledAutoWallet: process.env.NEXT_PUBLIC_ENABLED_AUTO_WALLET === 'true'
 };
 
 type FaucetConfig = {
@@ -17,6 +18,7 @@ type FaucetConfig = {
   cloudflareTurnstileSiteKey: string;
   rainbowProjectId: string;
   metadataBase: string;
+  enabledUsdc: boolean;
   // Backdoor flags
   enableBypassCloudflareTurnstile: boolean;
   enabledAutoWallet: boolean;
