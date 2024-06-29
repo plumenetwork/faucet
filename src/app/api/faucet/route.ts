@@ -13,7 +13,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 
 import { withConcurrencyLimiter } from '@/app/lib/concurrency';
 import { withRateLimiter } from '@/app/lib/rateLimiter';
-import { FaucetToken } from '@/app/lib/types';
+import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 import Redis from 'ioredis';
 
 const redis = new Redis({
@@ -39,7 +39,7 @@ export const POST = withRateLimiter({
     const json = await request.json();
 
     const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
-    const token: FaucetToken = json?.token?.toUpperCase() ?? FaucetToken.ETH;
+    const token: FaucetTokenType = json?.token?.toUpperCase() ?? FaucetToken.ETH;
 
     return [`${token}:${ip}`, `${token}:${walletAddress}`];
   },
@@ -50,10 +50,10 @@ export const POST = withRateLimiter({
   })(async (req: Request): Promise<Response> => {
     const {
       walletAddress,
-      token = FaucetToken.ETH,
+      token,
     }: {
       walletAddress: `0x${string}`;
-      token: FaucetToken;
+      token: FaucetTokenType | undefined;
     } = await req.json();
 
     if (
@@ -65,7 +65,7 @@ export const POST = withRateLimiter({
       return Response.json({ error: 'Invalid walletAddress' }, { status: 400 });
     }
 
-    if (!Object.values(FaucetToken).includes(token)) {
+    if (token === undefined || !Object.values(FaucetToken).includes(token)) {
       return Response.json({ error: 'Invalid token' }, { status: 400 });
     }
 

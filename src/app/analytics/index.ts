@@ -1,11 +1,11 @@
 import { sendGAEvent } from '@next/third-parties/google';
-import { FaucetToken } from '@/app/lib/types';
+import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 
 export const connectWalletButtonClicked = () => {
   sendEvent('connect_wallet_button_clicked');
 };
 
-export const tokenRadioCardSelected = (token: FaucetToken) => {
+export const tokenRadioCardSelected = (token: FaucetTokenType) => {
   sendEvent('token_radio_card_selected', token);
 };
 

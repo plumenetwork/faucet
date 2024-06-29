@@ -5,7 +5,7 @@ import { FC, ReactElement, useState } from 'react';
 import { Turnstile } from '@marsidev/react-turnstile';
 
 import { FaucetIcon } from '@/app/icons/FaucetIcon';
-import { FaucetToken } from '@/app/lib/types';
+import { FaucetTokenType, FaucetToken } from '@/app/lib/types';
 import CustomConnectButton from './CustomConnectButton';
 import { Divider } from '@/app/components/Divider';
 import { TextField } from '@/app/components/TextField';
@@ -21,7 +21,7 @@ import { tokenRadioCardSelected } from '@/app/analytics';
 
 const CoreFaucet: FC = () => {
   const [verified, setVerified] = useState(false);
-  const [token, setToken] = useState<FaucetToken>(FaucetToken.ETH);
+  const [token, setToken] = useState<FaucetTokenType>(FaucetToken.ETH);
 
   const bypassCloudflareTurnstile = config.enableBypassCloudflareTurnstile;
   //  const { bypassCloudflareTurnstile } = useBackdoorSearchParams();
