@@ -24,7 +24,7 @@ const CoreFaucet: FC = () => {
   const [token, setToken] = useState<FaucetToken>(FaucetToken.ETH);
 
   const bypassCloudflareTurnstile = config.enableBypassCloudflareTurnstile;
-//  const { bypassCloudflareTurnstile } = useBackdoorSearchParams();
+  //  const { bypassCloudflareTurnstile } = useBackdoorSearchParams();
   const { isConnected, address } = useFaucetWallet();
 
   return (
@@ -36,7 +36,8 @@ const CoreFaucet: FC = () => {
             Get Testnet Tokens
           </div>
           <div className='font-lufga font-medium'>
-            You can get testnet tokens once every 10 minutes<br/>
+            You can get testnet tokens once every 10 minutes
+            <br />
             to ensure a smooth experience for all users.
           </div>
         </div>
@@ -50,42 +51,50 @@ const CoreFaucet: FC = () => {
           tokenRadioCardSelected(token);
         }}
       >
-        {('ETH' in FaucetToken && (
-          <RadioCard
-            image={<EthIcon />}
-            value={FaucetToken.ETH}
-            label='ETH'
-            description='Plume Testnet Ether'
-            data-testid='eth-radio-card'
-          />
-        )) as ReactElement}
-        {('USDC' in FaucetToken && (
-          <RadioCard
-            image={<UsdcIcon />}
-            value={FaucetToken.USDC}
-            label='USDC'
-            description='Testnet USD Coin'
-            data-testid='usdc-radio-card'
-          />
-        )) as ReactElement}
-        {('DAI' in FaucetToken && (
-          <RadioCard
-            image={<DaiIcon />}
-            value={FaucetToken.DAI}
-            label='DAI'
-            description='Testnet DAI Stablecoin'
-            data-testid='dai-radio-card'
-          />
-        )) as ReactElement}
-        {('USDT' in FaucetToken && (
-          <RadioCard
-            image={<UsdtIcon />}
-            value={FaucetToken.USDT}
-            label='USDT'
-            description='Testnet Tether USD'
-            data-testid='usdt-radio-card'
-          />
-        )) as ReactElement}
+        {
+          ('ETH' in FaucetToken && (
+            <RadioCard
+              image={<EthIcon />}
+              value={FaucetToken.ETH}
+              label='ETH'
+              description='Plume Testnet Ether'
+              data-testid='eth-radio-card'
+            />
+          )) as ReactElement
+        }
+        {
+          ('USDC' in FaucetToken && (
+            <RadioCard
+              image={<UsdcIcon />}
+              value={FaucetToken.USDC}
+              label='USDC'
+              description='Testnet USD Coin'
+              data-testid='usdc-radio-card'
+            />
+          )) as ReactElement
+        }
+        {
+          ('DAI' in FaucetToken && (
+            <RadioCard
+              image={<DaiIcon />}
+              value={FaucetToken.DAI}
+              label='DAI'
+              description='Testnet DAI Stablecoin'
+              data-testid='dai-radio-card'
+            />
+          )) as ReactElement
+        }
+        {
+          ('USDT' in FaucetToken && (
+            <RadioCard
+              image={<UsdtIcon />}
+              value={FaucetToken.USDT}
+              label='USDT'
+              description='Testnet Tether USD'
+              data-testid='usdt-radio-card'
+            />
+          )) as ReactElement
+        }
       </RadioCardList>
       {isConnected && (
         <TextField label='Your Address' value={address} disabled />
