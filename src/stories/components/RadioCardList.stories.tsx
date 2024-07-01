@@ -1,7 +1,7 @@
 import { RadioCard, RadioCardList } from '@/app/components/RadioCardList';
 import { StoryFn } from '@storybook/react';
 import { ReactElement, useState } from 'react';
-import { FaucetToken } from '@/app/lib/types';
+import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 import { EthIcon } from '@/app/icons/EthIcon';
 import { UsdcIcon } from '@/app/icons/UsdcIcon';
 import { DaiIcon } from '@/app/icons/DaiIcon';
@@ -14,7 +14,7 @@ const meta = {
 export default meta;
 
 export const Default: StoryFn = () => {
-  const [token, setToken] = useState<FaucetToken>(FaucetToken.ETH);
+  const [token, setToken] = useState<FaucetTokenType>(FaucetToken.ETH);
 
   return (
     <RadioCardList
