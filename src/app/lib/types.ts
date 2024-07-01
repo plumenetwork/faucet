@@ -18,7 +18,7 @@ const FaucetToken: EthFaucetToken & { [key in FaucetTokenType]?: string } = {
   ETH: FaucetTokenType.ETH,
 }
 
-if (config.enabledUsdc) {
+if (config.isBitgetFaucet) {
   FaucetToken.USDC = FaucetTokenType.USDC;
 }
 
