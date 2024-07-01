@@ -12,7 +12,7 @@ export const config: FaucetConfig = {
   // Backdoor flags
   enableBypassCloudflareTurnstile:
     process.env.NEXT_PUBLIC_ENABLE_BYPASS_CLOUDFLARE_TURNSTILE === 'true',
-  enabledAutoWallet: process.env.NEXT_PUBLIC_ENABLED_AUTO_WALLET === 'true'
+  enabledAutoWallet: process.env.NEXT_PUBLIC_ENABLED_AUTO_WALLET === 'true',
 };
 
 type FaucetConfig = {
