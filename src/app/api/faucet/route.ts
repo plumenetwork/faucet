@@ -73,14 +73,17 @@ export const POST = withRateLimiter({
       const userBalance = await walletClient.getBalance({
         address: walletAddress,
       });
-      let tokenDrip = false;
+      let tokenDrip = '';
 
       if (userBalance < minTxCost) {
         const [faucetAddress] = await walletClient.getAddresses();
 
         let nonce;
         const [walletNonce, redisNonce] = await Promise.all([
-          walletClient.getTransactionCount({ address: faucetAddress }),
+          walletClient.getTransactionCount({
+            address: faucetAddress,
+            blockTag: 'pending',
+          }),
           redis.incr(faucetAddress),
         ]);
 
@@ -100,6 +103,7 @@ export const POST = withRateLimiter({
           .catch(async (e) => {
             const latestWalletNonce = await walletClient.getTransactionCount({
               address: faucetAddress,
+              blockTag: 'pending',
             });
 
             if (latestWalletNonce < nonce) {
@@ -109,11 +113,14 @@ export const POST = withRateLimiter({
             throw e;
           });
 
-        await walletClient.waitForTransactionReceipt({ hash });
-        // wait 1 second for the transaction to propagate through RPC nodes
+        // wait 100 milliseconds for the TX to propagate through mem-pool
         await new Promise((resolve) => setTimeout(resolve, 100));
 
-        tokenDrip = true;
+        await walletClient.waitForTransactionReceipt({ hash });
+        // wait 200 milliseconds for the block to propagate through RPC nodes
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        tokenDrip = hash;
       }
 
       const salt = keccak256(toHex(`${Date.now()}|${Math.random()}`));

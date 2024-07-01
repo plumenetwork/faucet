@@ -1,7 +1,7 @@
 import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useConfig, useWriteContract } from 'wagmi';
-import { getBalance } from '@wagmi/core';
+import { getBalance, waitForTransactionReceipt } from '@wagmi/core';
 import { useToast } from './ui/use-toast';
 import { cn } from '@/app/lib/utils';
 import { ButtonHTMLAttributes, FC, useState } from 'react';
@@ -11,9 +11,10 @@ import {
   connectWalletButtonClicked,
   getTokensButtonClicked,
 } from '@/app/analytics';
+import { config } from '@/app/config';
 
 type SignedData = {
-  tokenDrip: boolean;
+  tokenDrip: string;
   token: string;
   salt: string;
   signature: string;
@@ -29,7 +30,7 @@ export const CustomConnectButton = ({
   token: FaucetTokenType;
 }) => {
   const { writeContract } = useWriteContract();
-  const config = useConfig();
+  const wagmiConfig = useConfig();
   const { toast } = useToast();
   const { isPlumeTestnet } = useFaucetWallet();
   const [isLoading, setIsLoading] = useState(false);
@@ -63,13 +64,15 @@ export const CustomConnectButton = ({
 
       if (data.tokenDrip) {
         // try to refresh wallet balance
-        await new Promise((resolve) => setTimeout(resolve, 500));
         // @ts-ignore
-        await getBalance(config, { address: walletAddress });
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await waitForTransactionReceipt(wagmiConfig, { hash: data.tokenDrip });
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        // @ts-ignore
+        await getBalance(wagmiConfig, { address: walletAddress });
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         successToast();
-        setSignedData({ ...data, tokenDrip: false });
+        setSignedData({ ...data, tokenDrip: '' });
         setIsLoading(false);
 
         return;
@@ -79,8 +82,7 @@ export const CustomConnectButton = ({
 
       writeContract(
         {
-          address: process.env
-            .NEXT_PUBLIC_FAUCET_CONTRACT_ADDRESS as `0x${string}`,
+          address: config.faucetContractAddress,
           abi: Faucet.abi,
           functionName: 'getToken',
           args: [tokenName, salt, signature],
