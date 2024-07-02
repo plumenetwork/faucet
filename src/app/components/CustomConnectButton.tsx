@@ -6,7 +6,7 @@ import { useToast } from './ui/use-toast';
 import { cn } from '@/app/lib/utils';
 import { ButtonHTMLAttributes, FC, useState } from 'react';
 import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
-import Faucet from '@/app/abi/Faucet.json';
+import faucetABI from '@/app/abi/faucet';
 import {
   connectWalletButtonClicked,
   getTokensButtonClicked,
@@ -83,7 +83,7 @@ export const CustomConnectButton = ({
       writeContract(
         {
           address: config.faucetContractAddress,
-          abi: Faucet.abi,
+          abi: faucetABI,
           functionName: 'getToken',
           args: [tokenName, salt, signature],
         },
