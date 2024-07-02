@@ -11,7 +11,7 @@ import {
   ToastViewport,
 } from './toast';
 import { useToast } from './use-toast';
-import { UsdcIcon } from '@/app/icons/UsdcIcon';
+import { InfoIcon } from '@/app/icons/InfoIcon';
 
 export function Toaster() {
   const { toasts } = useToast();
@@ -20,19 +20,19 @@ export function Toaster() {
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, ...props }) {
         return (
-          <Toast duration={4000} key={id} {...props}>
+          <Toast key={id} {...props}>
             <div
-              className={`relative w-[400px] ${
+              className={`relative w-[400px] rounded-xl border ${
                 props.variant === 'pass'
-                  ? 'rounded-xl border border-green-500'
+                  ? 'border-green-500'
                   : props.variant === 'fail'
-                    ? 'rounded-xl border border-red-500'
-                    : 'rounded-xl border border-blue-500'
+                    ? 'border-red-500'
+                    : 'border-blue-500'
               } w-full bg-white p-1`}
             >
               <div className='flex flex-row'>
                 <ToastStatusIcon className='' icon={props.variant} />
-                <div className='flex w-[300px] flex-col justify-center py-2 pl-2'>
+                <div className='flex w-[300px] flex-col justify-center py-2'>
                   {title && (
                     <ToastTitle
                       className={`text-sm font-semibold leading-5 ${
@@ -67,7 +67,7 @@ export function Toaster() {
 const ToastStatusIcon = ({ icon }: any) => {
   return (
     <div className='m-1 flex min-w-[38px] self-start'>
-      {icon === 'default' && <UsdcIcon />}
+      {icon === 'default' && <InfoIcon />}
       {icon === 'pass' && <CheckToastIcon />}
       {icon === 'fail' && <AlertToastIcon />}
     </div>
