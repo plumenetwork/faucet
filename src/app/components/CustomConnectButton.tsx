@@ -80,6 +80,8 @@ export const CustomConnectButton = ({
 
       const { token: tokenName, salt, signature } = data;
 
+      console.log({ address: config.faucetContractAddress, tokenName, salt, signature })
+
       writeContract(
         {
           address: config.faucetContractAddress,
@@ -128,7 +130,7 @@ export const CustomConnectButton = ({
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
           You&apos;ll receive
-          {token === FaucetToken.ETH ? ' 0.001 ' : ' 1000 '}
+          {token === FaucetToken.ETH ? ' 0.001 ' : ' 10,000 '}
           testnet {token} in your wallet within a minute.
         </div>
       ),
