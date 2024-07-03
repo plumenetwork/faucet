@@ -15,11 +15,13 @@
   "dependencies": {
     "@marsidev/react-turnstile": "^0.5.4",
     "@next/third-parties": "^14.2.4",
+    "@opentelemetry/api-logs": "^0.52.1",
     "@radix-ui/react-toast": "^1.1.5",
     "@rainbow-me/rainbowkit": "^2.0.5",
     "@tanstack/react-query": "^5.29.2",
     "@upstash/ratelimit": "^1.1.1",
     "@vercel/kv": "^1.0.1",
+    "@vercel/otel": "^1.9.1",
     "@wagmi/core": "^2.10.6",
     "bignumber.js": "^9.1.2",
     "class-variance-authority": "^0.7.0",
