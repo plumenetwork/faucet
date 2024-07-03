@@ -80,8 +80,6 @@ export const CustomConnectButton = ({
 
       const { token: tokenName, salt, signature } = data;
 
-      console.log({ address: config.faucetContractAddress, tokenName, salt, signature })
-
       writeContract(
         {
           address: config.faucetContractAddress,
