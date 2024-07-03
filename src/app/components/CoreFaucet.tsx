@@ -31,14 +31,12 @@ const CoreFaucet: FC = () => {
     <div className='mt-8 flex max-w-full flex-col justify-center gap-4 rounded-2xl border border-solid border-gray-200 bg-neutral-50 px-5 py-5 md:w-[496px]'>
       <div className='flex flex-col items-center gap-2 text-center'>
         <FaucetIcon />
-        <div>
+        <div className='flex flex-col items-center'>
           <div className='font-lufga text-2xl font-extrabold uppercase'>
             Get Testnet Tokens
           </div>
-          <div className='font-lufga font-medium'>
-            You can get testnet tokens once every 10 minutes
-            <br />
-            to ensure a smooth experience for all users.
+          <div className='max-w-[280px] sm:max-w-[400px] font-lufga font-medium'>
+            You can get testnet tokens once every 10 minutes to ensure a smooth experience for all users.
           </div>
         </div>
       </div>
