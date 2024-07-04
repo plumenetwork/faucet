@@ -1,6 +1,5 @@
 import { createConfig, getBalance, http } from '@wagmi/core';
 import { plumeTestnet } from '@wagmi/core/chains';
-import { config } from '@/app/config';
 
 export const getAddressBalance = async (address: `0x${string}`) => {
   const wagmiConfig = createConfig({
@@ -10,7 +9,7 @@ export const getAddressBalance = async (address: `0x${string}`) => {
     },
   });
   const { decimals, symbol, value } = await getBalance(wagmiConfig, {
-    address: config.faucetContractAddress,
+    address,
   });
   return Number(value) / 10 ** decimals;
 };
