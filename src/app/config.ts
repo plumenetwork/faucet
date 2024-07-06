@@ -7,6 +7,7 @@ export const config: FaucetConfig = {
     process.env.NEXT_PUBLIC_METADATA_BASE ??
     `https://${process.env.VERCEL_URL ?? 'localhost:' + (process.env.PORT || 3000)}`,
   isBitgetFaucet: process.env.NEXT_PUBLIC_IS_BITGET_FAUCET === 'true',
+  isGoonFaucet: process.env.NEXT_PUBLIC_IS_GOON_FAUCET === 'true',
   faucetContractAddress: process.env
     .NEXT_PUBLIC_FAUCET_CONTRACT_ADDRESS as `0x${string}`,
   // Backdoor flags
@@ -21,6 +22,7 @@ type FaucetConfig = {
   rainbowProjectId: string;
   metadataBase: string;
   isBitgetFaucet: boolean;
+  isGoonFaucet: boolean;
   faucetContractAddress: `0x${string}`;
   // Backdoor flags
   enableBypassCloudflareTurnstile: boolean;
