@@ -5,7 +5,7 @@ export enum FaucetTokenType {
   USDC = 'USDC',
   USDT = 'USDT',
   DAI = 'DAI',
-  P = 'P',
+  GOON = 'GOON',
   GOONUSD = 'goonUSD',
   STRWA = 'stRWA'
 }
@@ -20,6 +20,10 @@ const FaucetToken: EthFaucetToken & { [key in FaucetTokenType]?: string } = {
 
 if (config.isBitgetFaucet) {
   FaucetToken.USDC = FaucetTokenType.USDC;
+}
+
+if (config.isGoonFaucet) {
+  FaucetToken.GOON = FaucetTokenType.GOON;
 }
 
 export { FaucetToken };
