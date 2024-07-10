@@ -13,7 +13,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 
 import { withConcurrencyLimiter } from '@/app/lib/concurrency';
 import { withRateLimiter } from '@/app/lib/rateLimiter';
-import { FaucetToken } from '@/app/lib/types';
+import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 import Redis from 'ioredis';
 
 const redis = new Redis({
@@ -39,7 +39,7 @@ export const POST = withRateLimiter({
     const json = await request.json();
 
     const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
-    const token: FaucetToken = json?.token?.toUpperCase() ?? FaucetToken.ETH;
+    const token: FaucetTokenType = json?.token?.toUpperCase() ?? FaucetToken.ETH;
 
     return [`${token}:${ip}`, `${token}:${walletAddress}`];
   },
@@ -53,7 +53,7 @@ export const POST = withRateLimiter({
       token = FaucetToken.ETH,
     }: {
       walletAddress: `0x${string}`;
-      token: FaucetToken;
+      token: FaucetTokenType;
     } = await req.json();
 
     if (
