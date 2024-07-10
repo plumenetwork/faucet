@@ -103,7 +103,6 @@ export const POST = withRateLimiter({
           .catch(async (e) => {
             const latestWalletNonce = await walletClient.getTransactionCount({
               address: faucetAddress,
-              blockTag: 'pending',
             });
 
             if (latestWalletNonce < nonce) {
@@ -115,10 +114,6 @@ export const POST = withRateLimiter({
 
         // wait 100 milliseconds for the TX to propagate through mem-pool
         await new Promise((resolve) => setTimeout(resolve, 100));
-
-        await walletClient.waitForTransactionReceipt({ hash });
-        // wait 200 milliseconds for the block to propagate through RPC nodes
-        await new Promise((resolve) => setTimeout(resolve, 200));
 
         tokenDrip = hash;
       }
