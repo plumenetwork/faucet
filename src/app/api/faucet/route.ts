@@ -39,7 +39,8 @@ export const POST = withRateLimiter({
     const json = await request.json();
 
     const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
-    const token: FaucetTokenType = json?.token?.toUpperCase() ?? FaucetToken.ETH;
+    const token: FaucetTokenType =
+      json?.token?.toUpperCase() ?? FaucetToken.ETH;
 
     return [`${token}:${ip}`, `${token}:${walletAddress}`];
   },

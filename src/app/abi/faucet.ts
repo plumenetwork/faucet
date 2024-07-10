@@ -1,497 +1,497 @@
 const abi = [
   {
-    "type": "receive",
-    "stateMutability": "payable"
+    type: 'receive',
+    stateMutability: 'payable',
   },
   {
-    "type": "function",
-    "name": "ETH_ADDRESS",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'ETH_ADDRESS',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
+        name: '',
+        type: 'address',
+        internalType: 'address',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "UPGRADE_INTERFACE_VERSION",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'UPGRADE_INTERFACE_VERSION',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "string",
-        "internalType": "string"
-      }
+        name: '',
+        type: 'string',
+        internalType: 'string',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "addNewToken",
-    "inputs": [
+    type: 'function',
+    name: 'addNewToken',
+    inputs: [
       {
-        "name": "tokenName",
-        "type": "string",
-        "internalType": "string"
+        name: 'tokenName',
+        type: 'string',
+        internalType: 'string',
       },
       {
-        "name": "tokenAddress",
-        "type": "address",
-        "internalType": "address"
-      }
+        name: 'tokenAddress',
+        type: 'address',
+        internalType: 'address',
+      },
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "getAdmin",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'getAdmin',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
+        name: '',
+        type: 'address',
+        internalType: 'address',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getCheckInContract",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'getCheckInContract',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
+        name: '',
+        type: 'address',
+        internalType: 'address',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getEtherAmount",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'getEtherAmount',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getToken",
-    "inputs": [
+    type: 'function',
+    name: 'getToken',
+    inputs: [
       {
-        "name": "token",
-        "type": "string",
-        "internalType": "string"
+        name: 'token',
+        type: 'string',
+        internalType: 'string',
       },
       {
-        "name": "salt",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: 'salt',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
       {
-        "name": "signature",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
+        name: 'signature',
+        type: 'bytes',
+        internalType: 'bytes',
+      },
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "getTokenAddress",
-    "inputs": [
+    type: 'function',
+    name: 'getTokenAddress',
+    inputs: [
       {
-        "name": "token",
-        "type": "string",
-        "internalType": "string"
-      }
+        name: 'token',
+        type: 'string',
+        internalType: 'string',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
+        name: '',
+        type: 'address',
+        internalType: 'address',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getTokenAmount",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'getTokenAmount',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "initialize",
-    "inputs": [
+    type: 'function',
+    name: 'initialize',
+    inputs: [
       {
-        "name": "_admin",
-        "type": "address",
-        "internalType": "address"
+        name: '_admin',
+        type: 'address',
+        internalType: 'address',
       },
       {
-        "name": "checkInContract",
-        "type": "address",
-        "internalType": "address"
+        name: 'checkInContract',
+        type: 'address',
+        internalType: 'address',
       },
       {
-        "name": "tokenNames",
-        "type": "string[]",
-        "internalType": "string[]"
+        name: 'tokenNames',
+        type: 'string[]',
+        internalType: 'string[]',
       },
       {
-        "name": "tokenAddresses",
-        "type": "address[]",
-        "internalType": "address[]"
-      }
+        name: 'tokenAddresses',
+        type: 'address[]',
+        internalType: 'address[]',
+      },
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "isNonceUsed",
-    "inputs": [
+    type: 'function',
+    name: 'isNonceUsed',
+    inputs: [
       {
-        "name": "nonce",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: 'nonce',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
+        name: '',
+        type: 'bool',
+        internalType: 'bool',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "proxiableUUID",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'proxiableUUID',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "setCheckInContract",
-    "inputs": [
+    type: 'function',
+    name: 'setCheckInContract',
+    inputs: [
       {
-        "name": "newCheckInContract",
-        "type": "address",
-        "internalType": "address"
-      }
+        name: 'newCheckInContract',
+        type: 'address',
+        internalType: 'address',
+      },
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "setEtherAmount",
-    "inputs": [
+    type: 'function',
+    name: 'setEtherAmount',
+    inputs: [
       {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: 'amount',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "setTokenAmount",
-    "inputs": [
+    type: 'function',
+    name: 'setTokenAmount',
+    inputs: [
       {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: 'amount',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "transferAdmin",
-    "inputs": [
+    type: 'function',
+    name: 'transferAdmin',
+    inputs: [
       {
-        "name": "newAdmin",
-        "type": "address",
-        "internalType": "address"
-      }
+        name: 'newAdmin',
+        type: 'address',
+        internalType: 'address',
+      },
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "upgradeToAndCall",
-    "inputs": [
+    type: 'function',
+    name: 'upgradeToAndCall',
+    inputs: [
       {
-        "name": "newImplementation",
-        "type": "address",
-        "internalType": "address"
+        name: 'newImplementation',
+        type: 'address',
+        internalType: 'address',
       },
       {
-        "name": "data",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
+        name: 'data',
+        type: 'bytes',
+        internalType: 'bytes',
+      },
     ],
-    "outputs": [],
-    "stateMutability": "payable"
+    outputs: [],
+    stateMutability: 'payable',
   },
   {
-    "type": "function",
-    "name": "withdrawToken",
-    "inputs": [
+    type: 'function',
+    name: 'withdrawToken',
+    inputs: [
       {
-        "name": "token",
-        "type": "string",
-        "internalType": "string"
+        name: 'token',
+        type: 'string',
+        internalType: 'string',
       },
       {
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
+        name: 'amount',
+        type: 'uint256',
+        internalType: 'uint256',
       },
       {
-        "name": "recipient",
-        "type": "address",
-        "internalType": "address payable"
-      }
+        name: 'recipient',
+        type: 'address',
+        internalType: 'address payable',
+      },
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "event",
-    "name": "AdminChanged",
-    "inputs": [
+    type: 'event',
+    name: 'AdminChanged',
+    inputs: [
       {
-        "name": "oldAdmin",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'oldAdmin',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "newAdmin",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      }
+        name: 'newAdmin',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "CheckInContractChanged",
-    "inputs": [
+    type: 'event',
+    name: 'CheckInContractChanged',
+    inputs: [
       {
-        "name": "oldCheckInContract",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'oldCheckInContract',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "newCheckInContract",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      }
+        name: 'newCheckInContract',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "Initialized",
-    "inputs": [
+    type: 'event',
+    name: 'Initialized',
+    inputs: [
       {
-        "name": "version",
-        "type": "uint64",
-        "indexed": false,
-        "internalType": "uint64"
-      }
+        name: 'version',
+        type: 'uint64',
+        indexed: false,
+        internalType: 'uint64',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "TokenSent",
-    "inputs": [
+    type: 'event',
+    name: 'TokenSent',
+    inputs: [
       {
-        "name": "recipient",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'recipient',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
+        name: 'amount',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
       },
       {
-        "name": "tokenName",
-        "type": "string",
-        "indexed": false,
-        "internalType": "string"
-      }
+        name: 'tokenName',
+        type: 'string',
+        indexed: false,
+        internalType: 'string',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "Upgraded",
-    "inputs": [
+    type: 'event',
+    name: 'Upgraded',
+    inputs: [
       {
-        "name": "implementation",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      }
+        name: 'implementation',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "Withdrawn",
-    "inputs": [
+    type: 'event',
+    name: 'Withdrawn',
+    inputs: [
       {
-        "name": "recipient",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'recipient',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
+        name: 'amount',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
       },
       {
-        "name": "tokenName",
-        "type": "string",
-        "indexed": false,
-        "internalType": "string"
-      }
+        name: 'tokenName',
+        type: 'string',
+        indexed: false,
+        internalType: 'string',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "error",
-    "name": "AddressEmptyCode",
-    "inputs": [
+    type: 'error',
+    name: 'AddressEmptyCode',
+    inputs: [
       {
-        "name": "target",
-        "type": "address",
-        "internalType": "address"
-      }
-    ]
+        name: 'target',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
   },
   {
-    "type": "error",
-    "name": "ECDSAInvalidSignature",
-    "inputs": []
+    type: 'error',
+    name: 'ECDSAInvalidSignature',
+    inputs: [],
   },
   {
-    "type": "error",
-    "name": "ECDSAInvalidSignatureLength",
-    "inputs": [
+    type: 'error',
+    name: 'ECDSAInvalidSignatureLength',
+    inputs: [
       {
-        "name": "length",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ]
+        name: 'length',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
   },
   {
-    "type": "error",
-    "name": "ECDSAInvalidSignatureS",
-    "inputs": [
+    type: 'error',
+    name: 'ECDSAInvalidSignatureS',
+    inputs: [
       {
-        "name": "s",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ]
+        name: 's',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
   },
   {
-    "type": "error",
-    "name": "ERC1967InvalidImplementation",
-    "inputs": [
+    type: 'error',
+    name: 'ERC1967InvalidImplementation',
+    inputs: [
       {
-        "name": "implementation",
-        "type": "address",
-        "internalType": "address"
-      }
-    ]
+        name: 'implementation',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
   },
   {
-    "type": "error",
-    "name": "ERC1967NonPayable",
-    "inputs": []
+    type: 'error',
+    name: 'ERC1967NonPayable',
+    inputs: [],
   },
   {
-    "type": "error",
-    "name": "FailedCall",
-    "inputs": []
+    type: 'error',
+    name: 'FailedCall',
+    inputs: [],
   },
   {
-    "type": "error",
-    "name": "InvalidInitialization",
-    "inputs": []
+    type: 'error',
+    name: 'InvalidInitialization',
+    inputs: [],
   },
   {
-    "type": "error",
-    "name": "NotInitializing",
-    "inputs": []
+    type: 'error',
+    name: 'NotInitializing',
+    inputs: [],
   },
   {
-    "type": "error",
-    "name": "UUPSUnauthorizedCallContext",
-    "inputs": []
+    type: 'error',
+    name: 'UUPSUnauthorizedCallContext',
+    inputs: [],
   },
   {
-    "type": "error",
-    "name": "UUPSUnsupportedProxiableUUID",
-    "inputs": [
+    type: 'error',
+    name: 'UUPSUnsupportedProxiableUUID',
+    inputs: [
       {
-        "name": "slot",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ]
-  }
-]
+        name: 'slot',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+  },
+];
 export default abi;

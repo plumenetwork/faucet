@@ -7,16 +7,16 @@ export enum FaucetTokenType {
   DAI = 'DAI',
   GOON = 'GOON',
   GOONUSD = 'goonUSD',
-  STRWA = 'stRWA'
+  STRWA = 'stRWA',
 }
 
 type EthFaucetToken = {
-  ETH: FaucetTokenType.ETH,
-}
+  ETH: FaucetTokenType.ETH;
+};
 
 const FaucetToken: EthFaucetToken & { [key in FaucetTokenType]?: string } = {
   ETH: FaucetTokenType.ETH,
-}
+};
 
 if (config.isBitgetFaucet) {
   FaucetToken.USDC = FaucetTokenType.USDC;
@@ -27,4 +27,3 @@ if (config.isGoonFaucet) {
 }
 
 export { FaucetToken };
-
