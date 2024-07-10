@@ -29,7 +29,7 @@ const walletClient = createWalletClient({
   transport: http(),
 }).extend(publicActions);
 
-const minTxCost = parseEther('0.0001');
+const minTxCost = parseEther('0.00004');
 const ethAmount = parseEther('0.001');
 
 export const POST = withRateLimiter({
