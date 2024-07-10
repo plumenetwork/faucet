@@ -13,7 +13,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 
 import { withConcurrencyLimiter } from '@/app/lib/concurrency';
 import { withRateLimiter } from '@/app/lib/rateLimiter';
-import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
+import { FaucetToken } from '@/app/lib/types';
 import Redis from 'ioredis';
 
 const redis = new Redis({
@@ -39,7 +39,7 @@ export const POST = withRateLimiter({
     const json = await request.json();
 
     const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
-    const token: FaucetTokenType = json?.token?.toUpperCase() ?? FaucetToken.ETH;
+    const token: FaucetToken = json?.token?.toUpperCase() ?? FaucetToken.ETH;
 
     return [`${token}:${ip}`, `${token}:${walletAddress}`];
   },
@@ -53,7 +53,7 @@ export const POST = withRateLimiter({
       token = FaucetToken.ETH,
     }: {
       walletAddress: `0x${string}`;
-      token: FaucetTokenType;
+      token: FaucetToken;
     } = await req.json();
 
     if (
@@ -82,7 +82,6 @@ export const POST = withRateLimiter({
         const [walletNonce, redisNonce] = await Promise.all([
           walletClient.getTransactionCount({
             address: faucetAddress,
-            blockTag: 'pending',
           }),
           redis.incr(faucetAddress),
         ]);
@@ -103,7 +102,6 @@ export const POST = withRateLimiter({
           .catch(async (e) => {
             const latestWalletNonce = await walletClient.getTransactionCount({
               address: faucetAddress,
-              blockTag: 'pending',
             });
 
             if (latestWalletNonce < nonce) {
@@ -115,10 +113,6 @@ export const POST = withRateLimiter({
 
         // wait 100 milliseconds for the TX to propagate through mem-pool
         await new Promise((resolve) => setTimeout(resolve, 100));
-
-        await walletClient.waitForTransactionReceipt({ hash });
-        // wait 200 milliseconds for the block to propagate through RPC nodes
-        await new Promise((resolve) => setTimeout(resolve, 200));
 
         tokenDrip = hash;
       }
