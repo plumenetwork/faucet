@@ -82,6 +82,7 @@ export const POST = withRateLimiter({
         const [walletNonce, redisNonce] = await Promise.all([
           walletClient.getTransactionCount({
             address: faucetAddress,
+            blockTag: 'pending',
           }),
           redis.incr(faucetAddress),
         ]);
