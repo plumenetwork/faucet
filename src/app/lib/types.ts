@@ -16,14 +16,11 @@ type EthFaucetToken = {
 
 const FaucetToken: EthFaucetToken & { [key in FaucetTokenType]?: string } = {
   ETH: FaucetTokenType.ETH,
+  GOON: FaucetTokenType.GOON,
 };
 
 if (config.isBitgetFaucet) {
   FaucetToken.USDC = FaucetTokenType.USDC;
-}
-
-if (config.isGoonFaucet) {
-  FaucetToken.GOON = FaucetTokenType.GOON;
 }
 
 export { FaucetToken };
