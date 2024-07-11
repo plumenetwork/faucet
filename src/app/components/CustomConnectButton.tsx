@@ -89,7 +89,7 @@ export const CustomConnectButton = ({
         },
         {
           onSuccess: () => {
-            successToast();
+            successToast(tokenName as FaucetTokenType);
             setIsLoading(false);
             setSignedData(null);
           },
@@ -122,7 +122,7 @@ export const CustomConnectButton = ({
     });
   };
 
-  const successToast = (tokenName = token) => {
+  const successToast = (tokenName: FaucetTokenType) => {
     return toast({
       title: 'Mission accomplished',
       description: (
