@@ -18,6 +18,7 @@ import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
 import { useBackdoorSearchParams } from '@/app/hooks/useBackdoorSearchParams';
 import { config } from '@/app/config';
 import { tokenRadioCardSelected } from '@/app/analytics';
+import { GoonIcon } from '../icons/GoonIcon';
 
 const CoreFaucet: FC = () => {
   const [verified, setVerified] = useState(false);
@@ -69,6 +70,17 @@ const CoreFaucet: FC = () => {
               label='USDC'
               description='Testnet USD Coin'
               data-testid='usdc-radio-card'
+            />
+          )) as ReactElement
+        }
+        {
+          ('GOON' in FaucetToken && (
+            <RadioCard
+              image={<GoonIcon />}
+              value={FaucetToken.GOON}
+              label='GOON'
+              description='Goon Testnet Token'
+              data-testid='goon-radio-card'
             />
           )) as ReactElement
         }
