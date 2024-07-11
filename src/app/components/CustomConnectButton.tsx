@@ -71,7 +71,7 @@ export const CustomConnectButton = ({
         await getBalance(wagmiConfig, { address: walletAddress });
         await new Promise((resolve) => setTimeout(resolve, 500));
 
-        successToast();
+        successToast(FaucetToken.ETH);
         setSignedData({ ...data, tokenDrip: '' });
         setIsLoading(false);
 
@@ -89,7 +89,7 @@ export const CustomConnectButton = ({
         },
         {
           onSuccess: () => {
-            successToast();
+            successToast(tokenName as FaucetTokenType);
             setIsLoading(false);
             setSignedData(null);
           },
@@ -122,14 +122,14 @@ export const CustomConnectButton = ({
     });
   };
 
-  const successToast = () => {
+  const successToast = (tokenName: FaucetTokenType) => {
     return toast({
       title: 'Mission accomplished',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
           You&apos;ll receive
-          {token === FaucetToken.ETH ? ' 0.001 ' : ' 1 '}
-          testnet {token} in your wallet within a minute.
+          {tokenName === FaucetToken.ETH ? ' 0.001 ' : ' 1 '}
+          testnet {tokenName} in your wallet within a minute.
         </div>
       ),
       variant: 'pass',
