@@ -8,7 +8,7 @@ const concurrentRateLimit = new Ratelimit({
 });
 const dailyRateLimit = new Ratelimit({
   redis: kv,
-  limiter: Ratelimit.slidingWindow(1, '10 m'), // 1 total successful requests per 10 minutes
+  limiter: Ratelimit.slidingWindow(1, '2 h'), // 1 total successful request per 2 hours
 });
 
 function passBasicAuth(req: NextRequest): boolean {
