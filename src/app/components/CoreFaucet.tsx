@@ -37,7 +37,7 @@ const CoreFaucet: FC = () => {
             Get Testnet Tokens
           </div>
           <div className='max-w-[280px] font-lufga font-medium sm:max-w-[400px]'>
-            You can get testnet tokens once every 10 minutes to ensure a smooth
+            You can get testnet tokens once every 2 hours to ensure a smooth
             experience for all users.
           </div>
         </div>
