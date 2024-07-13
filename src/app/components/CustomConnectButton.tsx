@@ -15,7 +15,7 @@ import { config } from '@/app/config';
 
 type SignedData = {
   tokenDrip: string;
-  token: string;
+  token: FaucetTokenType;
   salt: string;
   signature: string;
 };
@@ -51,7 +51,7 @@ export const CustomConnectButton = ({
           if (res.status === 200) {
             return res.json();
           } else if (res.status === 429) {
-            rateLimitToast();
+            rateLimitToast(token);
           } else {
             failureToast();
           }
@@ -95,8 +95,10 @@ export const CustomConnectButton = ({
           },
           onError: (error) => {
             console.error(error);
-            if (!error.message.includes('User rejected')) {
-              rateLimitToast();
+            if (error.message.includes('User rejected')) {
+              rejectedToast();
+            } else {
+              rateLimitToast(tokenName);
             }
             setIsLoading(false);
           },
@@ -137,12 +139,31 @@ export const CustomConnectButton = ({
     });
   };
 
-  const rateLimitToast = () => {
+  const rateLimitToast = (tokenName: FaucetTokenType) => {
     return toast({
       title: 'Whoosh! Slow down!',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Sorry, you can only claim tokens once every 2 hours.
+          Sorry, you can only claim
+          {tokenName === FaucetToken.ETH
+            ? ' free testnet gas '
+            : ` ${tokenName} tokens `}
+          once every
+          {tokenName === FaucetToken.ETH ? ' 10 minutes.' : ' 2 hours.'}
+        </div>
+      ),
+      variant: 'fail',
+      duration: 10000,
+    });
+  };
+
+  const rejectedToast = () => {
+    return toast({
+      title: 'You rejected the transaction',
+      description: (
+        <div className='flex flex-row text-sm text-gray-600'>
+          Please try again - don't worry, this doesn't count against your rate
+          limit.
         </div>
       ),
       variant: 'fail',
