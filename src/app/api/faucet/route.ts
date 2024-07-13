@@ -141,7 +141,14 @@ export const POST = withCaching({
         message: { raw: message },
       });
 
-      return { tokenDrip, walletAddress, token, salt, signature };
+      return {
+        tokenDrip,
+        walletAddress,
+        token,
+        salt,
+        signature,
+        invalidate: tokenDrip !== '',
+      };
     } catch (e) {
       console.error(e);
       return Response.json({ error: 'Failed to send token' }, { status: 503 });

@@ -162,8 +162,8 @@ export const CustomConnectButton = ({
       title: 'You rejected the transaction',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Please try again - don't worry, this doesn't count against your rate
-          limit.
+          Please try again. Don&apos;t worry, this doesn't count against your
+          rate limit.
         </div>
       ),
       variant: 'fail',
@@ -211,7 +211,7 @@ export const CustomConnectButton = ({
                 isLoading={isLoading}
                 data-testid='get-tokens-button'
               >
-                {signedData ? 'Get more Tokens and Miles' : 'Get Tokens'}
+                {signedData ? 'Get More Tokens and Miles' : 'Get Tokens'}
               </Button>
             ) : (
               <Button

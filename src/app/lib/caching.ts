@@ -26,7 +26,7 @@ export const withCaching =
     makeKeys,
     handler,
   }: {
-    prefix: string;
+    prefix?: string;
     makeKeys: (request: NextRequest) => Promise<any[]>;
     handler: (req: NextRequest) => Promise<any>;
   }) =>
@@ -46,8 +46,9 @@ export const withCaching =
     const json = await request.json();
     request.json = () => json;
 
-    if (typeof makeKeys !== 'function')
+    if (typeof makeKeys !== 'function') {
       throw new Error('makeKeys must be a function');
+    }
 
     const caches = await makeKeys(request);
 
@@ -56,7 +57,10 @@ export const withCaching =
       const data = await redis.get(`${prefix}:${key}`);
 
       if (data) {
-        return Response.json(JSON.parse(data));
+        const jsonResponse = JSON.parse(data);
+        if (!jsonResponse.invalidate) {
+          return Response.json(JSON.parse(data));
+        }
       }
     }
 
