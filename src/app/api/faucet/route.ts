@@ -14,7 +14,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { withConcurrencyLimiter } from '@/app/lib/concurrency';
 import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 import Redis from 'ioredis';
-import { withCaching } from "@/app/lib/caching";
+import { withCaching } from '@/app/lib/caching';
 
 const redis = new Redis({
   host: process.env.REDIS_HOST,
@@ -36,7 +36,6 @@ const minTxCost = parseEther('0.00004');
 const ethAmount = parseEther('0.001');
 
 export const POST = withCaching({
-  prefix: 'cache:faucet:',
   makeKeys: async (request: NextRequest) => {
     const ip =
       request.headers.get('x-forwarded-for') ?? request.ip ?? '127.0.0.1';
@@ -46,13 +45,15 @@ export const POST = withCaching({
     const token: FaucetTokenType =
       json?.token?.toUpperCase() ?? FaucetToken.ETH;
 
-    return [{
-      key: `${token}:${ip}`,
-      duration: token === FaucetToken.ETH ? TEN_MINUTES : TWO_HOURS,
-    }, {
-      key: `${token}:${walletAddress}`,
-      duration: token === FaucetToken.ETH ? TEN_MINUTES : TWO_HOURS,
-    },
+    return [
+      {
+        key: `${token}:${ip}`,
+        duration: token === FaucetToken.ETH ? TEN_MINUTES : TWO_HOURS,
+      },
+      {
+        key: `${token}:${walletAddress}`,
+        duration: token === FaucetToken.ETH ? TEN_MINUTES : TWO_HOURS,
+      },
     ];
   },
 
@@ -140,8 +141,14 @@ export const POST = withCaching({
         message: { raw: message },
       });
 
-      return { tokenDrip, walletAddress, token, salt, signature };
-
+      return {
+        tokenDrip,
+        walletAddress,
+        token,
+        salt,
+        signature,
+        invalidate: tokenDrip !== '',
+      };
     } catch (e) {
       console.error(e);
       return Response.json({ error: 'Failed to send token' }, { status: 503 });
