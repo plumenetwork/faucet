@@ -1,6 +1,5 @@
 import Redis from 'ioredis';
 import { NextRequest } from 'next/server';
-import { passBasicAuth } from "@/app/lib/rateLimiter";
 
 const redis = new Redis({
   host: process.env.REDIS_HOST,
@@ -8,53 +7,64 @@ const redis = new Redis({
   password: process.env.REDIS_PASSWORD || '',
 });
 
+function passBasicAuth(req: NextRequest): boolean {
+  const auth = req.headers.get('authorization');
+  if (auth) {
+    const [username, password] = atob(auth.split(' ')[1]).split(':');
+    return (
+      username == process.env.BASIC_USERNAME &&
+      password == process.env.BASIC_PASSWORD
+    );
+  }
+  return false;
+}
+
 export const withCaching =
   ({
-     prefix,
-     makeKeys,
-     handler,
-   }: {
+    prefix,
+    makeKeys,
+    handler,
+  }: {
     prefix: string;
     makeKeys: (request: NextRequest) => Promise<any[]>;
     handler: (req: NextRequest) => Promise<any>;
   }) =>
-    async (request: NextRequest): Promise<Response> => {
-      // If full rate limiter bypass is enabled for testing, continue
-      if (process.env.DANGEROUS_ENABLE_FULL_RATE_LIMITER_BYPASS) {
-        return handler(request);
+  async (request: NextRequest): Promise<Response> => {
+    // If full rate limiter bypass is enabled for testing, continue
+    if (process.env.DANGEROUS_ENABLE_FULL_RATE_LIMITER_BYPASS) {
+      return handler(request);
+    }
+
+    // If rate limiter bypass is enabled for testing and request passes basic auth, continue
+    if (process.env.ENABLE_RATE_LIMITER_BYPASS && passBasicAuth(request)) {
+      return handler(request);
+    }
+
+    // Read the request body stream and cache it, because `request.json()` can only be read once.
+    // Caching it allows `limiterKeys` and the route handler to call `await request.json()` later on.
+    const json = await request.json();
+    request.json = () => json;
+
+    if (typeof makeKeys !== 'function')
+      throw new Error('limiterKeys must be a function');
+
+    const caches = await makeKeys(request);
+
+    for (const cache of caches) {
+      const { key } = cache;
+      const data = await redis.get(`${prefix}:${key}`);
+
+      if (data) {
+        return Response.json(JSON.parse(data));
       }
+    }
 
-      // If rate limiter bypass is enabled for testing and request passes basic auth, continue
-      if (process.env.ENABLE_RATE_LIMITER_BYPASS && passBasicAuth(request)) {
-        return handler(request);
-      }
+    const response = await handler(request);
 
-      // Read the request body stream and cache it, because `request.json()` can only be read once.
-      // Caching it allows `limiterKeys` and the route handler to call `await request.json()` later on.
-      const json = await request.json();
-      request.json = () => json;
+    for (const cache of caches) {
+      const { key, duration } = cache;
+      await redis.setex(`${prefix}:${key}`, duration, JSON.stringify(response));
+    }
 
-      if (typeof makeKeys !== 'function')
-        throw new Error('limiterKeys must be a function');
-
-      const caches = await makeKeys(request);
-
-      for (const cache of caches) {
-        const { key } = cache;
-        const data = await redis.get(`${prefix}:${key}`);
-
-        if (data) {
-          return Response.json(JSON.parse(data));
-        }
-      }
-
-      const response = await handler(request);
-
-      for (const cache of caches) {
-        const { key, duration } = cache;
-        await redis.setex(`${prefix}:${key}`, duration, JSON.stringify(response));
-      }
-
-      return Response.json(response);
-    };
-
+    return Response.json(response);
+  };
