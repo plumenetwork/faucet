@@ -5,6 +5,7 @@ const redis = new Redis({
   host: process.env.REDIS_HOST,
   port: Number(process.env.REDIS_PORT || 6379),
   password: process.env.REDIS_PASSWORD || '',
+  keyPrefix: 'cache:faucet:',
 });
 
 function passBasicAuth(req: NextRequest): boolean {
@@ -21,7 +22,7 @@ function passBasicAuth(req: NextRequest): boolean {
 
 export const withCaching =
   ({
-    prefix,
+    prefix = '',
     makeKeys,
     handler,
   }: {
@@ -41,12 +42,12 @@ export const withCaching =
     }
 
     // Read the request body stream and cache it, because `request.json()` can only be read once.
-    // Caching it allows `limiterKeys` and the route handler to call `await request.json()` later on.
+    // Caching it allows `makeKeys` and the route handler to call `await request.json()` later on.
     const json = await request.json();
     request.json = () => json;
 
     if (typeof makeKeys !== 'function')
-      throw new Error('limiterKeys must be a function');
+      throw new Error('makeKeys must be a function');
 
     const caches = await makeKeys(request);
 
