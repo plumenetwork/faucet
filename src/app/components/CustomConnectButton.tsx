@@ -162,8 +162,8 @@ export const CustomConnectButton = ({
       title: 'You rejected the transaction',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Please try again. Don&apos;t worry, this doesn't count against your
-          rate limit.
+          Please try again. Don&apos;t worry, this doesn&apos;t count against
+          your rate limit.
         </div>
       ),
       variant: 'fail',
