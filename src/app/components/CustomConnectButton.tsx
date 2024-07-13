@@ -96,7 +96,7 @@ export const CustomConnectButton = ({
           onError: (error) => {
             console.error(error);
             if (!error.message.includes('User rejected')) {
-              failureToast();
+              rateLimitToast();
             }
             setIsLoading(false);
           },
