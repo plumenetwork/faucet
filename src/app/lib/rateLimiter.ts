@@ -11,7 +11,7 @@ const dailyRateLimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(1, '2 h'), // 1 total successful request per 2 hours
 });
 
-function passBasicAuth(req: NextRequest): boolean {
+export function passBasicAuth(req: NextRequest): boolean {
   const auth = req.headers.get('authorization');
   if (auth) {
     const [username, password] = atob(auth.split(' ')[1]).split(':');
