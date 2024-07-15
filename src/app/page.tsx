@@ -2,7 +2,7 @@ import Link from 'next/link';
 import CoreFaucet from './components/CoreFaucet';
 import PlumeNavBar from './components/PlumeNavBar';
 import SocialMediaBar from './components/SocialMediaBar';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -13,9 +13,9 @@ export default function Home() {
         <Link
           href='https://miles.plumenetwork.xyz/'
           target='_blank'
-          className='mt-2 flex items-center gap-1 underline'
+          className='mt-4 flex items-center gap-2 rounded-[9999px] bg-white px-6 py-2.5 text-sm text-gray-800'
         >
-          Back to Plume Testnet <ArrowUpRight size={18} />
+          <ArrowLeft size={16} /> Go back to Plume Testnet
         </Link>
         <SocialMediaBar />
       </div>
