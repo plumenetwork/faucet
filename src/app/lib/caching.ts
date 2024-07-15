@@ -24,10 +24,12 @@ export const withCaching =
   ({
     prefix = '',
     makeKeys,
+    cleanseData = (data) => data,
     handler,
   }: {
     prefix?: string;
     makeKeys: (request: NextRequest) => Promise<any[]>;
+    cleanseData?: (data: any) => any;
     handler: (req: NextRequest) => Promise<any>;
   }) =>
   async (request: NextRequest): Promise<Response> => {
@@ -54,13 +56,10 @@ export const withCaching =
 
     for (const cache of caches) {
       const { key } = cache;
-      const data = await redis.get(`${prefix}:${key}`);
+      const data = await redis.get(`${prefix}${key}`);
 
       if (data) {
-        const jsonResponse = JSON.parse(data);
-        if (!jsonResponse.invalidate) {
-          return Response.json(JSON.parse(data));
-        }
+        return Response.json(JSON.parse(data), { status: 202 });
       }
     }
 
@@ -68,7 +67,7 @@ export const withCaching =
 
     for (const cache of caches) {
       const { key, duration } = cache;
-      await redis.setex(`${prefix}:${key}`, duration, JSON.stringify(response));
+      await redis.setex(`${prefix}${key}`, duration, JSON.stringify(cleanseData(response)));
     }
 
     return Response.json(response);

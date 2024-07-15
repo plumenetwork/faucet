@@ -57,6 +57,8 @@ export const POST = withCaching({
     ];
   },
 
+  cleanseData: (data: any) => ({...data, tokenDrip: ''}),
+
   handler: withConcurrencyLimiter({
     keyPrefix: `concurrency:faucet:`,
     limit: 100,
@@ -147,7 +149,6 @@ export const POST = withCaching({
         token,
         salt,
         signature,
-        invalidate: tokenDrip !== '',
       };
     } catch (e) {
       console.error(e);
