@@ -45,6 +45,8 @@ export const POST = withCaching({
     const token: FaucetTokenType =
       json?.token?.toUpperCase() ?? FaucetToken.ETH;
 
+    console.log('headers', JSON.stringify(request.headers));
+
     return [
       {
         key: `${token}:${ip}`,
