@@ -56,12 +56,12 @@ export const withCaching =
 
     for (const cache of caches) {
       const { key } = cache;
-      const data = await redis.get(`${prefix}:${key}`);
+      const data = await redis.get(`${prefix}${key}`);
 
       if (data) {
         const jsonResponse = JSON.parse(data);
         if (!jsonResponse.invalidate) {
-          return Response.json(JSON.parse(data));
+          return Response.json(jsonResponse, { status: 202 });
         }
       }
     }
