@@ -67,7 +67,11 @@ export const withCaching =
 
     for (const cache of caches) {
       const { key, duration } = cache;
-      await redis.setex(`${prefix}${key}`, duration, JSON.stringify(cleanseData(response)));
+      await redis.setex(
+        `${prefix}${key}`,
+        duration,
+        JSON.stringify(cleanseData(response))
+      );
     }
 
     return Response.json(response);
