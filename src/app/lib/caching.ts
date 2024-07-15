@@ -24,10 +24,12 @@ export const withCaching =
   ({
     prefix = '',
     makeKeys,
+    cleanseData = (data) => data,
     handler,
   }: {
     prefix?: string;
     makeKeys: (request: NextRequest) => Promise<any[]>;
+    cleanseData?: (data: any) => any;
     handler: (req: NextRequest) => Promise<any>;
   }) =>
   async (request: NextRequest): Promise<Response> => {
@@ -68,7 +70,7 @@ export const withCaching =
 
     for (const cache of caches) {
       const { key, duration } = cache;
-      await redis.setex(`${prefix}:${key}`, duration, JSON.stringify(response));
+      await redis.setex(`${prefix}${key}`, duration, JSON.stringify(cleanseData(response)));
     }
 
     return Response.json(response);

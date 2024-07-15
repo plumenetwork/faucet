@@ -1,6 +1,6 @@
 import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useConfig, useWriteContract } from 'wagmi';
+import { useConfig, usePublicClient, useWriteContract } from 'wagmi';
 import { getBalance, waitForTransactionReceipt } from '@wagmi/core';
 import { useToast } from './ui/use-toast';
 import { cn } from '@/app/lib/utils';
@@ -29,6 +29,7 @@ export const CustomConnectButton = ({
   walletAddress: string | undefined;
   token: FaucetTokenType;
 }) => {
+  const client = usePublicClient();
   const { writeContract } = useWriteContract();
   const wagmiConfig = useConfig();
   const { toast } = useToast();
@@ -41,9 +42,9 @@ export const CustomConnectButton = ({
       setIsLoading(true);
       submitToast();
 
-      const data: SignedData =
-        signedData ||
-        (await fetch('api/faucet', {
+      const data: SignedData = token === signedData?.token
+        ? signedData
+        : (await fetch('api/faucet', {
           method: 'POST',
           headers: { ['Content-Type']: 'application/json' },
           body: JSON.stringify({ walletAddress, token }),
@@ -80,6 +81,20 @@ export const CustomConnectButton = ({
 
       const { token: tokenName, salt, signature } = data;
 
+      const isNonceUsed = await client?.readContract({
+        address: config.faucetContractAddress,
+        abi: faucetABI,
+        functionName: 'isNonceUsed',
+        args: [salt],
+      });
+
+      if (isNonceUsed) {
+        rateLimitToast(tokenName as FaucetTokenType);
+        setIsLoading(false);
+        setSignedData(null);
+        return;
+      }
+
       writeContract(
         {
           address: config.faucetContractAddress,
@@ -98,9 +113,10 @@ export const CustomConnectButton = ({
             if (error.message.includes('User rejected')) {
               rejectedToast();
             } else {
-              rateLimitToast(tokenName);
+              failureToast();
             }
             setIsLoading(false);
+            setSignedData(null);
           },
         }
       );
