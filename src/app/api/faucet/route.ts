@@ -37,18 +37,14 @@ const ethAmount = parseEther('0.001');
 
 export const POST = withCaching({
   makeKeys: async (request: NextRequest) => {
-    const ip =
-      request.headers.get('x-forwarded-for') ?? request.ip ?? '127.0.0.1';
-    const json = await request.json();
+    let ip =
+      request.headers.get('cf-connecting-ip') ?? request.headers.get('x-forwarded-for') ?? request.ip ?? '127.0.0.1';
+    ip = ip.replace(/:/gi, ';');
 
+    const json = await request.json();
     const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
     const token: FaucetTokenType =
       json?.token?.toUpperCase() ?? FaucetToken.ETH;
-
-    console.log('headers');
-    request.headers.forEach((value: any, key: any) => {
-      console.log(key, value);
-    });
 
     return [
       {
