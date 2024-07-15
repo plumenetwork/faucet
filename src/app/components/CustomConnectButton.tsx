@@ -103,9 +103,7 @@ export const CustomConnectButton = ({
         args: [nonce],
       });
 
-      console.log({ isNonceUsed });
-
-      if (isNonceUsed) {
+      if (isNonceUsed || wallet !== walletAddress) {
         rateLimitToast(tokenName as FaucetTokenType);
         setIsLoading(false);
         setSignedData(null);
