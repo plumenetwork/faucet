@@ -45,15 +45,18 @@ export const POST = withCaching({
     const token: FaucetTokenType =
       json?.token?.toUpperCase() ?? FaucetToken.ETH;
 
-    console.log('headers', JSON.stringify(request.headers));
+    console.log('headers');
+    request.headers.forEach((value: any, key: any) => {
+      console.log(key, value);
+    });
 
     return [
       {
-        key: `${token}:${ip}`,
+        key: `${token}:ip:${ip}`,
         duration: token === FaucetToken.ETH ? TEN_MINUTES : TWO_HOURS,
       },
       {
-        key: `${token}:${walletAddress}`,
+        key: `${token}:wallet:${walletAddress}`,
         duration: token === FaucetToken.ETH ? TEN_MINUTES : TWO_HOURS,
       },
     ];
