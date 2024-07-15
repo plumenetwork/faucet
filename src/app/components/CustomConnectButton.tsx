@@ -2,7 +2,7 @@ import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useConfig, usePublicClient, useWriteContract } from 'wagmi';
 import { getBalance, waitForTransactionReceipt } from '@wagmi/core';
-import { encodeAbiParameters, keccak256 } from 'viem';
+import { encodePacked, keccak256 } from 'viem';
 import { useToast } from './ui/use-toast';
 import { cn } from '@/app/lib/utils';
 import { ButtonHTMLAttributes, FC, useState } from 'react';
@@ -86,14 +86,7 @@ export const CustomConnectButton = ({
 
       // msg.sender, token, salt
       const nonce = keccak256(
-        encodeAbiParameters(
-          [
-            { name: 'wallet', type: 'address' },
-            { name: 'token', type: 'string' },
-            { name: 'salt', type: 'bytes32' },
-          ],
-          [wallet, token, salt]
-        )
+        encodePacked(['address', 'string', 'bytes32'], [wallet, token, salt])
       );
 
       const isNonceUsed = await client?.readContract({
