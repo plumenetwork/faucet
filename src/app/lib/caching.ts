@@ -59,10 +59,7 @@ export const withCaching =
       const data = await redis.get(`${prefix}${key}`);
 
       if (data) {
-        const jsonResponse = JSON.parse(data);
-        if (!jsonResponse.invalidate) {
-          return Response.json(jsonResponse, { status: 202 });
-        }
+        return Response.json(JSON.parse(data), { status: 202 });
       }
     }
 

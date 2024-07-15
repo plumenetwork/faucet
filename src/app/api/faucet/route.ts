@@ -149,7 +149,6 @@ export const POST = withCaching({
         token,
         salt,
         signature,
-        invalidate: tokenDrip !== '',
       };
     } catch (e) {
       console.error(e);
