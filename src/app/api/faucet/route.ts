@@ -12,9 +12,9 @@ import { plumeTestnet } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { withConcurrencyLimiter } from '@/app/lib/concurrency';
-import { withRateLimiter } from '@/app/lib/rateLimiter';
 import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 import Redis from 'ioredis';
+import { withCaching } from '@/app/lib/caching';
 
 const redis = new Redis({
   host: process.env.REDIS_HOST,
@@ -29,11 +29,14 @@ const walletClient = createWalletClient({
   transport: http(),
 }).extend(publicActions);
 
+const TEN_MINUTES = 60 * 10;
+const TWO_HOURS = 60 * 60 * 2;
+
 const minTxCost = parseEther('0.00004');
 const ethAmount = parseEther('0.001');
 
-export const POST = withRateLimiter({
-  limiterKeys: async (request: NextRequest) => {
+export const POST = withCaching({
+  makeKeys: async (request: NextRequest) => {
     const ip =
       request.headers.get('x-forwarded-for') ?? request.ip ?? '127.0.0.1';
     const json = await request.json();
@@ -42,13 +45,24 @@ export const POST = withRateLimiter({
     const token: FaucetTokenType =
       json?.token?.toUpperCase() ?? FaucetToken.ETH;
 
-    return [`${token}:${ip}`, `${token}:${walletAddress}`];
+    return [
+      {
+        key: `${token}:${ip}`,
+        duration: token === FaucetToken.ETH ? TEN_MINUTES : TWO_HOURS,
+      },
+      {
+        key: `${token}:${walletAddress}`,
+        duration: token === FaucetToken.ETH ? TEN_MINUTES : TWO_HOURS,
+      },
+    ];
   },
+
+  cleanseData: (data: any) => ({ ...data, tokenDrip: '' }),
 
   handler: withConcurrencyLimiter({
     keyPrefix: `concurrency:faucet:`,
     limit: 100,
-  })(async (req: Request): Promise<Response> => {
+  })(async (req: Request): Promise<any> => {
     const {
       walletAddress,
       token = FaucetToken.ETH,
@@ -129,10 +143,13 @@ export const POST = withRateLimiter({
         message: { raw: message },
       });
 
-      return Response.json(
-        { tokenDrip, walletAddress, token, salt, signature },
-        { status: 200 }
-      );
+      return {
+        tokenDrip,
+        walletAddress,
+        token,
+        salt,
+        signature,
+      };
     } catch (e) {
       console.error(e);
       return Response.json({ error: 'Failed to send token' }, { status: 503 });

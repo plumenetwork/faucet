@@ -1,7 +1,8 @@
 import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useConfig, useWriteContract } from 'wagmi';
+import { useConfig, usePublicClient, useWriteContract } from 'wagmi';
 import { getBalance, waitForTransactionReceipt } from '@wagmi/core';
+import { encodePacked, keccak256 } from 'viem';
 import { useToast } from './ui/use-toast';
 import { cn } from '@/app/lib/utils';
 import { ButtonHTMLAttributes, FC, useState } from 'react';
@@ -15,9 +16,10 @@ import { config } from '@/app/config';
 
 type SignedData = {
   tokenDrip: string;
-  token: string;
-  salt: string;
-  signature: string;
+  token: FaucetTokenType;
+  salt: `0x${string}`;
+  signature: `0x${string}`;
+  walletAddress: `0x${string}`;
 };
 
 export const CustomConnectButton = ({
@@ -29,6 +31,7 @@ export const CustomConnectButton = ({
   walletAddress: string | undefined;
   token: FaucetTokenType;
 }) => {
+  const client = usePublicClient();
   const { writeContract } = useWriteContract();
   const wagmiConfig = useConfig();
   const { toast } = useToast();
@@ -42,20 +45,21 @@ export const CustomConnectButton = ({
       submitToast();
 
       const data: SignedData =
-        signedData ||
-        (await fetch('api/faucet', {
-          method: 'POST',
-          headers: { ['Content-Type']: 'application/json' },
-          body: JSON.stringify({ walletAddress, token }),
-        }).then(async (res) => {
-          if (res.status === 200) {
-            return res.json();
-          } else if (res.status === 429) {
-            rateLimitToast();
-          } else {
-            failureToast();
-          }
-        }));
+        token === signedData?.token
+          ? signedData
+          : await fetch('api/faucet', {
+              method: 'POST',
+              headers: { ['Content-Type']: 'application/json' },
+              body: JSON.stringify({ walletAddress, token }),
+            }).then(async (res) => {
+              if (res.status >= 200 && res.status < 300) {
+                return res.json();
+              } else if (res.status === 429) {
+                rateLimitToast(token);
+              } else {
+                failureToast();
+              }
+            });
 
       if (!data) {
         setIsLoading(false);
@@ -78,7 +82,26 @@ export const CustomConnectButton = ({
         return;
       }
 
-      const { token: tokenName, salt, signature } = data;
+      const { token: tokenName, salt, signature, walletAddress: wallet } = data;
+
+      // msg.sender, token, salt
+      const nonce = keccak256(
+        encodePacked(['address', 'string', 'bytes32'], [wallet, token, salt])
+      );
+
+      const isNonceUsed = await client?.readContract({
+        address: config.faucetContractAddress,
+        abi: faucetABI,
+        functionName: 'isNonceUsed',
+        args: [nonce],
+      });
+
+      if (isNonceUsed || wallet !== walletAddress) {
+        rateLimitToast(tokenName as FaucetTokenType);
+        setIsLoading(false);
+        setSignedData(null);
+        return;
+      }
 
       writeContract(
         {
@@ -95,10 +118,13 @@ export const CustomConnectButton = ({
           },
           onError: (error) => {
             console.error(error);
-            if (!error.message.includes('User rejected')) {
+            if (error.message.includes('User rejected')) {
+              rejectedToast();
+            } else {
               failureToast();
             }
             setIsLoading(false);
+            setSignedData(null);
           },
         }
       );
@@ -137,12 +163,31 @@ export const CustomConnectButton = ({
     });
   };
 
-  const rateLimitToast = () => {
+  const rateLimitToast = (tokenName: FaucetTokenType) => {
     return toast({
       title: 'Whoosh! Slow down!',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Sorry, you can only claim tokens once every 2 hours.
+          Sorry, you can only claim
+          {tokenName === FaucetToken.ETH
+            ? ' free testnet gas '
+            : ` ${tokenName} tokens `}
+          once every
+          {tokenName === FaucetToken.ETH ? ' 10 minutes.' : ' 2 hours.'}
+        </div>
+      ),
+      variant: 'fail',
+      duration: 10000,
+    });
+  };
+
+  const rejectedToast = () => {
+    return toast({
+      title: 'You rejected the transaction',
+      description: (
+        <div className='flex flex-row text-sm text-gray-600'>
+          Please try again. Don&apos;t worry, this doesn&apos;t count against
+          your rate limit.
         </div>
       ),
       variant: 'fail',
@@ -190,7 +235,7 @@ export const CustomConnectButton = ({
                 isLoading={isLoading}
                 data-testid='get-tokens-button'
               >
-                {signedData ? 'Get more Tokens and Miles' : 'Get Tokens'}
+                {signedData ? 'Get More Tokens and Miles' : 'Get Tokens'}
               </Button>
             ) : (
               <Button
