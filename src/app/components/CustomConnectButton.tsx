@@ -2,6 +2,7 @@ import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useConfig, usePublicClient, useWriteContract } from 'wagmi';
 import { getBalance, waitForTransactionReceipt } from '@wagmi/core';
+import { encodeAbiParameters, keccak256 } from 'viem';
 import { useToast } from './ui/use-toast';
 import { cn } from '@/app/lib/utils';
 import { ButtonHTMLAttributes, FC, useState } from 'react';
@@ -16,8 +17,9 @@ import { config } from '@/app/config';
 type SignedData = {
   tokenDrip: string;
   token: FaucetTokenType;
-  salt: string;
-  signature: string;
+  salt: `0x${string}`;
+  signature: `0x${string}`;
+  walletAddress: `0x${string}`;
 };
 
 export const CustomConnectButton = ({
@@ -42,21 +44,22 @@ export const CustomConnectButton = ({
       setIsLoading(true);
       submitToast();
 
-      const data: SignedData = token === signedData?.token
-        ? signedData
-        : (await fetch('api/faucet', {
-          method: 'POST',
-          headers: { ['Content-Type']: 'application/json' },
-          body: JSON.stringify({ walletAddress, token }),
-        }).then(async (res) => {
-          if (res.status >= 200 && res.status < 300) {
-            return res.json();
-          } else if (res.status === 429) {
-            rateLimitToast(token);
-          } else {
-            failureToast();
-          }
-        }));
+      const data: SignedData =
+        token === signedData?.token
+          ? signedData
+          : await fetch('api/faucet', {
+              method: 'POST',
+              headers: { ['Content-Type']: 'application/json' },
+              body: JSON.stringify({ walletAddress, token }),
+            }).then(async (res) => {
+              if (res.status >= 200 && res.status < 300) {
+                return res.json();
+              } else if (res.status === 429) {
+                rateLimitToast(token);
+              } else {
+                failureToast();
+              }
+            });
 
       if (!data) {
         setIsLoading(false);
@@ -79,14 +82,28 @@ export const CustomConnectButton = ({
         return;
       }
 
-      const { token: tokenName, salt, signature } = data;
+      const { token: tokenName, salt, signature, walletAddress: wallet } = data;
+
+      // msg.sender, token, salt
+      const nonce = keccak256(
+        encodeAbiParameters(
+          [
+            { name: 'wallet', type: 'address' },
+            { name: 'token', type: 'string' },
+            { name: 'salt', type: 'bytes32' },
+          ],
+          [wallet, token, salt]
+        )
+      );
 
       const isNonceUsed = await client?.readContract({
         address: config.faucetContractAddress,
         abi: faucetABI,
         functionName: 'isNonceUsed',
-        args: [salt],
+        args: [nonce],
       });
+
+      console.log({ isNonceUsed });
 
       if (isNonceUsed) {
         rateLimitToast(tokenName as FaucetTokenType);

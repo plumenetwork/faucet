@@ -43,7 +43,7 @@ const CoreFaucet: FC = () => {
               : ` testnet ${token} tokens `}
             every
             {token === FaucetToken.ETH ? ' 10 minutes ' : ' 2 hours '}
-            <br/>
+            <br />
             to ensure a smooth experience for all users.
           </div>
         </div>
