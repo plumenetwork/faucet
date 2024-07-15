@@ -49,7 +49,7 @@ export const CustomConnectButton = ({
           headers: { ['Content-Type']: 'application/json' },
           body: JSON.stringify({ walletAddress, token }),
         }).then(async (res) => {
-          if (res.status === 200) {
+          if (res.status >= 200 && res.status < 300) {
             return res.json();
           } else if (res.status === 429) {
             rateLimitToast(token);
