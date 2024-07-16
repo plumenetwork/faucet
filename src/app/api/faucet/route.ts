@@ -26,7 +26,7 @@ const redis = new Redis({
 const limiter = withConcurrencyLimiter({
   keyPrefix: `concurrency:faucet:`,
   limit: 10,
-})
+});
 
 const walletClient = createWalletClient({
   account: privateKeyToAccount(`0x${process.env.FAUCET_ACCOUNT_PRIVATE_KEY}`),
@@ -40,10 +40,19 @@ const TWO_HOURS = 60 * 60 * 2;
 const minTxCost = parseEther('0.00004');
 const ethAmount = parseEther('0.001');
 
+const sharedCorsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
 export const POST = withCaching({
   makeKeys: async (request: NextRequest) => {
     let ip =
-      request.headers.get('cf-connecting-ip') ?? request.headers.get('x-forwarded-for') ?? request.ip ?? '127.0.0.1';
+      request.headers.get('cf-connecting-ip') ??
+      request.headers.get('x-forwarded-for') ??
+      request.ip ??
+      '127.0.0.1';
     ip = ip.replace(/:/gi, ';');
 
     const json = await request.json();
@@ -63,7 +72,7 @@ export const POST = withCaching({
     ];
   },
 
-  cleanseData: (data: any) => data && ({ ...data, tokenDrip: '' }),
+  cleanseData: (data: any) => data && { ...data, tokenDrip: '' },
 
   handler: async (req: Request): Promise<any> => {
     const {
@@ -80,11 +89,17 @@ export const POST = withCaching({
       walletAddress.length !== 42 ||
       !walletAddress.match(/^0x[0-9a-fA-F]+$/)
     ) {
-      return Response.json({ error: 'Invalid walletAddress' }, { status: 400 });
+      return Response.json(
+        { error: 'Invalid walletAddress' },
+        { status: 400, headers: sharedCorsHeaders }
+      );
     }
 
     if (!Object.values(FaucetToken).includes(token)) {
-      return Response.json({ error: 'Invalid token' }, { status: 400 });
+      return Response.json(
+        { error: 'Invalid token' },
+        { status: 400, headers: sharedCorsHeaders }
+      );
     }
 
     try {
@@ -148,13 +163,16 @@ export const POST = withCaching({
         message: { raw: message },
       });
 
-      return {
-        tokenDrip,
-        walletAddress,
-        token,
-        salt,
-        signature,
-      };
+      return Response.json(
+        {
+          tokenDrip,
+          walletAddress,
+          token,
+          salt,
+          signature,
+        },
+        { status: 200, headers: sharedCorsHeaders }
+      );
     } catch (e) {
       console.error(e);
       return Response.json({ error: 'Failed to send token' }, { status: 503 });
