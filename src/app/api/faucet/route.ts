@@ -58,7 +58,7 @@ export const POST = withCaching({
     ];
   },
 
-  cleanseData: (data: any) => ({ ...data, tokenDrip: '' }),
+  cleanseData: (data: any) => data && ({ ...data, tokenDrip: '' }),
 
   handler: withConcurrencyLimiter({
     keyPrefix: `concurrency:faucet:`,

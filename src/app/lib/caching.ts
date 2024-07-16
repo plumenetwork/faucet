@@ -65,6 +65,14 @@ export const withCaching =
 
     const response = await handler(request);
 
+    if (!response) {
+      return Response.json({ error: 'Invalid request' }, { status: 400 });
+    }
+
+    if (response instanceof Response) {
+      return response;
+    }
+
     for (const cache of caches) {
       const { key, duration } = cache;
       await redis.setex(
