@@ -45,10 +45,6 @@ export const OPTIONS = async () => {
   return Response.json({}, { status: 200, headers: sharedCorsHeaders });
 };
 
-export const OPTIONS = async () => {
-  return Response.json({}, { status: 200, headers: sharedCorsHeaders });
-};
-
 export const POST = withCaching({
   makeKeys: async (request: NextRequest) => {
     let ip =
