@@ -46,6 +46,10 @@ const sharedCorsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
+export const OPTIONS = async () => {
+  return Response.json({}, { status: 200, headers: sharedCorsHeaders });
+};
+
 export const POST = withCaching({
   makeKeys: async (request: NextRequest) => {
     let ip =
