@@ -13,7 +13,7 @@ export default function Home() {
         <Link
           href='https://miles.plumenetwork.xyz/'
           target='_blank'
-          className='mt-4 flex items-center gap-2 rounded-[9999px] bg-white px-6 py-2.5 text-sm text-gray-800'
+          className='mt-4 flex items-center gap-2 rounded-[9999px] bg-white px-6 py-2.5 text-sm text-gray-800 hover:bg-[#FAFAFA]'
         >
           <ArrowLeft size={16} /> Go back to Plume Testnet
         </Link>
