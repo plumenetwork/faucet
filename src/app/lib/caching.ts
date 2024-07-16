@@ -1,5 +1,6 @@
 import Redis from 'ioredis';
 import { NextRequest } from 'next/server';
+import { sharedCorsHeaders } from '@/app/lib/utils';
 
 const redis = new Redis({
   host: process.env.REDIS_HOST,
@@ -59,7 +60,10 @@ export const withCaching =
       const data = await redis.get(`${prefix}${key}`);
 
       if (data) {
-        return Response.json(JSON.parse(data), { status: 202 });
+        return Response.json(JSON.parse(data), {
+          status: 202,
+          headers: sharedCorsHeaders,
+        });
       }
     }
 
@@ -75,12 +79,12 @@ export const withCaching =
 
     for (const cache of caches) {
       const { key, duration } = cache;
-      await redis.setex(
+      redis.setex(
         `${prefix}${key}`,
         duration,
         JSON.stringify(cleanseData(response))
       );
     }
 
-    return Response.json(response);
+    return Response.json(response, { status: 202, headers: sharedCorsHeaders });
   };
