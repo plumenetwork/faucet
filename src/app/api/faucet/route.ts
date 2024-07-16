@@ -23,6 +23,11 @@ const redis = new Redis({
   keyPrefix: 'nonce:faucet:',
 });
 
+const limiter = withConcurrencyLimiter({
+  keyPrefix: `concurrency:faucet:`,
+  limit: 10,
+})
+
 const walletClient = createWalletClient({
   account: privateKeyToAccount(`0x${process.env.FAUCET_ACCOUNT_PRIVATE_KEY}`),
   chain: plumeTestnet,
@@ -60,10 +65,7 @@ export const POST = withCaching({
 
   cleanseData: (data: any) => data && ({ ...data, tokenDrip: '' }),
 
-  handler: withConcurrencyLimiter({
-    keyPrefix: `concurrency:faucet:`,
-    limit: 100,
-  })(async (req: Request): Promise<any> => {
+  handler: async (req: Request): Promise<any> => {
     const {
       walletAddress,
       token = FaucetToken.ETH,
@@ -92,46 +94,48 @@ export const POST = withCaching({
       let tokenDrip = '';
 
       if (userBalance < minTxCost) {
-        const [faucetAddress] = await walletClient.getAddresses();
+        await limiter(async () => {
+          const [faucetAddress] = await walletClient.getAddresses();
 
-        let nonce;
-        const [walletNonce, redisNonce] = await Promise.all([
-          walletClient.getTransactionCount({
-            address: faucetAddress,
-            blockTag: 'pending',
-          }),
-          redis.incr(faucetAddress),
-        ]);
-
-        if (walletNonce > redisNonce) {
-          redis.set(faucetAddress, walletNonce);
-          nonce = walletNonce;
-        } else {
-          nonce = redisNonce;
-        }
-
-        const hash = await walletClient
-          .sendTransaction({
-            to: walletAddress as `0x${string}`,
-            value: ethAmount,
-            nonce,
-          })
-          .catch(async (e) => {
-            const latestWalletNonce = await walletClient.getTransactionCount({
+          let nonce;
+          const [walletNonce, redisNonce] = await Promise.all([
+            walletClient.getTransactionCount({
               address: faucetAddress,
+              blockTag: 'pending',
+            }),
+            redis.incr(faucetAddress),
+          ]);
+
+          if (walletNonce > redisNonce) {
+            redis.set(faucetAddress, walletNonce);
+            nonce = walletNonce;
+          } else {
+            nonce = redisNonce;
+          }
+
+          const hash = await walletClient
+            .sendTransaction({
+              to: walletAddress as `0x${string}`,
+              value: ethAmount,
+              nonce,
+            })
+            .catch(async (e) => {
+              const latestWalletNonce = await walletClient.getTransactionCount({
+                address: faucetAddress,
+              });
+
+              if (latestWalletNonce < nonce) {
+                redis.set(faucetAddress, latestWalletNonce - 1);
+              }
+
+              throw e;
             });
 
-            if (latestWalletNonce < nonce) {
-              redis.set(faucetAddress, latestWalletNonce - 1);
-            }
+          // wait 100 milliseconds for the TX to propagate through mem-pool
+          await new Promise((resolve) => setTimeout(resolve, 100));
 
-            throw e;
-          });
-
-        // wait 100 milliseconds for the TX to propagate through mem-pool
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        tokenDrip = hash;
+          tokenDrip = hash;
+        })();
       }
 
       const salt = keccak256(toHex(`${Date.now()}|${Math.random()}`));
@@ -155,5 +159,5 @@ export const POST = withCaching({
       console.error(e);
       return Response.json({ error: 'Failed to send token' }, { status: 503 });
     }
-  }),
+  },
 });
