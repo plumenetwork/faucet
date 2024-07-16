@@ -3,6 +3,7 @@
 import { FC, ReactElement, useState } from 'react';
 
 import { Turnstile } from '@marsidev/react-turnstile';
+import { watchAsset } from 'viem/actions';
 
 import { FaucetIcon } from '@/app/icons/FaucetIcon';
 import { FaucetTokenType, FaucetToken } from '@/app/lib/types';
@@ -15,14 +16,35 @@ import { EthIcon } from '@/app/icons/EthIcon';
 import { DaiIcon } from '@/app/icons/DaiIcon';
 import { UsdtIcon } from '@/app/icons/UsdtIcon';
 import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
-import { useBackdoorSearchParams } from '@/app/hooks/useBackdoorSearchParams';
 import { config } from '@/app/config';
 import { tokenRadioCardSelected } from '@/app/analytics';
 import { GoonIcon } from '../icons/GoonIcon';
+import { useAccount } from 'wagmi';
+import { useWagmiConfig } from '../hooks/useWagmiConfig';
+import { getConnectorClient } from '@wagmi/core';
+import { useToast } from './ui/use-toast';
+import { Address } from 'viem';
+
+const faucetTokenConfigs: {
+  [k in FaucetTokenType]?: {
+    address: Address;
+    symbol: string;
+    decimals: number;
+  };
+} = {
+  [FaucetTokenType.GOON]: {
+    address: '0xbA22114ec75f0D55C34A5E5A3cf384484Ad9e733',
+    symbol: 'GOON',
+    decimals: 18,
+  },
+};
 
 const CoreFaucet: FC = () => {
+  const { connector } = useAccount();
+  const { wagmiConfig } = useWagmiConfig();
   const [verified, setVerified] = useState(false);
   const [token, setToken] = useState<FaucetTokenType>(FaucetToken.ETH);
+  const { toast } = useToast();
 
   const bypassCloudflareTurnstile = config.enableBypassCloudflareTurnstile;
   //  const { bypassCloudflareTurnstile } = useBackdoorSearchParams();
@@ -132,6 +154,32 @@ const CoreFaucet: FC = () => {
           onExpire={() => setVerified(false)}
           onError={() => setVerified(false)}
         />
+      )}
+      {isConnected && faucetTokenConfigs[token] && (
+        <button
+          className='text-blue-500'
+          onClick={async () => {
+            try {
+              // @ts-ignore
+              const connectorClient = await getConnectorClient(wagmiConfig, {
+                connector,
+              });
+
+              watchAsset(connectorClient, {
+                type: 'ERC20',
+                // okay to assert here due to check above
+                options: faucetTokenConfigs[token]!,
+              });
+            } catch (e) {
+              toast({
+                title: 'Cancelled by user',
+                variant: 'fail',
+              });
+            }
+          }}
+        >
+          Add {token} to your wallet
+        </button>
       )}
     </div>
   );
