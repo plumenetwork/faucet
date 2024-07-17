@@ -19,4 +19,3 @@ export const TelegramBrandIcon: FC<SVGProps<SVGSVGElement>> = (props) => {
     </svg>
   );
 };
-s;
