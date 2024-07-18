@@ -16,6 +16,7 @@ import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
 import Redis from 'ioredis';
 import { withCaching } from '@/app/lib/caching';
 import { sharedCorsHeaders } from '@/app/lib/utils';
+import FaucetABI from '@/app/abi/faucet';
 
 const redis = new Redis({
   host: process.env.REDIS_HOST,
@@ -26,7 +27,7 @@ const redis = new Redis({
 
 const limiter = withConcurrencyLimiter({
   keyPrefix: `concurrency:faucet:`,
-  limit: 10,
+  limit: 1, // 1 concurrent request to for the nonce sequence
 });
 
 const walletClient = createWalletClient({
@@ -37,13 +38,14 @@ const walletClient = createWalletClient({
 
 const TEN_MINUTES = 60 * 10;
 const TWO_HOURS = 60 * 60 * 2;
-
-const minTxCost = parseEther('0.00004');
-const ethAmount = parseEther('0.001');
-
+const MIN_TX_COST = parseEther('0.00004');
 export const OPTIONS = async () => {
   return Response.json({}, { status: 200, headers: sharedCorsHeaders });
 };
+
+
+const pendingDripRequests: string[] = [];
+let resolvedDripTxHash: string = '';
 
 export const POST = withCaching({
   makeKeys: async (request: NextRequest) => {
@@ -107,8 +109,15 @@ export const POST = withCaching({
       });
       let tokenDrip = '';
 
-      if (userBalance < minTxCost) {
+      if (userBalance < MIN_TX_COST) {
+        pendingDripRequests.push(walletAddress);
+
         await limiter(async () => {
+          if (pendingDripRequests.length === 0) {
+            tokenDrip = resolvedDripTxHash;
+            return;
+          }
+
           const [faucetAddress] = await walletClient.getAddresses();
 
           let nonce;
@@ -128,10 +137,14 @@ export const POST = withCaching({
           }
 
           const hash = await walletClient
-            .sendTransaction({
-              to: walletAddress as `0x${string}`,
-              value: ethAmount,
+            .writeContract({
+              address: process.env.NEXT_PUBLIC_FAUCET_CONTRACT_ADDRESS as `0x${string}`,
+              abi: FaucetABI,
+              functionName: "giveGasTokens",
               nonce,
+              args: [
+                pendingDripRequests,
+              ]
             })
             .catch(async (e) => {
               const latestWalletNonce = await walletClient.getTransactionCount({
@@ -148,6 +161,8 @@ export const POST = withCaching({
           // wait 100 milliseconds for the TX to propagate through mem-pool
           await new Promise((resolve) => setTimeout(resolve, 100));
 
+          pendingDripRequests.length = 0;
+          resolvedDripTxHash = hash;
           tokenDrip = hash;
         })();
       }
