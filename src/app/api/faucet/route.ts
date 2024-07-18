@@ -45,7 +45,8 @@ export const OPTIONS = async () => {
 
 
 const pendingDripRequests: string[] = [];
-let resolvedDripTxHash: string = '';
+const processingDripRequests: string[] = [];
+let resolvedDripTxHash: {[key: string]: string} = {};
 
 export const POST = withCaching({
   makeKeys: async (request: NextRequest) => {
@@ -113,10 +114,14 @@ export const POST = withCaching({
         pendingDripRequests.push(walletAddress);
 
         await limiter(async () => {
-          if (pendingDripRequests.length === 0) {
-            tokenDrip = resolvedDripTxHash;
+          if (resolvedDripTxHash[walletAddress]) {
+            tokenDrip = resolvedDripTxHash[walletAddress];
+            delete resolvedDripTxHash[walletAddress];
             return;
           }
+
+          processingDripRequests.push(...pendingDripRequests);
+          pendingDripRequests.length = 0;
 
           const [faucetAddress] = await walletClient.getAddresses();
 
@@ -158,12 +163,16 @@ export const POST = withCaching({
               throw e;
             });
 
+          processingDripRequests.forEach((address) => {
+            if (address !== walletAddress)
+              resolvedDripTxHash[address] = hash;
+          });
+
+          processingDripRequests.length = 0;
+          tokenDrip = hash;
+
           // wait 100 milliseconds for the TX to propagate through mem-pool
           await new Promise((resolve) => setTimeout(resolve, 100));
-
-          pendingDripRequests.length = 0;
-          resolvedDripTxHash = hash;
-          tokenDrip = hash;
         })();
       }
 
