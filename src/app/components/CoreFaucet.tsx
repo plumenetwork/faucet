@@ -64,7 +64,7 @@ const CoreFaucet: FC = () => {
               ? ' free testnet gas '
               : ` testnet ${token} tokens `}
             every
-            {token === FaucetToken.ETH ? ' hour ' : ' 2 hours '}
+            {token === FaucetToken.ETH ? ' 10 minutes ' : ' 2 hours '}
             <br />
             to ensure a smooth experience for all users.
           </div>
