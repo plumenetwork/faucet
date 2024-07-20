@@ -35,7 +35,7 @@ const walletClient = createWalletClient({
   transport: http(),
 }).extend(publicActions);
 
-const ONE_HOUR = 60 * 60;
+const TEN_MINUTES = 60 * 10;
 const TWO_HOURS = 60 * 60 * 2;
 
 const minTxCost = parseEther('0.00004');
@@ -62,11 +62,11 @@ export const POST = withCaching({
     return [
       {
         key: `${token}:ip:${ip}`,
-        duration: token === FaucetToken.ETH ? ONE_HOUR : TWO_HOURS,
+        duration: token === FaucetToken.ETH ? TEN_MINUTES : TWO_HOURS,
       },
       {
         key: `${token}:wallet:${walletAddress}`,
-        duration: token === FaucetToken.ETH ? ONE_HOUR : TWO_HOURS,
+        duration: token === FaucetToken.ETH ? TEN_MINUTES : TWO_HOURS,
       },
     ];
   },
