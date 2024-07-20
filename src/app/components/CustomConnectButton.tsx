@@ -173,7 +173,7 @@ export const CustomConnectButton = ({
             ? ' free testnet gas '
             : ` ${tokenName} tokens `}
           once every
-          {tokenName === FaucetToken.ETH ? ' 10 minutes.' : ' 2 hours.'}
+          {tokenName === FaucetToken.ETH ? ' hour.' : ' 2 hours.'}
         </div>
       ),
       variant: 'fail',
