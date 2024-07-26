@@ -54,6 +54,9 @@ export const CustomConnectButton = ({
             }).then(async (res) => {
               if (res.status >= 200 && res.status < 300) {
                 return res.json();
+              } else if (res.status === 400) {
+                const { error } = await res.json();
+                failureToast(error);
               } else if (res.status === 429) {
                 rateLimitToast(token);
               } else {
@@ -186,8 +189,8 @@ export const CustomConnectButton = ({
       title: 'You rejected the transaction',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Please try again. Don&#39;t worry, this doesn&#39;t count against
-          your rate limit.
+          Please try again. Don&#39;t worry, this doesn&#39;t count against your
+          rate limit.
         </div>
       ),
       variant: 'fail',
@@ -195,12 +198,12 @@ export const CustomConnectButton = ({
     });
   };
 
-  const failureToast = () => {
+  const failureToast = (error?: string) => {
     return toast({
       title: 'Oops! Something went wrong',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Our system is under heavy load. Please try again later.
+          {error ?? 'Our system is under heavy load. Please try again later.'}
         </div>
       ),
       variant: 'fail',

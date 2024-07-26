@@ -40,6 +40,7 @@ const TWO_HOURS = 60 * 60 * 2;
 
 const minTxCost = parseEther('0.00004');
 const ethAmount = parseEther('0.001');
+const maxBalance = parseEther('0.01');
 
 export const OPTIONS = async () => {
   return Response.json({}, { status: 200, headers: sharedCorsHeaders });
@@ -89,14 +90,18 @@ export const POST = withCaching({
       !walletAddress.match(/^0x[0-9a-fA-F]+$/)
     ) {
       return Response.json(
-        { error: 'Invalid walletAddress' },
+        {
+          error: `Your wallet address is incorrectly formatted: ${walletAddress}`,
+        },
         { status: 400, headers: sharedCorsHeaders }
       );
     }
 
     if (!Object.values(FaucetToken).includes(token)) {
       return Response.json(
-        { error: 'Invalid token' },
+        {
+          error: `You requested an invalid token type "${token}". Please only request "ETH" or "GOON".`,
+        },
         { status: 400, headers: sharedCorsHeaders }
       );
     }
@@ -106,6 +111,16 @@ export const POST = withCaching({
         address: walletAddress,
       });
       let tokenDrip = '';
+
+      if (userBalance > maxBalance) {
+        return Response.json(
+          {
+            error:
+              'You have enough gas in your wallet already! Please do not abuse the faucet.',
+          },
+          { status: 400, headers: sharedCorsHeaders }
+        );
+      }
 
       if (userBalance < minTxCost) {
         await limiter(async () => {
@@ -171,7 +186,10 @@ export const POST = withCaching({
       };
     } catch (e) {
       console.error(e);
-      return Response.json({ error: 'Failed to send token' }, { status: 503 });
+      return Response.json(
+        { error: 'Failed to send token' },
+        { status: 503, headers: sharedCorsHeaders }
+      );
     }
   },
 });
