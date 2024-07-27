@@ -21,7 +21,7 @@ const SocialMediaBar = () => (
       <Link href='https://t.me/plumenetwork_community'>
         <TelegramBrandIcon className='text-gray-500 hover:text-gray-600' />
       </Link>
-      <Link href='https://discord.com/invite/plume'>
+      <Link href='https://discord.com/invite/plume-network'>
         <DiscordBrandIcon className='text-gray-500 hover:text-gray-600' />
       </Link>
       <Link href='https://www.linkedin.com/company/plume-network'>
