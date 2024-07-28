@@ -38,7 +38,7 @@ const walletClient = createWalletClient({
 const ONE_HOUR = 60 * 60;
 const TWO_HOURS = 60 * 60 * 2;
 
-const minTxCost = parseEther('0.00004');
+const minTxCost = parseEther('0.0004');
 const ethAmount = parseEther('0.001');
 
 export const OPTIONS = async () => {
