@@ -51,136 +51,19 @@ const CoreFaucet: FC = () => {
   const { isConnected, address } = useFaucetWallet();
 
   return (
-    <div className='mt-8 flex max-w-full flex-col justify-center gap-4 rounded-2xl border border-solid border-gray-200 bg-neutral-50 px-5 py-5 md:w-[496px]'>
-      <div className='flex flex-col items-center gap-2 text-center'>
-        <FaucetIcon />
-        <div className='flex flex-col items-center'>
-          <div className='font-lufga text-2xl font-extrabold uppercase'>
-            Get Testnet Tokens
-          </div>
-          <div className='max-w-[280px] font-lufga font-medium sm:max-w-[400px]'>
-            You can get
-            {token === FaucetToken.ETH
-              ? ' free testnet gas '
-              : ` testnet ${token} tokens `}
-            every
-            {token === FaucetToken.ETH ? ' hour ' : ' 2 hours '}
-            <br />
-            to ensure a smooth experience for all users.
-          </div>
-        </div>
+    <div className='mt-4 flex max-w-full flex-col justify-center gap-1 rounded-2xl border border-solid border-gray-200 bg-neutral-50 px-5 py-5 md:w-[496px]'>
+      <div className='flex flex-col text-left'>
+      <p className='font-lufga font-bold'>Who is Eligible?</p>
       </div>
+      <p className='font-lufga font-medium'>All users who participated in Plume x Bitget <a className="text-blue-600" href="https://medium.com/@plumenetwork/earn-rewards-with-plume-x-bitget-task2get-campaign-96bafb6a7d3d">Task2Get</a> campaign from July 2nd to July 16th</p>
       <Divider />
-      <RadioCardList
-        label={`${Object.values(FaucetToken).length > 1 ? 'Select a' : ''} Token`}
-        value={token}
-        onChange={(token) => {
-          setToken(token);
-          tokenRadioCardSelected(token);
-        }}
-      >
-        {
-          ('ETH' in FaucetToken && (
-            <RadioCard
-              image={<EthIcon />}
-              value={FaucetToken.ETH}
-              label='ETH'
-              description='Plume Testnet Ether'
-              data-testid='eth-radio-card'
-            />
-          )) as ReactElement
-        }
-        {
-          ('USDC' in FaucetToken && (
-            <RadioCard
-              image={<UsdcIcon />}
-              value={FaucetToken.USDC}
-              label='USDC'
-              description='Testnet USD Coin'
-              data-testid='usdc-radio-card'
-            />
-          )) as ReactElement
-        }
-        {
-          ('GOON' in FaucetToken && (
-            <RadioCard
-              image={<GoonIcon />}
-              value={FaucetToken.GOON}
-              label='GOON'
-              description='Goon Testnet Token'
-              data-testid='goon-radio-card'
-            />
-          )) as ReactElement
-        }
-        {
-          ('DAI' in FaucetToken && (
-            <RadioCard
-              image={<DaiIcon />}
-              value={FaucetToken.DAI}
-              label='DAI'
-              description='Testnet DAI Stablecoin'
-              data-testid='dai-radio-card'
-            />
-          )) as ReactElement
-        }
-        {
-          ('USDT' in FaucetToken && (
-            <RadioCard
-              image={<UsdtIcon />}
-              value={FaucetToken.USDT}
-              label='USDT'
-              description='Testnet Tether USD'
-              data-testid='usdt-radio-card'
-            />
-          )) as ReactElement
-        }
-      </RadioCardList>
-      {isConnected && (
-        <TextField label='Your Address' value={address} disabled />
-      )}
-      <CustomConnectButton
-        verified={verified || bypassCloudflareTurnstile}
-        walletAddress={address}
-        token={token}
-      />
-      {!bypassCloudflareTurnstile && (
-        <Turnstile
-          options={{
-            theme: 'light',
-          }}
-          className='mx-auto flex items-center justify-center'
-          siteKey={config.cloudflareTurnstileSiteKey}
-          onSuccess={() => setVerified(true)}
-          onExpire={() => setVerified(false)}
-          onError={() => setVerified(false)}
-        />
-      )}
-      {isConnected && faucetTokenConfigs[token] && (
-        <button
-          className='text-blue-500'
-          onClick={async () => {
-            try {
-              // @ts-ignore
-              const connectorClient = await getConnectorClient(wagmiConfig, {
-                connector,
-              });
+      <span className="font-lufga text-gray-400 capitalize font-normal">STEP 1</span>
+      <p className="font-lufga font-semi">Connect Your Bitget Wallet</p>
+      <span className="font-lufga text-gray-400 capitalize font-normal">STEP 2</span>
+      <p className="font-lufga font-semi">Enter Your Plume Wallet Address</p>
+      <span className="font-lufga text-gray-400 capitalize font-normal">STEP 3</span>
+      <p className="font-lufga font-semi">Claim Miles</p>
 
-              watchAsset(connectorClient, {
-                type: 'ERC20',
-                // okay to assert here due to check above
-                options: faucetTokenConfigs[token]!,
-              });
-            } catch (e) {
-              toast({
-                title: 'Cancelled by user',
-                variant: 'fail',
-              });
-            }
-          }}
-        >
-          Add {token} to your wallet
-        </button>
-      )}
     </div>
   );
 };
