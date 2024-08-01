@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { WorldIcon } from '../icons/WorldIcon';
 import { XBrandIcon } from '../icons/XBrandIcon';
 import { LinkedInBrandIcon } from '../icons/LinkedInBrandIcon';
+import { TelegramBrandIcon } from '../icons/TelegramBrandIcon';
+import { DiscordBrandIcon } from '../icons/DiscordBrandIcon';
 
 const SocialMediaBar = () => (
   <>
@@ -15,6 +17,12 @@ const SocialMediaBar = () => (
       </Link>
       <Link href='https://twitter.com/plumenetwork'>
         <XBrandIcon className='text-gray-500 hover:text-gray-600' />
+      </Link>
+      <Link href='https://t.me/plumenetwork_community'>
+        <TelegramBrandIcon className='text-gray-500 hover:text-gray-600' />
+      </Link>
+      <Link href='https://discord.com/invite/plume-network'>
+        <DiscordBrandIcon className='text-gray-500 hover:text-gray-600' />
       </Link>
       <Link href='https://www.linkedin.com/company/plume-network'>
         <LinkedInBrandIcon className='text-gray-500 hover:text-gray-600' />

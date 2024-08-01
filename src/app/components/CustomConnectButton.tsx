@@ -153,7 +153,7 @@ export const CustomConnectButton = ({
       title: 'Mission accomplished',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          You&apos;ll receive
+          You&#39;ll receive
           {tokenName === FaucetToken.ETH ? ' 0.001 ' : ' 0.1 '}
           testnet {tokenName} in your wallet within a minute.
         </div>
@@ -173,7 +173,7 @@ export const CustomConnectButton = ({
             ? ' free testnet gas '
             : ` ${tokenName} tokens `}
           once every
-          {tokenName === FaucetToken.ETH ? ' 10 minutes.' : ' 2 hours.'}
+          {tokenName === FaucetToken.ETH ? ' hour.' : ' 2 hours.'}
         </div>
       ),
       variant: 'fail',
@@ -186,7 +186,7 @@ export const CustomConnectButton = ({
       title: 'You rejected the transaction',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Please try again. Don&apos;t worry, this doesn&apos;t count against
+          Please try again. Don&#39;t worry, this doesn&#39;t count against
           your rate limit.
         </div>
       ),
