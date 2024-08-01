@@ -13,7 +13,7 @@ export function withConcurrencyLimiter({
   limit = 10,
   perServer = false,
 } = {}): FunctionWithRedis {
-  if (!process.env.REDIS_HOST) {
+  if (!process.env.REDIS_SYNC) {
     console.warn(
       'Redis host is not provided. Concurrency limiter is disabled.'
     );
@@ -25,10 +25,13 @@ export function withConcurrencyLimiter({
 
   // REDIS CONFIGURATION
 
+  const redisUrl = process.env.REDIS_SYNC || '';
+  const url = new URL(redisUrl);
+
   const redisConfig = {
-    host: process.env.REDIS_HOST,
-    port: Number(process.env.REDIS_PORT || 6379),
-    password: process.env.REDIS_PASSWORD || '',
+    host: url.hostname,
+    port: Number(url.port || 6379),
+    password: url.password,
     keyPrefix,
   };
 
