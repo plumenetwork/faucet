@@ -6,8 +6,8 @@ export enum FaucetTokenType {
   USDT = 'USDT',
   DAI = 'DAI',
   GOON = 'GOON',
-  GOONUSD = 'goonUSD',
-  STRWA = 'stRWA',
+  GNUSD = 'gnUSD',
+  SGNUSD = 'sgnUSD',
 }
 
 type EthFaucetToken = {
