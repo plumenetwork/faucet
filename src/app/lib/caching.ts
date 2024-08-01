@@ -2,10 +2,13 @@ import Redis from 'ioredis';
 import { NextRequest } from 'next/server';
 import { sharedCorsHeaders } from '@/app/lib/utils';
 
+const redisUrl = process.env.REDIS_CACHE || '';
+const url = new URL(redisUrl);
+
 const redis = new Redis({
-  host: process.env.REDIS_HOST,
-  port: Number(process.env.REDIS_PORT || 6379),
-  password: process.env.REDIS_PASSWORD || '',
+  host: url.hostname,
+  port: Number(url.port || 6379),
+  password: url.password,
   keyPrefix: 'cache:faucet:',
 });
 
