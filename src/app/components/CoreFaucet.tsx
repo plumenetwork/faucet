@@ -31,6 +31,8 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import WalletIcon from '../assets/wallet.png'
 import dynamic from 'next/dynamic';
 import GoonLoadingAnimation from './Goon Loading Small.json'
+import GreenTickBox from '../assets/GreenTickBox.png'
+
 
 const faucetTokenConfigs: {
   [k in FaucetTokenType]?: {
@@ -97,7 +99,7 @@ const BitGetWalletConnect = () => {
 }
 
 const CoreFaucet: FC = () => {
-  const [claimingState, setClaimingState] = useState<'initial' | 'claiming' | 'complete'>('claiming')
+  const [claimingState, setClaimingState] = useState<'initial' | 'claiming' | 'complete'>('complete')
 
   const { wagmiConfig } = useWagmiConfig();
   const [verified, setVerified] = useState(false);
@@ -153,7 +155,16 @@ const CoreFaucet: FC = () => {
     </div>
     );
     case 'complete': 
-    return (<>Complete</>);
+    return (
+      <div className='mt-4 overflow-hidden flex max-w-full flex-col items-center gap-4 text-center justify-center rounded-2xl border border-solid border-gray-200 bg-neutral-50 px-5 py-5 md:w-[560px]'>
+                        <Image src={GreenTickBox} alt='green tick box' className='w-20 h-20' />
+                        <p className='font-lufga font-bold text-4xl'>Miles Claimed</p>
+                        <p className='font-lufga font-bold text-4xl text-[#31C48D]'>+{(10000).toLocaleString()} MILES</p>
+                        <p className='font-lufga text-gray-500'>Thank you for participating!</p>
+                        <button className='w-full  bg-black disabled:text-[#C7C6C3] text-white rounded-md flex items-center justify-center space-x-2 py-3 px-4'>Claim your miles on Plume Testnet</button>
+
+      </div>
+    );
   }
 };
 
