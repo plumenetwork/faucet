@@ -25,17 +25,9 @@ export const useWagmiConfig = (): { wagmiConfig: Config } => {
     projectId: config.rainbowProjectId,
     wallets: [
       {
-        groupName: 'Recommended',
+        groupName: 'Connect to Bitget',
         wallets: [
-          foxWallet,
           bitgetWallet,
-          metaMaskWallet,
-          coinbaseWallet,
-          okxWallet,
-          trustWallet,
-          zerionWallet,
-          walletConnectWallet,
-          ...(includeAutoWallet ? [autoWallet] : []),
         ],
       },
     ],

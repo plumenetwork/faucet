@@ -32,10 +32,10 @@ const PlumeNavBar: FC = () => {
           <OpenInNewTabIcon />
         </Link>
       </div>
-      <div className='flex flex-row gap-4'>
+      {/* <div className='flex flex-row gap-4'>
         {isConnected && <PlumeTestnetIndicator />}
         <ConnectButton showBalance={false} />
-      </div>
+      </div> */}
     </div>
   );
 };
