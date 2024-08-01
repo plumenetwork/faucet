@@ -17,13 +17,13 @@ import Redis from 'ioredis';
 import { withCaching } from '@/app/lib/caching';
 import { sharedCorsHeaders } from '@/app/lib/utils';
 
-const redisUrl = process.env.REDIS_SYNC || '';
-const url = new URL(redisUrl);
+const redisConnection = process.env.REDIS_SYNC || '';
+const redisUrl = new URL(redisConnection);
 
 const redis = new Redis({
-  host: url.hostname,
-  port: Number(url.port || 6379),
-  password: url.password,
+  host: redisUrl.hostname,
+  port: Number(redisUrl.port || 6379),
+  password: redisUrl.password,
   keyPrefix: 'nonce:faucet:',
 });
 

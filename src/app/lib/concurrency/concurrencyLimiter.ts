@@ -25,13 +25,13 @@ export function withConcurrencyLimiter({
 
   // REDIS CONFIGURATION
 
-  const redisUrl = process.env.REDIS_SYNC || '';
-  const url = new URL(redisUrl);
+  const redisConnection = process.env.REDIS_SYNC || '';
+  const redisUrl = new URL(redisConnection);
 
   const redisConfig = {
-    host: url.hostname,
-    port: Number(url.port || 6379),
-    password: url.password,
+    host: redisUrl.hostname,
+    port: Number(redisUrl.port || 6379),
+    password: redisUrl.password,
     keyPrefix,
   };
 
