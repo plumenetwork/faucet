@@ -1,66 +1,92 @@
 'use client';
 
-import { FC, ReactElement, useState } from 'react';
-
-import { Turnstile } from '@marsidev/react-turnstile';
-import { watchAsset } from 'viem/actions';
-
-import { FaucetIcon } from '@/app/icons/FaucetIcon';
-import { FaucetTokenType, FaucetToken } from '@/app/lib/types';
-import CustomConnectButton from './CustomConnectButton';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { Divider } from '@/app/components/Divider';
-import { TextField } from '@/app/components/TextField';
-import { RadioCard, RadioCardList } from '@/app/components/RadioCardList';
-import { UsdcIcon } from '@/app/icons/UsdcIcon';
-import { EthIcon } from '@/app/icons/EthIcon';
-import { DaiIcon } from '@/app/icons/DaiIcon';
-import { UsdtIcon } from '@/app/icons/UsdtIcon';
-import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
 import { config } from '@/app/config';
-import { tokenRadioCardSelected } from '@/app/analytics';
-import { GoonIcon } from '../icons/GoonIcon';
-import { useAccount, useConnect } from 'wagmi';
-import { useWagmiConfig } from '../hooks/useWagmiConfig';
-import { getConnectorClient } from '@wagmi/core';
-import { useToast } from './ui/use-toast';
-import { Address } from 'viem';
+import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
 import Image from 'next/image';
 import bitgetLogo from '../assets/bitget.png';
-import {} from 'wagmi/connectors';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import WalletIcon from '../assets/wallet.png';
 import dynamic from 'next/dynamic';
 import GoonLoadingAnimation from './Goon Loading Small.json';
 import GreenTickBox from '../assets/GreenTickBox.png';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Address } from 'viem';
+import { link } from 'fs';
+import { toast } from './ui/use-toast';
 
-const faucetTokenConfigs: {
-  [k in FaucetTokenType]?: {
-    address: Address;
-    symbol: string;
-    decimals: number;
+const sendLinkRequest = async ({
+  plumeAddress,
+  bitgetAddress,
+  messsage,
+  signature,
+}: {
+  plumeAddress: string;
+  bitgetAddress: string;
+  messsage: string;
+  signature: string;
+}) => {
+  const resp = await fetch(`${config.apiUrl}/bitget`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      plumeAddress: plumeAddress.toLowerCase(),
+      bitgetAddress: bitgetAddress.toLowerCase(),
+      messsage,
+      signature,
+    }),
+  });
+  return resp.json() as unknown as {
+    address: string;
+    points: number;
   };
-} = {
-  [FaucetTokenType.GOON]: {
-    address: '0xbA22114ec75f0D55C34A5E5A3cf384484Ad9e733',
-    symbol: 'GOON',
-    decimals: 18,
-  },
 };
 
-const PlumeAddress = () => {
+const getEligibility = async (address: string) => {
+  const resp = await fetch(`${config.apiUrl}/bitget/${address}`, {
+    method: 'GET',
+  });
+
+  return resp.json() as unknown as {
+    address: string;
+    points: number;
+  };
+};
+
+const PlumeAddress = ({
+  plumeAddress,
+  setPlumeAddress,
+}: {
+  plumeAddress?: string;
+  setPlumeAddress: Dispatch<SetStateAction<string | undefined>>;
+}) => {
   return (
     <input
       className='disabled:bg-gray-[#C7C6C3] rounded-md border-2 p-4 placeholder:font-lufga placeholder:text-[#C7C6C3]'
-      disabled={true}
+      disabled={false}
       placeholder='Plume Wallet Address'
+      value={plumeAddress}
+      onChange={(e) => {
+        setPlumeAddress(e.target.value);
+      }}
     />
   );
 };
 
-const ClaimMiles = () => {
+const ClaimMiles = ({
+  claimFunction,
+  isClaimDisabled,
+}: {
+  claimFunction: () => {};
+  isClaimDisabled: boolean;
+}) => {
   return (
     <button
-      disabled={false}
+      onClick={claimFunction}
+      disabled={isClaimDisabled}
       className='flex w-full items-center justify-center space-x-2 rounded-md bg-black px-4 py-3 text-white disabled:bg-[#F1F0EE] disabled:text-[#C7C6C3]'
     >
       Claim Miles
@@ -68,12 +94,19 @@ const ClaimMiles = () => {
   );
 };
 
-const BitGetWalletConnect = () => {
-  const { isConnected, address } = useAccount();
+const BitGetWalletConnect = ({
+  isConnected,
+  address,
+  isEligible,
+}: {
+  isConnected: boolean;
+  address: Address | undefined;
+  isEligible: boolean;
+}) => {
   const { openConnectModal } = useConnectModal();
-  const [isEligible, setIsEligible] = useState(false);
+  const { disconnect } = useDisconnect();
 
-  if (false) {
+  if (!isConnected || !address) {
     return (
       <button
         onClick={() => openConnectModal && openConnectModal()}
@@ -84,15 +117,12 @@ const BitGetWalletConnect = () => {
       </button>
     );
   }
-
-  const tempAddress = '0x82C5F5534eaec8FE2EBE0E6dEDd4F35330E82759';
-
-  if (true) {
+  if (isConnected) {
     return (
       <div className='flex max-w-full flex-row justify-between'>
         <div className='flex w-1/2 flex-row items-center justify-center gap-2'>
           <Image height={20} src={WalletIcon} alt='wallet icon' />
-          <p className='text-ellipsis'>{tempAddress}</p>
+          <p className='text-ellipsis'>{address}</p>
         </div>
         <div className='flex items-center space-x-2'>
           {isEligible ? (
@@ -104,7 +134,10 @@ const BitGetWalletConnect = () => {
               Not Eligible
             </span>
           )}
-          <button className='whitespace-nowrap rounded-lg bg-[#F1F0EE] px-3 py-2 text-sm'>
+          <button
+            onClick={() => disconnect()}
+            className='whitespace-nowrap rounded-lg bg-[#F1F0EE] px-3 py-2 text-sm'
+          >
             Disconnect
           </button>
         </div>
@@ -116,16 +149,62 @@ const BitGetWalletConnect = () => {
 const CoreFaucet: FC = () => {
   const [claimingState, setClaimingState] = useState<
     'initial' | 'claiming' | 'complete'
-  >('complete');
+  >('initial');
+  const { isConnected, address } = useAccount();
+  const [plumeAddress, setPlumeAddress] = useState<string | undefined>();
 
-  const { wagmiConfig } = useWagmiConfig();
-  const [verified, setVerified] = useState(false);
-  const [token, setToken] = useState<FaucetTokenType>(FaucetToken.ETH);
-  const { toast } = useToast();
+  const { mutate: linkRequestMutate } = useMutation({
+    mutationFn: sendLinkRequest,
+    onMutate: () => {
+      setClaimingState('claiming');
+    },
+    onSuccess: () => {
+      setClaimingState('complete');
+    },
+    onError: () => {
+      setClaimingState('initial');
+      toast({});
+    },
+  });
 
-  const bypassCloudflareTurnstile = config.enableBypassCloudflareTurnstile;
-  //  const { bypassCloudflareTurnstile } = useBackdoorSearchParams();
-  const { isConnected, address } = useFaucetWallet();
+  const { data: eligibilityRequest } = useQuery({
+    queryKey: ['getEligibility', address],
+    queryFn: () => getEligibility(address as string),
+    enabled: !!address,
+  });
+
+  const { signMessage } = useSignMessage();
+
+  const handleSignMessage = async () => {
+    if (!address || !plumeAddress) return;
+
+    const message = `I confirm ${plumeAddress.toLowerCase()} owns ${address.toLowerCase()}`;
+    try {
+      await signMessage(
+        { message },
+        {
+          onSuccess: (signature, variables) => {
+            console.log('signature', signature);
+            console.log('message', variables?.message);
+            linkRequestMutate({
+              plumeAddress: plumeAddress,
+              bitgetAddress: address,
+              messsage: message,
+              signature,
+            });
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error signing message:', error);
+    }
+  };
+
+  const isEligible = eligibilityRequest ? eligibilityRequest.points > 0 : false;
+  const isClaimDisabled = !true || !plumeAddress || !address;
+  console.log(plumeAddress);
+  console.log(address);
+  console.log(isClaimDisabled);
 
   switch (claimingState) {
     case 'initial':
@@ -149,19 +228,29 @@ const CoreFaucet: FC = () => {
             STEP 1
           </span>
           <p className='font-semi font-lufga'>Connect Your Bitget Wallet</p>
-          <BitGetWalletConnect />
+          <BitGetWalletConnect
+            isConnected={isConnected}
+            address={address}
+            isEligible={isEligible}
+          />
           <span className='font-lufga font-normal capitalize text-gray-400'>
             STEP 2
           </span>
           <p className='font-semi font-lufga'>
             Enter Your Plume Wallet Address
           </p>
-          <PlumeAddress />
+          <PlumeAddress
+            plumeAddress={plumeAddress}
+            setPlumeAddress={setPlumeAddress}
+          />
           <span className='font-lufga font-normal capitalize text-gray-400'>
             STEP 3
           </span>
           <p className='font-semi font-lufga'>Claim Miles</p>
-          <ClaimMiles />
+          <ClaimMiles
+            claimFunction={handleSignMessage}
+            isClaimDisabled={isClaimDisabled}
+          />
         </div>
       );
     case 'claiming':
