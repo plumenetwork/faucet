@@ -40,9 +40,9 @@ const lufga = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Plume Network Faucet',
+  title: 'Plume / Bitget task2get Claim',
   description:
-    'Plume Faucet: Your gateway to testnet tokens! Claim ETH, USDC, USDT, and DAI on the Plume testnet. Start testing your projects hassle-free.',
+    '',
   metadataBase: new URL(config.metadataBase),
 };
 
