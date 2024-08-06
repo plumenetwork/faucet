@@ -1,4 +1,4 @@
-# Faucet
+# faucet
 
 Plume faucet: https://faucet.plumenetwork.xyz/
 
