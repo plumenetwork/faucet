@@ -46,14 +46,18 @@ const sendLinkRequest = async ({
 };
 
 const getEligibility = async (address: string) => {
-  const resp = await fetch(`${config.apiUrl}/bitget/${address}`, {
-    method: 'GET',
-  });
-
-  return resp.json() as unknown as {
-    address: string;
-    points: number;
-  };
+  console.log('getEligibility', address);  
+  return fetch(`${config.apiUrl}/bitget/${address}`, {
+      method: 'GET',
+    }).then(async (resp) =>  {
+      const data = await resp.json();
+      if(data.code === 404) {
+        return { address, points: 0 };
+      }
+      return data;
+    }).catch((error) => {
+      return { address, points: 0 };
+    });
 };
 
 const PlumeAddress = ({
@@ -119,28 +123,19 @@ const BitGetWalletConnect = ({
   }
   if (isConnected) {
     return (
-      <div className='flex max-w-full flex-row justify-between'>
+      <div className='flex max-w-full justify-between'>
         <div className='flex w-1/2 flex-row items-center justify-center gap-2'>
           <Image height={20} src={WalletIcon} alt='wallet icon' />
-          <p className='text-ellipsis'>{address}</p>
+          <p className='truncate'>{address}</p>
         </div>
         <div className='flex items-center space-x-2'>
-          {isEligible ? (
-            <span className='whitespace-nowrap rounded-full bg-[#DEF7EC] px-3 py-1 text-sm text-[#0E9F6E]'>
-              You are Eligible
-            </span>
-          ) : (
-            <span className='whitespace-nowrap rounded-full bg-[#FEEBEB] px-3 py-1 text-sm text-[#F43B3A]'>
-              Not Eligible
-            </span>
-          )}
           <button
             onClick={() => disconnect()}
             className='whitespace-nowrap rounded-lg bg-[#F1F0EE] px-3 py-2 text-sm'
           >
             Disconnect
           </button>
-        </div>
+        </div>        
       </div>
     );
   }
@@ -232,24 +227,37 @@ const CoreFaucet: FC = () => {
             address={address}
             isEligible={isEligible}
           />
-          <span className='font-lufga font-normal capitalize text-gray-400'>
-            STEP 2
-          </span>
-          <p className='font-semi font-lufga'>
-            Enter Your Plume Wallet Address
-          </p>
-          <PlumeAddress
-            plumeAddress={plumeAddress}
-            setPlumeAddress={setPlumeAddress}
-          />
-          <span className='font-lufga font-normal capitalize text-gray-400'>
-            STEP 3
-          </span>
-          <p className='font-semi font-lufga'>Claim Miles</p>
-          <ClaimMiles
-            claimFunction={handleSignMessage}
-            isClaimDisabled={isClaimDisabled}
-          />
+          <div className='flex items-center space-x-2'>
+          {isEligible && (
+            <span className='whitespace-nowrap rounded-full bg-[#DEF7EC] px-3 py-1 text-sm text-[#0E9F6E]'>
+              You are Eligible
+            </span>
+          )}
+          </div>
+          {!!eligibilityRequest && isEligible && <>
+            <span className='font-lufga font-normal capitalize text-gray-400'>
+              STEP 2
+            </span>
+            <p className='font-semi font-lufga'>
+              Enter Your Plume Wallet Address
+            </p>
+            <PlumeAddress
+              plumeAddress={plumeAddress}
+              setPlumeAddress={setPlumeAddress}
+            />
+            <span className='font-lufga font-normal capitalize text-gray-400'>
+              STEP 3
+            </span>
+            <p className='font-semi font-lufga'>Claim Miles</p>
+            <ClaimMiles
+              claimFunction={handleSignMessage}
+              isClaimDisabled={isClaimDisabled}
+            />
+          </>}
+          {!!eligibilityRequest && !isEligible && 
+          <span className='whitespace-nowrap rounded-md bg-[#FEEBEB] px-3 py-3 text-sm text-[#F43B3A] text-center'>
+          You are not eligible
+        </span>}
         </div>
       );
     case 'claiming':
