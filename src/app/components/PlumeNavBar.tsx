@@ -1,23 +1,23 @@
 'use client';
 
-import Link from 'next/link';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+// import Link from 'next/link';
+// import { ConnectButton } from '@rainbow-me/rainbowkit';
 import PlumeLogo from '@/app/components/PlumeLogo';
 import PlumeLogoWithoutText from '@/app/components/PlumeLogoWithoutText';
-import { OpenInNewTabIcon } from '@/app/icons/OpenInNewTabIcon';
-import { config } from '@/app/config';
+// import { OpenInNewTabIcon } from '@/app/icons/OpenInNewTabIcon';
+// import { config } from '@/app/config';
 import { FC } from 'react';
 import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
 
 const PlumeNavBar: FC = () => {
-  const { isConnected } = useFaucetWallet();
+  // const { isConnected } = useFaucetWallet();
 
   return (
     <div className='flex flex-row justify-between bg-white px-8 py-4 text-black'>
       <div className='flex flex-row items-center gap-8 sm:gap-4'>
         <PlumeLogo className='hidden sm:block' />
         <PlumeLogoWithoutText className='sm:hidden' />
-        <Link
+        {/* <Link
           href='/'
           className='hidden rounded-lg bg-gray-100 px-3 py-2 font-lufga sm:block'
         >
@@ -30,7 +30,7 @@ const PlumeNavBar: FC = () => {
         >
           Bridge
           <OpenInNewTabIcon />
-        </Link>
+        </Link> */}
       </div>
       {/* <div className='flex flex-row gap-4'>
         {isConnected && <PlumeTestnetIndicator />}
