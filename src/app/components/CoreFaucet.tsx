@@ -13,7 +13,6 @@ import GoonLoadingAnimation from './Goon Loading Small.json';
 import GreenTickBox from '../assets/GreenTickBox.png';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Address } from 'viem';
-import { link } from 'fs';
 import { toast } from './ui/use-toast';
 
 const sendLinkRequest = async ({
@@ -39,6 +38,7 @@ const sendLinkRequest = async ({
       signature,
     }),
   });
+
   return resp.json() as unknown as {
     address: string;
     points: number;
@@ -173,6 +173,8 @@ const CoreFaucet: FC = () => {
     enabled: !!address,
   });
 
+  const miles = eligibilityRequest ? eligibilityRequest.points : 0;
+
   const { signMessage } = useSignMessage();
 
   const handleSignMessage = async () => {
@@ -184,8 +186,6 @@ const CoreFaucet: FC = () => {
         { message },
         {
           onSuccess: (signature, variables) => {
-            console.log('signature', signature);
-            console.log('message', variables?.message);
             linkRequestMutate({
               plumeAddress: plumeAddress,
               bitgetAddress: address,
@@ -201,10 +201,9 @@ const CoreFaucet: FC = () => {
   };
 
   const isEligible = eligibilityRequest ? eligibilityRequest.points > 0 : false;
-  const isClaimDisabled = !true || !plumeAddress || !address;
-  console.log(plumeAddress);
-  console.log(address);
-  console.log(isClaimDisabled);
+  const isPlumeAddressValid =
+    plumeAddress?.length === 42 && plumeAddress?.startsWith('0x');
+  const isClaimDisabled = !isEligible || !isPlumeAddressValid || !address;
 
   switch (claimingState) {
     case 'initial':
@@ -287,7 +286,7 @@ const CoreFaucet: FC = () => {
           />
           <p className='font-lufga text-4xl font-bold'>Miles Claimed</p>
           <p className='font-lufga text-4xl font-bold text-[#31C48D]'>
-            +{(10000).toLocaleString()} MILES
+            +{miles.toLocaleString()} MILES
           </p>
           <p className='font-lufga text-gray-500'>
             Thank you for participating!
