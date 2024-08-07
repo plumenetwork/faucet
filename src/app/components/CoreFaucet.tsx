@@ -26,7 +26,7 @@ const sendLinkRequest = async ({
   messsage: string;
   signature: string;
 }) => {
-  const resp = await fetch(`${config.apiUrl}/bitget`, {
+  return fetch(`${config.apiUrl}/bitget`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -36,17 +36,19 @@ const sendLinkRequest = async ({
       bitgetAddress: bitgetAddress.toLowerCase(),
       messsage,
       signature,
-    }),
+    })
+  }).then(async (resp) =>  {
+    const data = await resp.json();
+    if(data.code === 404) {
+      return { verified: false };
+    }
+    return data;
+  }).catch((error) => {
+    throw error;
   });
-
-  return resp.json() as unknown as {
-    address: string;
-    points: number;
-  };
 };
 
 const getEligibility = async (address: string) => {
-  console.log('getEligibility', address);  
   return fetch(`${config.apiUrl}/bitget/${address}`, {
       method: 'GET',
     }).then(async (resp) =>  {
@@ -56,7 +58,7 @@ const getEligibility = async (address: string) => {
       }
       return data;
     }).catch((error) => {
-      return { address, points: 0 };
+      return { address, error: error.message };
     });
 };
 
@@ -65,7 +67,7 @@ const PlumeAddress = ({
   setPlumeAddress,
 }: {
   plumeAddress?: string;
-  setPlumeAddress: Dispatch<SetStateAction<string | undefined>>;
+  setPlumeAddress: Dispatch<SetStateAction<string>>;
 }) => {
   return (
     <input
@@ -100,12 +102,10 @@ const ClaimMiles = ({
 
 const BitGetWalletConnect = ({
   isConnected,
-  address,
-  isEligible,
+  address,  
 }: {
   isConnected: boolean;
   address: Address | undefined;
-  isEligible: boolean;
 }) => {
   const { openConnectModal } = useConnectModal();
   const { disconnect } = useDisconnect();
@@ -141,24 +141,45 @@ const BitGetWalletConnect = ({
   }
 };
 
+const failureToast = () => {
+  return toast({
+    title: 'Oops! Something went wrong',
+    description: (
+      <div className='flex flex-row text-sm text-gray-600'>
+        We were unable to claim your miles. Please make sure you entered your Plume wallet address and have not already claimed.
+      </div>
+    ),
+    variant: 'fail',
+    duration: 10000,
+  });
+};
+
 const CoreFaucet: FC = () => {
   const [claimingState, setClaimingState] = useState<
     'initial' | 'claiming' | 'complete'
   >('initial');
   const { isConnected, address } = useAccount();
-  const [plumeAddress, setPlumeAddress] = useState<string | undefined>();
+  const [plumeAddress, setPlumeAddress] = useState<string>('');
 
   const { mutate: linkRequestMutate } = useMutation({
     mutationFn: sendLinkRequest,
     onMutate: () => {
+      console.log('onMutate');
       setClaimingState('claiming');
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('onSuccess', data);
+      if(data?.verified) {
       setClaimingState('complete');
+      } else {
+        setClaimingState('initial');
+        failureToast();
+      }
     },
-    onError: () => {
+    onError: (e) => {
+      console.log('onError', e);
       setClaimingState('initial');
-      toast({});
+      failureToast();
     },
   });
 
@@ -168,12 +189,12 @@ const CoreFaucet: FC = () => {
     enabled: !!address,
   });
 
-  const miles = eligibilityRequest ? eligibilityRequest.points : 0;
+  const miles = eligibilityRequest?.points ?? 0;
 
   const { signMessage } = useSignMessage();
 
   const handleSignMessage = async () => {
-    if (!address || !plumeAddress) return;
+    if (!address || plumeAddress.trim() === '') return;
 
     const message = `I confirm ${plumeAddress.toLowerCase()} owns ${address.toLowerCase()}`;
     try {
@@ -196,6 +217,7 @@ const CoreFaucet: FC = () => {
   };
 
   const isEligible = eligibilityRequest ? eligibilityRequest.points > 0 : false;
+  const showNotEligible = eligibilityRequest && !eligibilityRequest.error && eligibilityRequest.points <= 0;
   const isPlumeAddressValid =
     plumeAddress?.length === 42 && plumeAddress?.startsWith('0x');
   const isClaimDisabled = !isEligible || !isPlumeAddressValid || !address;
@@ -225,7 +247,6 @@ const CoreFaucet: FC = () => {
           <BitGetWalletConnect
             isConnected={isConnected}
             address={address}
-            isEligible={isEligible}
           />
           <div className='flex items-center space-x-2'>
           {isEligible && (
@@ -254,7 +275,7 @@ const CoreFaucet: FC = () => {
               isClaimDisabled={isClaimDisabled}
             />
           </>}
-          {!!eligibilityRequest && !isEligible && 
+          {showNotEligible && 
           <span className='whitespace-nowrap rounded-md bg-[#FEEBEB] px-3 py-3 text-sm text-[#F43B3A] text-center'>
           You are not eligible
         </span>}
