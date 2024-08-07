@@ -54,6 +54,9 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${inter.className} ${lufga.variable}`}>
+        <div className='fixed top-[12%] z-[-1] h-[500px] w-[100vw]'>
+          <div className='marquee-content' />
+        </div>
         <Suspense>
           <Providers>{children}</Providers>
         </Suspense>
