@@ -13,6 +13,7 @@ import {
   getTokensButtonClicked,
 } from '@/app/analytics';
 import { config } from '@/app/config';
+import { sendGAEvent } from '@next/third-parties/google';
 
 type SignedData = {
   tokenDrip: string;
@@ -115,12 +116,21 @@ export const CustomConnectButton = ({
             successToast(tokenName as FaucetTokenType);
             setIsLoading(false);
             setSignedData(null);
+            sendGAEvent({
+              event: 'faucet_get_token_faucet_site',
+              value: 'success',
+            });
           },
           onError: (error) => {
             console.error(error);
             if (error.message.includes('User rejected')) {
               rejectedToast();
             } else {
+              sendGAEvent({
+                event: 'faucet_get_token_faucet_site',
+                value: 'internal_error',
+              });
+
               failureToast();
             }
             setIsLoading(false);
@@ -186,8 +196,8 @@ export const CustomConnectButton = ({
       title: 'You rejected the transaction',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Please try again. Don&#39;t worry, this doesn&#39;t count against
-          your rate limit.
+          Please try again. Don&#39;t worry, this doesn&#39;t count against your
+          rate limit.
         </div>
       ),
       variant: 'fail',
