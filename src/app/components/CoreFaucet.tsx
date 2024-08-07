@@ -18,12 +18,12 @@ import { toast } from './ui/use-toast';
 const sendLinkRequest = async ({
   plumeAddress,
   bitgetAddress,
-  messsage,
+  message,
   signature,
 }: {
   plumeAddress: string;
   bitgetAddress: string;
-  messsage: string;
+  message: string;
   signature: string;
 }) => {
   return fetch(`${config.apiUrl}/bitget`, {
@@ -34,7 +34,7 @@ const sendLinkRequest = async ({
     body: JSON.stringify({
       plumeAddress: plumeAddress.toLowerCase(),
       bitgetAddress: bitgetAddress.toLowerCase(),
-      messsage,
+      message,
       signature,
     })
   }).then(async (resp) =>  {
@@ -205,7 +205,7 @@ const CoreFaucet: FC = () => {
             linkRequestMutate({
               plumeAddress: plumeAddress,
               bitgetAddress: address,
-              messsage: message,
+              message: message,
               signature,
             });
           },
