@@ -331,9 +331,6 @@ const CoreFaucet: FC = () => {
           <p className='font-lufga text-gray-500'>
             Thank you for participating!
           </p>
-          <button className='flex w-full items-center justify-center space-x-2 rounded-md bg-black px-4 py-3 text-white disabled:text-[#C7C6C3]'>
-            Claim your miles on Plume Testnet
-          </button>
         </div>
       );
   }
