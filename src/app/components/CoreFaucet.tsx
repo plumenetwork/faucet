@@ -223,7 +223,7 @@ const CoreFaucet: FC = () => {
   const isPlumeAddressValid =
     plumeAddress?.length === 42 && plumeAddress?.startsWith('0x');
   
-  const showSameAddressError = address && plumeAddress !== '' && address.toLowerCase() === plumeAddress.toLowerCase();
+  const showSameAddressError = !!address && plumeAddress !== '' && address.toLowerCase() === plumeAddress.toLowerCase();
   const isClaimDisabled = !isEligible || !isPlumeAddressValid || !address || showSameAddressError;
 
   switch (claimingState) {
