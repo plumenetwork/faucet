@@ -55,6 +55,8 @@ const getEligibility = async (address: string) => {
       const data = await resp.json();
       if(data.code === 404) {
         return { address, points: 0 };
+      } else if(data.message === 'Address already claimed') {
+        return { address, points: 0, claimed: true };
       }
       return data;
     }).catch((error) => {
@@ -217,7 +219,7 @@ const CoreFaucet: FC = () => {
   };
 
   const isEligible = eligibilityRequest ? eligibilityRequest.points > 0 : false;
-  const showNotEligible = eligibilityRequest && !eligibilityRequest.error && eligibilityRequest.points <= 0;
+  const showNotEligible = eligibilityRequest && !eligibilityRequest.error && eligibilityRequest.points <= 0 && !eligibilityRequest.claimed;
   const isPlumeAddressValid =
     plumeAddress?.length === 42 && plumeAddress?.startsWith('0x');
   const isClaimDisabled = !isEligible || !isPlumeAddressValid || !address;
@@ -279,6 +281,9 @@ const CoreFaucet: FC = () => {
           <span className='whitespace-nowrap rounded-md bg-[#FEEBEB] px-3 py-3 text-sm text-[#F43B3A] text-center'>
           You are not eligible
         </span>}
+        {eligibilityRequest && eligibilityRequest.claimed && <span className='whitespace-nowrap rounded-full bg-[#DEF7EC] px-3 py-2 text-sm text-center text-[#0E9F6E]'>
+              Miles have already been claimed for this address
+            </span>}
         </div>
       );
     case 'claiming':
