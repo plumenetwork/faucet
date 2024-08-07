@@ -222,7 +222,9 @@ const CoreFaucet: FC = () => {
   const showNotEligible = eligibilityRequest && !eligibilityRequest.error && eligibilityRequest.points <= 0 && !eligibilityRequest.claimed;
   const isPlumeAddressValid =
     plumeAddress?.length === 42 && plumeAddress?.startsWith('0x');
-  const isClaimDisabled = !isEligible || !isPlumeAddressValid || !address;
+  
+  const showSameAddressError = address && plumeAddress !== '' && address.toLowerCase() === plumeAddress.toLowerCase();
+  const isClaimDisabled = !isEligible || !isPlumeAddressValid || !address || showSameAddressError;
 
   switch (claimingState) {
     case 'initial':
@@ -268,6 +270,10 @@ const CoreFaucet: FC = () => {
               plumeAddress={plumeAddress}
               setPlumeAddress={setPlumeAddress}
             />
+            {showSameAddressError && 
+            <span className='whitespace-nowrap rounded-md bg-[#FEEBEB] px-3 py-3 text-sm text-[#F43B3A] text-center'>
+              Plume Wallet Address cannot be the same as your Bitget wallet address
+            </span>}
             <span className='font-lufga font-normal capitalize text-gray-400'>
               STEP 3
             </span>
@@ -277,13 +283,13 @@ const CoreFaucet: FC = () => {
               isClaimDisabled={isClaimDisabled}
             />
           </>}
-          {showNotEligible && 
+        {showNotEligible && 
           <span className='whitespace-nowrap rounded-md bg-[#FEEBEB] px-3 py-3 text-sm text-[#F43B3A] text-center'>
           You are not eligible
-        </span>}
+        </span>}        
         {eligibilityRequest && eligibilityRequest.claimed && <span className='whitespace-nowrap rounded-full bg-[#DEF7EC] px-3 py-2 text-sm text-center text-[#0E9F6E]'>
-              Miles have already been claimed for this address
-            </span>}
+          Miles have already been claimed for this address
+        </span>}
         </div>
       );
     case 'claiming':
