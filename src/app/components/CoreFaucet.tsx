@@ -223,8 +223,7 @@ const CoreFaucet: FC = () => {
   const isPlumeAddressValid =
     plumeAddress?.length === 42 && plumeAddress?.startsWith('0x');
   
-  const showSameAddressError = !!address && plumeAddress !== '' && address.toLowerCase() === plumeAddress.toLowerCase();
-  const isClaimDisabled = !isEligible || !isPlumeAddressValid || !address || showSameAddressError;
+  const isClaimDisabled = !isEligible || !isPlumeAddressValid || !address;
 
   switch (claimingState) {
     case 'initial':
@@ -270,10 +269,6 @@ const CoreFaucet: FC = () => {
               plumeAddress={plumeAddress}
               setPlumeAddress={setPlumeAddress}
             />
-            {showSameAddressError && 
-            <span className='whitespace-nowrap rounded-md bg-[#FEEBEB] px-3 py-3 text-sm text-[#F43B3A] text-center'>
-              Plume Wallet Address cannot be the same as your Bitget wallet address
-            </span>}
             <span className='font-lufga font-normal capitalize text-gray-400'>
               STEP 3
             </span>
