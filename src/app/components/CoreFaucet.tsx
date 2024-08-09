@@ -40,7 +40,9 @@ const sendLinkRequest = async ({
   }).then(async (resp) =>  {
     const data = await resp.json();
     if(data.code === 404) {
-      return { verified: false };
+      const plumeAddressNonExistent = data.message.includes('User not found for address');
+      
+      return { verified: false, plumeAddressNonExistent };
     }
     return data;
   }).catch((error) => {
@@ -143,12 +145,19 @@ const BitGetWalletConnect = ({
   }
 };
 
-const failureToast = () => {
+const failureToast = (plumeAddressNonExistent?: boolean) => {
+  let title = 'Oops! Something went wrong';
+  let description = 'We were unable to claim your miles. Please make sure you entered your Plume wallet address and have not already claimed;'
+  
+  if(plumeAddressNonExistent) {
+    title = 'Plume wallet address not found';
+    description = 'Please make sure you already have a Plume account and have entered your Plume wallet address correctly.';
+  }
   return toast({
-    title: 'Oops! Something went wrong',
+    title,
     description: (
       <div className='flex flex-row text-sm text-gray-600'>
-        We were unable to claim your miles. Please make sure you entered your Plume wallet address and have not already claimed.
+        {description}
       </div>
     ),
     variant: 'fail',
@@ -162,6 +171,7 @@ const CoreFaucet: FC = () => {
   >('initial');
   const { isConnected, address } = useAccount();
   const [plumeAddress, setPlumeAddress] = useState<string>('');
+  const [claimedMiles, setClaimedMiles] = useState<number>(0);
 
   const { mutate: linkRequestMutate } = useMutation({
     mutationFn: sendLinkRequest,
@@ -172,10 +182,11 @@ const CoreFaucet: FC = () => {
     onSuccess: (data) => {
       console.log('onSuccess', data);
       if(data?.verified) {
-      setClaimingState('complete');
+        setClaimedMiles(data?.points);
+        setClaimingState('complete');
       } else {
         setClaimingState('initial');
-        failureToast();
+        failureToast(data.plumeAddressNonExistent);
       }
     },
     onError: (e) => {
@@ -191,22 +202,20 @@ const CoreFaucet: FC = () => {
     enabled: !!address,
   });
 
-  const miles = eligibilityRequest?.points ?? 0;
-
   const { signMessage } = useSignMessage();
 
   const handleSignMessage = async () => {
     if (!address || plumeAddress.trim() === '') return;
 
-    const message = `I confirm ${plumeAddress.toLowerCase()} owns ${address.toLowerCase()}`;
+    const message = `I confirm ${plumeAddress.toLowerCase().trim()} owns ${address.toLowerCase().trim()}`;
     try {
       await signMessage(
         { message },
         {
           onSuccess: (signature, variables) => {
             linkRequestMutate({
-              plumeAddress: plumeAddress,
-              bitgetAddress: address,
+              plumeAddress: plumeAddress.trim(),
+              bitgetAddress: address.trim(),
               message: message,
               signature,
             });
@@ -321,7 +330,7 @@ const CoreFaucet: FC = () => {
           />
           <p className='font-lufga text-4xl font-bold'>Miles Claimed</p>
           <p className='font-lufga text-4xl font-bold text-[#31C48D]'>
-            +{miles.toLocaleString()} MILES
+            +{claimedMiles?.toLocaleString()} MILES
           </p>
           <p className='font-lufga text-gray-500'>
             Thank you for participating!
