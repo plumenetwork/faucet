@@ -150,7 +150,7 @@ const failureToast = (plumeAddressNonExistent?: boolean) => {
   let description = 'We were unable to claim your miles. Please make sure you entered your Plume wallet address and have not already claimed;'
   
   if(plumeAddressNonExistent) {
-    title = 'Plume Wallet Address not found';
+    title = 'Plume wallet address not found';
     description = 'Please make sure you already have a Plume account and have entered your Plume wallet address correctly.';
   }
   return toast({
