@@ -145,7 +145,7 @@ const BitGetWalletConnect = ({
   }
 };
 
-const failureToast = (plumeAddressNonExistent: boolean) => {
+const failureToast = (plumeAddressNonExistent?: boolean) => {
   let title = 'Oops! Something went wrong';
   let description = 'We were unable to claim your miles. Please make sure you entered your Plume wallet address and have not already claimed;'
   
