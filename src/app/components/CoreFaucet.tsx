@@ -162,6 +162,7 @@ const CoreFaucet: FC = () => {
   >('initial');
   const { isConnected, address } = useAccount();
   const [plumeAddress, setPlumeAddress] = useState<string>('');
+  const [claimedMiles, setClaimedMiles] = useState<number>(0);
 
   const { mutate: linkRequestMutate } = useMutation({
     mutationFn: sendLinkRequest,
@@ -172,7 +173,8 @@ const CoreFaucet: FC = () => {
     onSuccess: (data) => {
       console.log('onSuccess', data);
       if(data?.verified) {
-      setClaimingState('complete');
+        setClaimedMiles(data?.points);
+        setClaimingState('complete');
       } else {
         setClaimingState('initial');
         failureToast();
@@ -191,22 +193,20 @@ const CoreFaucet: FC = () => {
     enabled: !!address,
   });
 
-  const miles = eligibilityRequest?.points ?? 0;
-
   const { signMessage } = useSignMessage();
 
   const handleSignMessage = async () => {
     if (!address || plumeAddress.trim() === '') return;
 
-    const message = `I confirm ${plumeAddress.toLowerCase()} owns ${address.toLowerCase()}`;
+    const message = `I confirm ${plumeAddress.toLowerCase().trim()} owns ${address.toLowerCase().trim()}`;
     try {
       await signMessage(
         { message },
         {
           onSuccess: (signature, variables) => {
             linkRequestMutate({
-              plumeAddress: plumeAddress,
-              bitgetAddress: address,
+              plumeAddress: plumeAddress.trim(),
+              bitgetAddress: address.trim(),
               message: message,
               signature,
             });
@@ -321,7 +321,7 @@ const CoreFaucet: FC = () => {
           />
           <p className='font-lufga text-4xl font-bold'>Miles Claimed</p>
           <p className='font-lufga text-4xl font-bold text-[#31C48D]'>
-            +{miles.toLocaleString()} MILES
+            +{claimedMiles?.toLocaleString()} MILES
           </p>
           <p className='font-lufga text-gray-500'>
             Thank you for participating!
