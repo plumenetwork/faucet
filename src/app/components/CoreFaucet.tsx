@@ -40,7 +40,9 @@ const sendLinkRequest = async ({
   }).then(async (resp) =>  {
     const data = await resp.json();
     if(data.code === 404) {
-      return { verified: false };
+      const plumeAddressNonExistent = data.message.includes('User not found for address');
+      
+      return { verified: false, plumeAddressNonExistent };
     }
     return data;
   }).catch((error) => {
@@ -143,12 +145,19 @@ const BitGetWalletConnect = ({
   }
 };
 
-const failureToast = () => {
+const failureToast = (plumeAddressNonExistent: boolean) => {
+  let title = 'Oops! Something went wrong';
+  let description = 'We were unable to claim your miles. Please make sure you entered your Plume wallet address and have not already claimed;'
+  
+  if(plumeAddressNonExistent) {
+    title = 'Plume Wallet Address not found';
+    description = 'Please make sure you already have a Plume account and have entered your Plume wallet address correctly.';
+  }
   return toast({
-    title: 'Oops! Something went wrong',
+    title,
     description: (
       <div className='flex flex-row text-sm text-gray-600'>
-        We were unable to claim your miles. Please make sure you entered your Plume wallet address and have not already claimed.
+        {description}
       </div>
     ),
     variant: 'fail',
@@ -177,7 +186,7 @@ const CoreFaucet: FC = () => {
         setClaimingState('complete');
       } else {
         setClaimingState('initial');
-        failureToast();
+        failureToast(data.plumeAddressNonExistent);
       }
     },
     onError: (e) => {
