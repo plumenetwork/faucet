@@ -11,9 +11,10 @@ import faucetABI from '@/app/abi/faucet';
 import {
   connectWalletButtonClicked,
   getTokensButtonClicked,
+  getTokensError,
+  getTokensSuccess,
 } from '@/app/analytics';
 import { config } from '@/app/config';
-import { sendGAEvent } from '@next/third-parties/google';
 
 type SignedData = {
   tokenDrip: string;
@@ -116,21 +117,14 @@ export const CustomConnectButton = ({
             successToast(tokenName as FaucetTokenType);
             setIsLoading(false);
             setSignedData(null);
-            sendGAEvent({
-              event: 'faucet_get_token_faucet_site',
-              value: 'success',
-            });
+            getTokensSuccess();
           },
           onError: (error) => {
             console.error(error);
             if (error.message.includes('User rejected')) {
               rejectedToast();
             } else {
-              sendGAEvent({
-                event: 'faucet_get_token_faucet_site',
-                value: 'internal_error',
-              });
-
+              getTokensError();
               failureToast();
             }
             setIsLoading(false);
