@@ -15,6 +15,7 @@ import {
   getTokensSuccess,
 } from '@/app/analytics';
 import { config } from '@/app/config';
+import * as Sentry from '@sentry/nextjs';
 
 type SignedData = {
   tokenDrip: string;
@@ -121,6 +122,10 @@ export const CustomConnectButton = ({
           },
           onError: (error) => {
             console.error(error);
+            if (Math.random() < 0.05) {
+              Sentry.captureException(error);
+            }
+
             if (error.message.includes('User rejected')) {
               rejectedToast();
             } else {
