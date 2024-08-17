@@ -125,7 +125,9 @@ export const CustomConnectButton = ({
             if (error.message.includes('User rejected')) {
               rejectedToast();
             } else {
-              Sentry.captureException(error);
+              if (Math.random() < 0.05) {
+                Sentry.captureException(error);
+              }
 
               getTokensError();
               failureToast();
