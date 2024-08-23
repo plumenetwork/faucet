@@ -42,7 +42,7 @@ const faucetTokenConfigs: {
 const CoreFaucet: FC = () => {
   const { connector } = useAccount();
   const { wagmiConfig } = useWagmiConfig();
-  const [verified, setVerified] = useState(false);
+  const [verified, setVerified] = useState<string | null>(null);
   const [token, setToken] = useState<FaucetTokenType>(FaucetToken.ETH);
   const { toast } = useToast();
 
@@ -139,7 +139,8 @@ const CoreFaucet: FC = () => {
         <TextField label='Your Address' value={address} disabled />
       )}
       <CustomConnectButton
-        verified={verified || bypassCloudflareTurnstile}
+        verified={verified}
+        bypassCloudflareTurnstile={bypassCloudflareTurnstile}
         walletAddress={address}
         token={token}
       />
@@ -150,9 +151,9 @@ const CoreFaucet: FC = () => {
           }}
           className='mx-auto flex items-center justify-center'
           siteKey={config.cloudflareTurnstileSiteKey}
-          onSuccess={() => setVerified(true)}
-          onExpire={() => setVerified(false)}
-          onError={() => setVerified(false)}
+          onSuccess={setVerified}
+          onExpire={() => setVerified(null)}
+          onError={() => setVerified(null)}
         />
       )}
       {isConnected && faucetTokenConfigs[token] && (
