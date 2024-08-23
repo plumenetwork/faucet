@@ -66,7 +66,7 @@ export const withCaching =
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `secret=${encodeURIComponent(process.env.CLOUDFLARE_TURNSTILE_SECRET)}&response=${encodeURIComponent(verified)}`,
+        body: `secret=${encodeURIComponent(process.env.CLOUDFLARE_TURNSTILE_SECRET || '')}&response=${encodeURIComponent(json.verified || '')}`,
       }
     );
     const cloudflareData = await cloudflareResponse.json();
