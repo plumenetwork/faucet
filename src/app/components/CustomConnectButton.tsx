@@ -27,10 +27,12 @@ type SignedData = {
 
 export const CustomConnectButton = ({
   verified,
+  bypassCloudflareTurnstile,
   walletAddress,
   token = FaucetToken.ETH,
 }: {
-  verified: boolean;
+  verified: string | null;
+  bypassCloudflareTurnstile: boolean;
   walletAddress: string | undefined;
   token: FaucetTokenType;
 }) => {
@@ -42,7 +44,7 @@ export const CustomConnectButton = ({
   const [isLoading, setIsLoading] = useState(false);
   const [signedData, setSignedData] = useState<SignedData | null>(null);
 
-  const handleClaimTokens = async () => {
+  const handleClaimTokens = async (verified: string | null) => {
     try {
       setIsLoading(true);
       submitToast();
@@ -53,7 +55,7 @@ export const CustomConnectButton = ({
           : await fetch('api/faucet', {
               method: 'POST',
               headers: { ['Content-Type']: 'application/json' },
-              body: JSON.stringify({ walletAddress, token }),
+              body: JSON.stringify({ walletAddress, token, verified }),
             }).then(async (res) => {
               if (res.status >= 200 && res.status < 300) {
                 return res.json();
@@ -237,10 +239,12 @@ export const CustomConnectButton = ({
             {connected ? (
               <Button
                 onClick={() => {
-                  handleClaimTokens();
+                  handleClaimTokens(verified);
                   getTokensButtonClicked();
                 }}
-                disabled={!verified || !isPlumeTestnet}
+                disabled={
+                  !bypassCloudflareTurnstile && (!verified || !isPlumeTestnet)
+                }
                 isLoading={isLoading}
                 data-testid='get-tokens-button'
               >
@@ -252,7 +256,7 @@ export const CustomConnectButton = ({
                   openConnectModal();
                   connectWalletButtonClicked();
                 }}
-                disabled={!verified}
+                disabled={!bypassCloudflareTurnstile && !verified}
                 data-testid='connect-wallet-button'
               >
                 Connect Wallet

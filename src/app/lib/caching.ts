@@ -52,6 +52,31 @@ export const withCaching =
     const json = await request.json();
     request.json = () => json;
 
+    // Check that the request has a valid Cloudflare token
+    if (!json.verified) {
+      return Response.json(
+        { error: 'Please only access the faucet via the frontend' },
+        { status: 400, headers: sharedCorsHeaders }
+      );
+    }
+    const cloudflareResponse = await fetch(
+      'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `secret=${encodeURIComponent(process.env.CLOUDFLARE_TURNSTILE_SECRET)}&response=${encodeURIComponent(verified)}`,
+      }
+    );
+    const cloudflareData = await cloudflareResponse.json();
+    if (cloudflareData.success !== true) {
+      return Response.json(
+        { error: 'Invalid Cloudflare token' },
+        { status: 400, headers: sharedCorsHeaders }
+      );
+    }
+
     if (typeof makeKeys !== 'function') {
       throw new Error('makeKeys must be a function');
     }
