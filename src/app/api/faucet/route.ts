@@ -42,7 +42,7 @@ const ONE_HOUR = 60 * 60;
 const TWO_HOURS = 60 * 60 * 2;
 
 const minTxCost = parseEther('0.001');
-const ethAmount = parseEther('0.01');
+const ethAmount = parseEther('0.003');
 
 export const OPTIONS = async () => {
   return Response.json({}, { status: 200, headers: sharedCorsHeaders });
