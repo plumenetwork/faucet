@@ -171,7 +171,7 @@ export const CustomConnectButton = ({
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
           You&#39;ll receive
-          {tokenName === FaucetToken.ETH ? ' 0.001 ' : ' 1 '}
+          {tokenName === FaucetToken.ETH ? ' 0.01 ' : ' 1 '}
           testnet {tokenName} in your wallet within a minute.
         </div>
       ),

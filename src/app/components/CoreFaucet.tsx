@@ -48,7 +48,6 @@ const CoreFaucet: FC = () => {
   const { toast } = useToast();
 
   const bypassCloudflareTurnstile = config.enableBypassCloudflareTurnstile;
-  //  const { bypassCloudflareTurnstile } = useBackdoorSearchParams();
   const { isConnected, address } = useFaucetWallet();
 
   return (
