@@ -1,8 +1,8 @@
 'use client';
 
-import { FC, ReactElement, useState } from 'react';
+import { FC, ReactElement, useRef, useState } from 'react';
 
-import { Turnstile } from '@marsidev/react-turnstile';
+import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
 import { watchAsset } from 'viem/actions';
 
 import { FaucetIcon } from '@/app/icons/FaucetIcon';
@@ -44,6 +44,7 @@ const CoreFaucet: FC = () => {
   const { wagmiConfig } = useWagmiConfig();
   const [verified, setVerified] = useState<string | null>(null);
   const [token, setToken] = useState<FaucetTokenType>(FaucetToken.ETH);
+  const turnstileInstanceRef = useRef<TurnstileInstance | null>(null);
   const { toast } = useToast();
 
   const bypassCloudflareTurnstile = config.enableBypassCloudflareTurnstile;
@@ -143,11 +144,17 @@ const CoreFaucet: FC = () => {
         bypassCloudflareTurnstile={bypassCloudflareTurnstile}
         walletAddress={address}
         token={token}
+        resetTurnstile={() => turnstileInstanceRef.current?.reset()}
       />
       {!bypassCloudflareTurnstile && (
         <Turnstile
           options={{
             theme: 'light',
+          }}
+          ref={(instance) => {
+            if (instance) {
+              turnstileInstanceRef.current = instance;
+            }
           }}
           className='mx-auto flex items-center justify-center'
           siteKey={config.cloudflareTurnstileSiteKey}
