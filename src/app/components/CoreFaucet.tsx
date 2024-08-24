@@ -144,6 +144,7 @@ const CoreFaucet: FC = () => {
         bypassCloudflareTurnstile={bypassCloudflareTurnstile}
         walletAddress={address}
         token={token}
+        resetTurnstile={() => turnstileInstanceRef.current?.reset()}
       />
       {!bypassCloudflareTurnstile && (
         <Turnstile
