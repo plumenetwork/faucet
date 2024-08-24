@@ -26,6 +26,7 @@ type SignedData = {
 };
 
 export const CustomConnectButton = ({
+  resetTurnstile,
   verified,
   bypassCloudflareTurnstile,
   walletAddress,
@@ -35,6 +36,7 @@ export const CustomConnectButton = ({
   bypassCloudflareTurnstile: boolean;
   walletAddress: string | undefined;
   token: FaucetTokenType;
+  resetTurnstile: () => void;
 }) => {
   const client = usePublicClient();
   const { writeContract } = useWriteContract();
@@ -56,15 +58,19 @@ export const CustomConnectButton = ({
               method: 'POST',
               headers: { ['Content-Type']: 'application/json' },
               body: JSON.stringify({ walletAddress, token, verified }),
-            }).then(async (res) => {
-              if (res.status >= 200 && res.status < 300) {
-                return res.json();
-              } else if (res.status === 429) {
-                rateLimitToast(token);
-              } else {
-                failureToast();
-              }
-            });
+            })
+              .then(async (res) => {
+                if (res.status >= 200 && res.status < 300) {
+                  return res.json();
+                } else if (res.status === 429) {
+                  rateLimitToast(token);
+                } else {
+                  failureToast();
+                }
+              })
+              .finally(() => {
+                resetTurnstile();
+              });
 
       if (!data) {
         setIsLoading(false);
