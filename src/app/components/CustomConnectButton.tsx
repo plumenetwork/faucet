@@ -11,8 +11,11 @@ import faucetABI from '@/app/abi/faucet';
 import {
   connectWalletButtonClicked,
   getTokensButtonClicked,
+  getTokensError,
+  getTokensSuccess,
 } from '@/app/analytics';
 import { config } from '@/app/config';
+import * as Sentry from '@sentry/nextjs';
 
 type SignedData = {
   tokenDrip: string;
@@ -23,13 +26,17 @@ type SignedData = {
 };
 
 export const CustomConnectButton = ({
+  resetTurnstile,
   verified,
+  bypassCloudflareTurnstile,
   walletAddress,
   token = FaucetToken.ETH,
 }: {
-  verified: boolean;
+  verified: string | null;
+  bypassCloudflareTurnstile: boolean;
   walletAddress: string | undefined;
   token: FaucetTokenType;
+  resetTurnstile: () => void;
 }) => {
   const client = usePublicClient();
   const { writeContract } = useWriteContract();
@@ -39,7 +46,7 @@ export const CustomConnectButton = ({
   const [isLoading, setIsLoading] = useState(false);
   const [signedData, setSignedData] = useState<SignedData | null>(null);
 
-  const handleClaimTokens = async () => {
+  const handleClaimTokens = async (verified: string | null) => {
     try {
       setIsLoading(true);
       submitToast();
@@ -50,16 +57,20 @@ export const CustomConnectButton = ({
           : await fetch('api/faucet', {
               method: 'POST',
               headers: { ['Content-Type']: 'application/json' },
-              body: JSON.stringify({ walletAddress, token }),
-            }).then(async (res) => {
-              if (res.status >= 200 && res.status < 300) {
-                return res.json();
-              } else if (res.status === 429) {
-                rateLimitToast(token);
-              } else {
-                failureToast();
-              }
-            });
+              body: JSON.stringify({ walletAddress, token, verified }),
+            })
+              .then(async (res) => {
+                if (res.status >= 200 && res.status < 300) {
+                  return res.json();
+                } else if (res.status === 429) {
+                  rateLimitToast(token);
+                } else {
+                  failureToast();
+                }
+              })
+              .finally(() => {
+                resetTurnstile();
+              });
 
       if (!data) {
         setIsLoading(false);
@@ -115,12 +126,18 @@ export const CustomConnectButton = ({
             successToast(tokenName as FaucetTokenType);
             setIsLoading(false);
             setSignedData(null);
+            getTokensSuccess();
           },
           onError: (error) => {
             console.error(error);
             if (error.message.includes('User rejected')) {
               rejectedToast();
             } else {
+              if (Math.random() < 0.05) {
+                Sentry.captureException(error);
+              }
+
+              getTokensError();
               failureToast();
             }
             setIsLoading(false);
@@ -154,7 +171,7 @@ export const CustomConnectButton = ({
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
           You&#39;ll receive
-          {tokenName === FaucetToken.ETH ? ' 0.001 ' : ' 1 '}
+          {tokenName === FaucetToken.ETH ? ' 0.003 ' : ' 1 '}
           testnet {tokenName} in your wallet within a minute.
         </div>
       ),
@@ -186,8 +203,8 @@ export const CustomConnectButton = ({
       title: 'You rejected the transaction',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          Please try again. Don&#39;t worry, this doesn&#39;t count against
-          your rate limit.
+          Please try again. Don&#39;t worry, this doesn&#39;t count against your
+          rate limit.
         </div>
       ),
       variant: 'fail',
@@ -228,10 +245,12 @@ export const CustomConnectButton = ({
             {connected ? (
               <Button
                 onClick={() => {
-                  handleClaimTokens();
+                  handleClaimTokens(verified);
                   getTokensButtonClicked();
                 }}
-                disabled={!verified || !isPlumeTestnet}
+                disabled={
+                  !bypassCloudflareTurnstile && (!verified || !isPlumeTestnet)
+                }
                 isLoading={isLoading}
                 data-testid='get-tokens-button'
               >
@@ -243,7 +262,7 @@ export const CustomConnectButton = ({
                   openConnectModal();
                   connectWalletButtonClicked();
                 }}
-                disabled={!verified}
+                disabled={!bypassCloudflareTurnstile && !verified}
                 data-testid='connect-wallet-button'
               >
                 Connect Wallet
