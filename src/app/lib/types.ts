@@ -1,6 +1,7 @@
 import { config } from '@/app/config';
 
 export enum FaucetTokenType {
+  P = 'P',
   ETH = 'ETH',
   USDC = 'USDC',
   USDT = 'USDT',
@@ -10,17 +11,19 @@ export enum FaucetTokenType {
   SGNUSD = 'sgnUSD',
 }
 
-type EthFaucetToken = {
-  ETH: FaucetTokenType.ETH;
+type PFaucetToken = {
+  P: FaucetTokenType.P;
 };
 
-const FaucetToken: EthFaucetToken & { [key in FaucetTokenType]?: string } = {
-  ETH: FaucetTokenType.ETH,
-  GOON: FaucetTokenType.GOON,
+const FaucetToken: PFaucetToken & { [key in FaucetTokenType]?: string } = {
+  P: FaucetTokenType.P,
 };
 
+/*
 if (config.isBitgetFaucet) {
+  FaucetToken.GOON = FaucetTokenType.GOON,
   FaucetToken.USDC = FaucetTokenType.USDC;
 }
+*/
 
 export { FaucetToken };

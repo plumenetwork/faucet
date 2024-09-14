@@ -8,7 +8,7 @@ import {
   toHex,
   keccak256,
 } from 'viem';
-import { plumeTestnet } from 'viem/chains';
+import { plumeTestnet } from '@/app/lib/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { withConcurrencyLimiter } from '@/app/lib/concurrency';
@@ -38,11 +38,10 @@ const walletClient = createWalletClient({
   transport: http(),
 }).extend(publicActions);
 
-const ONE_HOUR = 60 * 60;
-const TWO_HOURS = 60 * 60 * 2;
+const ONE_DAY = 60 * 60 * 24;
 
-const minTxCost = parseEther('0.001');
-const ethAmount = parseEther('0.003');
+const minTxCost = parseEther('0.0004');
+const pAmount = parseEther('0.001');
 
 export const OPTIONS = async () => {
   return Response.json({}, { status: 200, headers: sharedCorsHeaders });
@@ -59,17 +58,16 @@ export const POST = withCaching({
 
     const json = await request.json();
     const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
-    const token: FaucetTokenType =
-      json?.token?.toUpperCase() ?? FaucetToken.ETH;
+    const token: FaucetTokenType = json?.token?.toUpperCase() ?? FaucetToken.P;
 
     return [
       {
         key: `${token}:ip:${ip}`,
-        duration: token === FaucetToken.ETH ? ONE_HOUR : TWO_HOURS,
+        duration: ONE_DAY,
       },
       {
         key: `${token}:wallet:${walletAddress}`,
-        duration: token === FaucetToken.ETH ? ONE_HOUR : TWO_HOURS,
+        duration: ONE_DAY,
       },
     ];
   },
@@ -79,7 +77,7 @@ export const POST = withCaching({
   handler: async (req: Request): Promise<any> => {
     const {
       walletAddress,
-      token = FaucetToken.ETH,
+      token = FaucetToken.P,
     }: {
       walletAddress: `0x${string}`;
       token: FaucetTokenType;
@@ -133,7 +131,7 @@ export const POST = withCaching({
           const hash = await walletClient
             .sendTransaction({
               to: walletAddress as `0x${string}`,
-              value: ethAmount,
+              value: pAmount,
               nonce,
             })
             .catch(async (e) => {

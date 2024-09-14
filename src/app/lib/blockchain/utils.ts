@@ -1,5 +1,5 @@
 import { createConfig, getBalance, http } from '@wagmi/core';
-import { plumeTestnet } from '@wagmi/core/chains';
+import { plumeTestnet } from '../chains';
 import { config } from '@/app/config';
 
 export const getAddressBalance = async (address: `0x${string}`) => {

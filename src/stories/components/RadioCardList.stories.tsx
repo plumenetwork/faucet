@@ -14,7 +14,7 @@ const meta = {
 export default meta;
 
 export const Default: StoryFn = () => {
-  const [token, setToken] = useState<FaucetTokenType>(FaucetToken.ETH);
+  const [token, setToken] = useState<FaucetTokenType>(FaucetToken.P);
 
   return (
     <RadioCardList

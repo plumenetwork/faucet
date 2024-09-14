@@ -30,7 +30,7 @@ export const CustomConnectButton = ({
   verified,
   bypassCloudflareTurnstile,
   walletAddress,
-  token = FaucetToken.ETH,
+  token = FaucetToken.P,
 }: {
   verified: string | null;
   bypassCloudflareTurnstile: boolean;
@@ -86,7 +86,7 @@ export const CustomConnectButton = ({
         await getBalance(wagmiConfig, { address: walletAddress });
         await new Promise((resolve) => setTimeout(resolve, 500));
 
-        successToast(FaucetToken.ETH);
+        successToast(FaucetToken.P);
         setSignedData({ ...data, tokenDrip: '' });
         setIsLoading(false);
 
@@ -170,9 +170,8 @@ export const CustomConnectButton = ({
       title: 'Mission accomplished',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          You&#39;ll receive
-          {tokenName === FaucetToken.ETH ? ' 0.003 ' : ' 1 '}
-          testnet {tokenName} in your wallet within a minute.
+          You&#39;ll receive 0.001 testnet {tokenName} in your wallet within a
+          minute.
         </div>
       ),
       variant: 'pass',
@@ -186,11 +185,10 @@ export const CustomConnectButton = ({
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
           Sorry, you can only claim
-          {tokenName === FaucetToken.ETH
+          {tokenName === FaucetToken.P
             ? ' free testnet gas '
             : ` ${tokenName} tokens `}
-          once every
-          {tokenName === FaucetToken.ETH ? ' hour.' : ' 2 hours.'}
+          once every day.
         </div>
       ),
       variant: 'fail',

@@ -3,7 +3,7 @@ import { FC } from 'react';
 export const GoonIcon: FC = () => {
   return (
     <svg
-      width='33'
+      width='32'
       height='32'
       viewBox='0 0 240 240'
       fill='none'

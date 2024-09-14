@@ -5,7 +5,7 @@ const abi = [
   },
   {
     type: 'function',
-    name: 'ETH_ADDRESS',
+    name: 'P_ADDRESS',
     inputs: [],
     outputs: [
       {
@@ -62,20 +62,7 @@ const abi = [
   },
   {
     type: 'function',
-    name: 'getCheckInContract',
-    inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'address',
-        internalType: 'address',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getEtherAmount',
+    name: 'getPAmount',
     inputs: [],
     outputs: [
       {
@@ -151,11 +138,6 @@ const abi = [
         internalType: 'address',
       },
       {
-        name: 'checkInContract',
-        type: 'address',
-        internalType: 'address',
-      },
-      {
         name: 'tokenNames',
         type: 'string[]',
         internalType: 'string[]',
@@ -203,20 +185,7 @@ const abi = [
   },
   {
     type: 'function',
-    name: 'setCheckInContract',
-    inputs: [
-      {
-        name: 'newCheckInContract',
-        type: 'address',
-        internalType: 'address',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'setEtherAmount',
+    name: 'setPAmount',
     inputs: [
       {
         name: 'amount',
@@ -306,25 +275,6 @@ const abi = [
       },
       {
         name: 'newAdmin',
-        type: 'address',
-        indexed: true,
-        internalType: 'address',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'CheckInContractChanged',
-    inputs: [
-      {
-        name: 'oldCheckInContract',
-        type: 'address',
-        indexed: true,
-        internalType: 'address',
-      },
-      {
-        name: 'newCheckInContract',
         type: 'address',
         indexed: true,
         internalType: 'address',
@@ -493,5 +443,6 @@ const abi = [
       },
     ],
   },
-];
+] as const;
+
 export default abi;

@@ -42,7 +42,7 @@ const lufga = localFont({
 export const metadata: Metadata = {
   title: 'Plume Network Faucet',
   description:
-    'Plume Faucet: Your gateway to testnet tokens! Claim ETH, USDC, USDT, and DAI on the Plume testnet. Start testing your projects hassle-free.',
+    'Plume Faucet: Your gateway to testnet tokens! Claim gas and testnet tokens on the Plume testnet. Start testing your projects hassle-free.',
   metadataBase: new URL(config.metadataBase),
 };
 

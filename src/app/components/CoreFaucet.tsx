@@ -11,6 +11,7 @@ import CustomConnectButton from './CustomConnectButton';
 import { Divider } from '@/app/components/Divider';
 import { TextField } from '@/app/components/TextField';
 import { RadioCard, RadioCardList } from '@/app/components/RadioCardList';
+import { PIcon } from '@/app/icons/PIcon';
 import { UsdcIcon } from '@/app/icons/UsdcIcon';
 import { EthIcon } from '@/app/icons/EthIcon';
 import { DaiIcon } from '@/app/icons/DaiIcon';
@@ -43,7 +44,7 @@ const CoreFaucet: FC = () => {
   const { connector } = useAccount();
   const { wagmiConfig } = useWagmiConfig();
   const [verified, setVerified] = useState<string | null>(null);
-  const [token, setToken] = useState<FaucetTokenType>(FaucetToken.ETH);
+  const [token, setToken] = useState<FaucetTokenType>(FaucetToken.P);
   const turnstileInstanceRef = useRef<TurnstileInstance | null>(null);
   const { toast } = useToast();
 
@@ -60,13 +61,10 @@ const CoreFaucet: FC = () => {
           </div>
           <div className='max-w-[280px] font-lufga font-medium sm:max-w-[400px]'>
             You can get
-            {token === FaucetToken.ETH
+            {token === FaucetToken.P
               ? ' free testnet gas '
               : ` testnet ${token} tokens `}
-            every
-            {token === FaucetToken.ETH ? ' hour ' : ' 2 hours '}
-            <br />
-            to ensure a smooth experience for all users.
+            once per day to ensure a smooth experience for all users.
           </div>
         </div>
       </div>
@@ -79,6 +77,17 @@ const CoreFaucet: FC = () => {
           tokenRadioCardSelected(token);
         }}
       >
+        {
+          ('P' in FaucetToken && (
+            <RadioCard
+              image={<PIcon />}
+              value={FaucetToken.P}
+              label='P'
+              description='Plume Devnet Gas'
+              data-testid='p-radio-card'
+            />
+          )) as ReactElement
+        }
         {
           ('ETH' in FaucetToken && (
             <RadioCard

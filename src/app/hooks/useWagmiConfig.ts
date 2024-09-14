@@ -1,5 +1,4 @@
 import { Config } from 'wagmi';
-import { plumeTestnet } from 'wagmi/chains';
 import {
   bitgetWallet,
   coinbaseWallet,
@@ -15,6 +14,7 @@ import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { config } from '@/app/config';
 import { useBackdoorSearchParams } from '@/app/hooks/useBackdoorSearchParams';
 import { getAutoWallet } from '@/app/autoWallet/autoWallet';
+import { plumeTestnet } from '../lib/chains';
 
 export const useWagmiConfig = (): { wagmiConfig: Config } => {
   const { includeAutoWallet } = useBackdoorSearchParams();
