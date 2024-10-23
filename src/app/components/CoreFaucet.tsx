@@ -162,7 +162,6 @@ const CoreFaucet: FC = () => {
         token={token}
         resetTurnstile={() => turnstileInstanceRef.current?.reset()}
       />
-      ;
       {!bypassCloudflareTurnstile && (
         <Turnstile
           options={{
