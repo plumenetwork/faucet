@@ -58,7 +58,8 @@ export const POST = withCaching({
 
     const json = await request.json();
     const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
-    const token: FaucetTokenType = json?.token?.toUpperCase() ?? FaucetToken.P;
+    const token: FaucetTokenType =
+      json?.token?.toUpperCase() ?? FaucetToken.ETH;
 
     return [
       {
@@ -77,7 +78,7 @@ export const POST = withCaching({
   handler: async (req: Request): Promise<any> => {
     const {
       walletAddress,
-      token = FaucetToken.P,
+      token = FaucetToken.ETH,
     }: {
       walletAddress: `0x${string}`;
       token: FaucetTokenType;
