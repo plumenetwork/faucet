@@ -42,7 +42,7 @@ const CoreFaucet: FC = () => {
   const { connector } = useAccount();
   const { wagmiConfig } = useWagmiConfig();
   const [verified, setVerified] = useState<string | null>(null);
-  const [token, setToken] = useState<FaucetTokenType>(FaucetToken.P);
+  const [token, setToken] = useState<FaucetTokenType>(FaucetToken.ETH);
   const turnstileInstanceRef = useRef<TurnstileInstance | null>(null);
   const { toast } = useToast();
 
@@ -59,7 +59,7 @@ const CoreFaucet: FC = () => {
           </div>
           <div className='max-w-[280px] font-lufga font-medium sm:max-w-[400px]'>
             You can get
-            {token === FaucetToken.P
+            {token === FaucetToken.ETH
               ? ' free testnet gas '
               : ` testnet ${token} tokens `}
             once per day to ensure a smooth experience for all users.

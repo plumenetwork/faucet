@@ -8,7 +8,7 @@ import {
   toHex,
   keccak256,
 } from 'viem';
-import { plumeTestnet } from '@/app/lib/chains';
+import { plumeDevnet } from '@/app/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { withConcurrencyLimiter } from '@/app/lib/concurrency';
@@ -34,7 +34,7 @@ const limiter = withConcurrencyLimiter({
 
 const walletClient = createWalletClient({
   account: privateKeyToAccount(`0x${process.env.FAUCET_ACCOUNT_PRIVATE_KEY}`),
-  chain: plumeTestnet,
+  chain: plumeDevnet,
   transport: http(),
 }).extend(publicActions);
 

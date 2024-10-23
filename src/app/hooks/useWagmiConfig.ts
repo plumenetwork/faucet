@@ -14,7 +14,7 @@ import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { config } from '@/app/config';
 import { useBackdoorSearchParams } from '@/app/hooks/useBackdoorSearchParams';
 import { getAutoWallet } from '@/app/autoWallet/autoWallet';
-import { plumeTestnet } from '../lib/chains';
+import { plumeDevnet } from '../chains';
 
 export const useWagmiConfig = (): { wagmiConfig: Config } => {
   const { includeAutoWallet } = useBackdoorSearchParams();
@@ -39,7 +39,7 @@ export const useWagmiConfig = (): { wagmiConfig: Config } => {
         ],
       },
     ],
-    chains: [plumeTestnet],
+    chains: [plumeDevnet],
     ssr: true,
   });
 
