@@ -76,17 +76,6 @@ const CoreFaucet: FC = () => {
         }}
       >
         {
-          ('P' in FaucetToken && (
-            <RadioCard
-              image={<PIcon />}
-              value={FaucetToken.P}
-              label='P'
-              description='Plume Devnet Gas'
-              data-testid='p-radio-card'
-            />
-          )) as ReactElement
-        }
-        {
           ('ETH' in FaucetToken && (
             <RadioCard
               image={<EthIcon />}

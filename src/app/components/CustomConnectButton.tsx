@@ -30,7 +30,7 @@ export const CustomConnectButton = ({
   verified,
   bypassCloudflareTurnstile,
   walletAddress,
-  token = FaucetToken.P,
+  token = FaucetToken.ETH,
 }: {
   verified: string | null;
   bypassCloudflareTurnstile: boolean;
@@ -86,7 +86,7 @@ export const CustomConnectButton = ({
         await getBalance(wagmiConfig, { address: walletAddress });
         await new Promise((resolve) => setTimeout(resolve, 500));
 
-        successToast(FaucetToken.P);
+        successToast(FaucetToken.ETH);
         setSignedData({ ...data, tokenDrip: '' });
         setIsLoading(false);
 
@@ -185,7 +185,7 @@ export const CustomConnectButton = ({
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
           Sorry, you can only claim
-          {tokenName === FaucetToken.P
+          {tokenName === FaucetToken.ETH
             ? ' free testnet gas '
             : ` ${tokenName} tokens `}
           once every day.
