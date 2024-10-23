@@ -18,7 +18,7 @@
     "@opentelemetry/api-logs": "^0.52.1",
     "@radix-ui/react-toast": "^1.1.5",
     "@rainbow-me/rainbowkit": "^2.0.5",
-    "@sentry/nextjs": "^8",
+    "@sentry/nextjs": "^8.25.0",
     "@tanstack/react-query": "^5.29.2",
     "@vercel/otel": "^1.9.1",
     "@wagmi/core": "^2.10.6",
