@@ -86,7 +86,7 @@ export const CustomConnectButton = ({
         await getBalance(wagmiConfig, { address: walletAddress });
         await new Promise((resolve) => setTimeout(resolve, 500));
 
-        successToast(FaucetToken.ETH);
+        successToast(data.token);
         setSignedData({ ...data, tokenDrip: '' });
         setIsLoading(false);
 
@@ -252,7 +252,7 @@ export const CustomConnectButton = ({
                 isLoading={isLoading}
                 data-testid='get-tokens-button'
               >
-                {signedData ? 'Get More Tokens and Miles' : 'Get Tokens'}
+                Get Tokens
               </Button>
             ) : (
               <Button

@@ -10,8 +10,14 @@ type EthFaucetToken = {
   ETH: FaucetTokenType.ETH;
 };
 
-const FaucetToken: EthFaucetToken & { [key in FaucetTokenType]?: string } = {
+type UsdtFaucetToken = {
+  USDT: FaucetTokenType.USDT;
+};
+
+const FaucetToken: EthFaucetToken &
+  UsdtFaucetToken & { [key in FaucetTokenType]?: string } = {
   ETH: FaucetTokenType.ETH,
+  USDT: FaucetTokenType.USDT,
 };
 
 export { FaucetToken };
