@@ -1,9 +1,9 @@
 import { useAccount } from 'wagmi';
-import { plumeTestnet } from '../lib/chains';
+import { plumeDevnet } from '../chains';
 
 export const useFaucetWallet = () => {
   const { chainId, isConnected, address } = useAccount();
-  const isPlumeTestnet = chainId === plumeTestnet.id;
+  const isPlumeTestnet = chainId === plumeDevnet.id;
 
   return {
     isPlumeTestnet,

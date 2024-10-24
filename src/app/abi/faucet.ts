@@ -1,447 +1,510 @@
 const abi = [
   {
-    type: 'receive',
-    stateMutability: 'payable',
-  },
-  {
-    type: 'function',
-    name: 'P_ADDRESS',
     inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'address',
-        internalType: 'address',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'UPGRADE_INTERFACE_VERSION',
-    inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'string',
-        internalType: 'string',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'addNewToken',
-    inputs: [
-      {
-        name: 'tokenName',
-        type: 'string',
-        internalType: 'string',
-      },
-      {
-        name: 'tokenAddress',
-        type: 'address',
-        internalType: 'address',
-      },
-    ],
-    outputs: [],
     stateMutability: 'nonpayable',
+    type: 'constructor',
   },
   {
-    type: 'function',
-    name: 'getAdmin',
-    inputs: [],
-    outputs: [
+    inputs: [
       {
-        name: '',
-        type: 'address',
         internalType: 'address',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getPAmount',
-    inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getToken',
-    inputs: [
-      {
-        name: 'token',
-        type: 'string',
-        internalType: 'string',
-      },
-      {
-        name: 'salt',
-        type: 'bytes32',
-        internalType: 'bytes32',
-      },
-      {
-        name: 'signature',
-        type: 'bytes',
-        internalType: 'bytes',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'getTokenAddress',
-    inputs: [
-      {
-        name: 'token',
-        type: 'string',
-        internalType: 'string',
-      },
-    ],
-    outputs: [
-      {
-        name: '',
-        type: 'address',
-        internalType: 'address',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'getTokenAmount',
-    inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'initialize',
-    inputs: [
-      {
-        name: '_admin',
-        type: 'address',
-        internalType: 'address',
-      },
-      {
-        name: 'tokenNames',
-        type: 'string[]',
-        internalType: 'string[]',
-      },
-      {
-        name: 'tokenAddresses',
-        type: 'address[]',
-        internalType: 'address[]',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'isNonceUsed',
-    inputs: [
-      {
-        name: 'nonce',
-        type: 'bytes32',
-        internalType: 'bytes32',
-      },
-    ],
-    outputs: [
-      {
-        name: '',
-        type: 'bool',
-        internalType: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'proxiableUUID',
-    inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'bytes32',
-        internalType: 'bytes32',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'setPAmount',
-    inputs: [
-      {
-        name: 'amount',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'setTokenAmount',
-    inputs: [
-      {
-        name: 'amount',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'transferAdmin',
-    inputs: [
-      {
-        name: 'newAdmin',
-        type: 'address',
-        internalType: 'address',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'upgradeToAndCall',
-    inputs: [
-      {
-        name: 'newImplementation',
-        type: 'address',
-        internalType: 'address',
-      },
-      {
-        name: 'data',
-        type: 'bytes',
-        internalType: 'bytes',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'payable',
-  },
-  {
-    type: 'function',
-    name: 'withdrawToken',
-    inputs: [
-      {
-        name: 'token',
-        type: 'string',
-        internalType: 'string',
-      },
-      {
-        name: 'amount',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {
-        name: 'recipient',
-        type: 'address',
-        internalType: 'address payable',
-      },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'event',
-    name: 'AdminChanged',
-    inputs: [
-      {
-        name: 'oldAdmin',
-        type: 'address',
-        indexed: true,
-        internalType: 'address',
-      },
-      {
-        name: 'newAdmin',
-        type: 'address',
-        indexed: true,
-        internalType: 'address',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'Initialized',
-    inputs: [
-      {
-        name: 'version',
-        type: 'uint64',
-        indexed: false,
-        internalType: 'uint64',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'TokenSent',
-    inputs: [
-      {
-        name: 'recipient',
-        type: 'address',
-        indexed: true,
-        internalType: 'address',
-      },
-      {
-        name: 'amount',
-        type: 'uint256',
-        indexed: false,
-        internalType: 'uint256',
-      },
-      {
-        name: 'tokenName',
-        type: 'string',
-        indexed: false,
-        internalType: 'string',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'Upgraded',
-    inputs: [
-      {
-        name: 'implementation',
-        type: 'address',
-        indexed: true,
-        internalType: 'address',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'event',
-    name: 'Withdrawn',
-    inputs: [
-      {
-        name: 'recipient',
-        type: 'address',
-        indexed: true,
-        internalType: 'address',
-      },
-      {
-        name: 'amount',
-        type: 'uint256',
-        indexed: false,
-        internalType: 'uint256',
-      },
-      {
-        name: 'tokenName',
-        type: 'string',
-        indexed: false,
-        internalType: 'string',
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: 'error',
-    name: 'AddressEmptyCode',
-    inputs: [
-      {
         name: 'target',
         type: 'address',
-        internalType: 'address',
       },
     ],
+    name: 'AddressEmptyCode',
+    type: 'error',
   },
   {
-    type: 'error',
-    name: 'ECDSAInvalidSignature',
     inputs: [],
+    name: 'ECDSAInvalidSignature',
+    type: 'error',
   },
   {
-    type: 'error',
-    name: 'ECDSAInvalidSignatureLength',
     inputs: [
       {
+        internalType: 'uint256',
         name: 'length',
         type: 'uint256',
-        internalType: 'uint256',
       },
     ],
+    name: 'ECDSAInvalidSignatureLength',
+    type: 'error',
   },
   {
-    type: 'error',
-    name: 'ECDSAInvalidSignatureS',
     inputs: [
       {
+        internalType: 'bytes32',
         name: 's',
         type: 'bytes32',
-        internalType: 'bytes32',
       },
     ],
+    name: 'ECDSAInvalidSignatureS',
+    type: 'error',
   },
   {
-    type: 'error',
-    name: 'ERC1967InvalidImplementation',
     inputs: [
       {
+        internalType: 'address',
         name: 'implementation',
         type: 'address',
-        internalType: 'address',
       },
     ],
+    name: 'ERC1967InvalidImplementation',
+    type: 'error',
   },
   {
-    type: 'error',
+    inputs: [],
     name: 'ERC1967NonPayable',
-    inputs: [],
+    type: 'error',
   },
   {
-    type: 'error',
-    name: 'FailedCall',
     inputs: [],
+    name: 'FailedInnerCall',
+    type: 'error',
   },
   {
-    type: 'error',
-    name: 'InvalidInitialization',
-    inputs: [],
-  },
-  {
-    type: 'error',
-    name: 'NotInitializing',
-    inputs: [],
-  },
-  {
-    type: 'error',
-    name: 'UUPSUnauthorizedCallContext',
-    inputs: [],
-  },
-  {
-    type: 'error',
-    name: 'UUPSUnsupportedProxiableUUID',
     inputs: [
       {
-        name: 'slot',
-        type: 'bytes32',
-        internalType: 'bytes32',
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'string',
+        name: 'token',
+        type: 'string',
       },
     ],
+    name: 'InsufficientBalance',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InvalidAddress',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InvalidInitialization',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InvalidNonce',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InvalidSignature',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'InvalidToken',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'NotInitializing',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'tokenAddress',
+        type: 'address',
+      },
+    ],
+    name: 'TransferFailed',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'UUPSUnauthorizedCallContext',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'slot',
+        type: 'bytes32',
+      },
+    ],
+    name: 'UUPSUnsupportedProxiableUUID',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'sender',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'authorizedUser',
+        type: 'address',
+      },
+    ],
+    name: 'Unauthorized',
+    type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint64',
+        name: 'version',
+        type: 'uint64',
+      },
+    ],
+    name: 'Initialized',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'oldOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnerChanged',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'tokenAddress',
+        type: 'address',
+      },
+    ],
+    name: 'TokenSent',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'implementation',
+        type: 'address',
+      },
+    ],
+    name: 'Upgraded',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'string',
+        name: 'token',
+        type: 'string',
+      },
+    ],
+    name: 'Withdrawn',
+    type: 'event',
+  },
+  {
+    inputs: [],
+    name: 'ETH_ADDRESS',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'UPGRADE_INTERFACE_VERSION',
+    outputs: [
+      {
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'token',
+        type: 'string',
+      },
+      {
+        internalType: 'address',
+        name: 'tokenAddress',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'addToken',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'token',
+        type: 'string',
+      },
+    ],
+    name: 'getDripAmount',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'dripAmount',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getOwner',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'token',
+        type: 'string',
+      },
+      {
+        internalType: 'bytes32',
+        name: 'salt',
+        type: 'bytes32',
+      },
+      {
+        internalType: 'bytes',
+        name: 'signature',
+        type: 'bytes',
+      },
+    ],
+    name: 'getToken',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'token',
+        type: 'string',
+      },
+    ],
+    name: 'getTokenAddress',
+    outputs: [
+      {
+        internalType: 'address',
+        name: 'tokenAddress',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        internalType: 'string[]',
+        name: 'tokens',
+        type: 'string[]',
+      },
+      {
+        internalType: 'address[]',
+        name: 'tokenAddresses',
+        type: 'address[]',
+      },
+    ],
+    name: 'initialize',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bytes32',
+        name: 'nonce',
+        type: 'bytes32',
+      },
+    ],
+    name: 'isNonceUsed',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: 'used',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'proxiableUUID',
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'token',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'setDripAmount',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'setOwner',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newImplementation',
+        type: 'address',
+      },
+      {
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
+    ],
+    name: 'upgradeToAndCall',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'token',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address payable',
+        name: 'recipient',
+        type: 'address',
+      },
+    ],
+    name: 'withdrawToken',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    stateMutability: 'payable',
+    type: 'receive',
   },
 ] as const;
 

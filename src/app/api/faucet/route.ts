@@ -8,7 +8,7 @@ import {
   toHex,
   keccak256,
 } from 'viem';
-import { plumeTestnet } from '@/app/lib/chains';
+import { plumeDevnet } from '@/app/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { withConcurrencyLimiter } from '@/app/lib/concurrency';
@@ -34,7 +34,7 @@ const limiter = withConcurrencyLimiter({
 
 const walletClient = createWalletClient({
   account: privateKeyToAccount(`0x${process.env.FAUCET_ACCOUNT_PRIVATE_KEY}`),
-  chain: plumeTestnet,
+  chain: plumeDevnet,
   transport: http(),
 }).extend(publicActions);
 
@@ -58,7 +58,8 @@ export const POST = withCaching({
 
     const json = await request.json();
     const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
-    const token: FaucetTokenType = json?.token?.toUpperCase() ?? FaucetToken.P;
+    const token: FaucetTokenType =
+      json?.token?.toUpperCase() ?? FaucetToken.ETH;
 
     return [
       {
@@ -77,7 +78,7 @@ export const POST = withCaching({
   handler: async (req: Request): Promise<any> => {
     const {
       walletAddress,
-      token = FaucetToken.P,
+      token = FaucetToken.ETH,
     }: {
       walletAddress: `0x${string}`;
       token: FaucetTokenType;
@@ -163,13 +164,13 @@ export const POST = withCaching({
         message: { raw: message },
       });
 
-      return {
+      return Response.json({
         tokenDrip,
         walletAddress,
         token,
         salt,
         signature,
-      };
+      });
     } catch (e) {
       console.error(e);
       return Response.json({ error: 'Failed to send token' }, { status: 503 });

@@ -8,8 +8,6 @@ import { watchAsset } from 'viem/actions';
 import { FaucetIcon } from '@/app/icons/FaucetIcon';
 import { FaucetTokenType, FaucetToken } from '@/app/lib/types';
 import CustomConnectButton from './CustomConnectButton';
-import { Divider } from '@/app/components/Divider';
-import { TextField } from '@/app/components/TextField';
 import { RadioCard, RadioCardList } from '@/app/components/RadioCardList';
 import { PIcon } from '@/app/icons/PIcon';
 import { UsdcIcon } from '@/app/icons/UsdcIcon';
@@ -44,7 +42,7 @@ const CoreFaucet: FC = () => {
   const { connector } = useAccount();
   const { wagmiConfig } = useWagmiConfig();
   const [verified, setVerified] = useState<string | null>(null);
-  const [token, setToken] = useState<FaucetTokenType>(FaucetToken.P);
+  const [token, setToken] = useState<FaucetTokenType>(FaucetToken.ETH);
   const turnstileInstanceRef = useRef<TurnstileInstance | null>(null);
   const { toast } = useToast();
 
@@ -61,14 +59,14 @@ const CoreFaucet: FC = () => {
           </div>
           <div className='max-w-[280px] font-lufga font-medium sm:max-w-[400px]'>
             You can get
-            {token === FaucetToken.P
+            {token === FaucetToken.ETH
               ? ' free testnet gas '
               : ` testnet ${token} tokens `}
             once per day to ensure a smooth experience for all users.
           </div>
         </div>
       </div>
-      <Divider />
+      <div className='my-2 h-px bg-[#e4e2df] lg:max-w-full' />
       <RadioCardList
         label={`${Object.values(FaucetToken).length > 1 ? 'Select a' : ''} Token`}
         value={token}
@@ -77,17 +75,6 @@ const CoreFaucet: FC = () => {
           tokenRadioCardSelected(token);
         }}
       >
-        {
-          ('P' in FaucetToken && (
-            <RadioCard
-              image={<PIcon />}
-              value={FaucetToken.P}
-              label='P'
-              description='Plume Devnet Gas'
-              data-testid='p-radio-card'
-            />
-          )) as ReactElement
-        }
         {
           ('ETH' in FaucetToken && (
             <RadioCard
@@ -145,7 +132,17 @@ const CoreFaucet: FC = () => {
         }
       </RadioCardList>
       {isConnected && (
-        <TextField label='Your Address' value={address} disabled />
+        <div className='flex flex-col gap-2'>
+          <label className='font-lufga text-sm font-semibold uppercase leading-5 max-md:max-w-full'>
+            Your Address
+          </label>
+          <input
+            type='text'
+            disabled
+            className='text-gray-60 my-auto flex h-full truncate rounded-lg border border-neutral-700 bg-gray-50 px-3 py-3 text-sm outline-none disabled:border-gray-200 disabled:bg-stone-100 disabled:text-[#555]'
+            value={address}
+          />
+        </div>
       )}
       <CustomConnectButton
         verified={verified}

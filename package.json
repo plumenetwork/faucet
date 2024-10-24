@@ -8,9 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier --check .",
-    "prettier:fix": "prettier --write .",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "prettier:fix": "prettier --write ."
   },
   "dependencies": {
     "@marsidev/react-turnstile": "^0.5.4",
@@ -18,7 +16,7 @@
     "@opentelemetry/api-logs": "^0.52.1",
     "@radix-ui/react-toast": "^1.1.5",
     "@rainbow-me/rainbowkit": "^2.0.5",
-    "@sentry/nextjs": "^8",
+    "@sentry/nextjs": "^8.25.0",
     "@tanstack/react-query": "^5.29.2",
     "@vercel/otel": "^1.9.1",
     "@wagmi/core": "^2.10.6",
@@ -38,12 +36,6 @@
     "wagmi": "^2.5.20"
   },
   "devDependencies": {
-    "@storybook/addon-controls": "^8.1.5",
-    "@storybook/addon-styling-webpack": "^1.0.0",
-    "@storybook/blocks": "^8.1.5",
-    "@storybook/nextjs": "^8.1.5",
-    "@storybook/react": "^8.1.5",
-    "@storybook/test": "^8.1.5",
     "@svgr/webpack": "^8.1.0",
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.79",
@@ -52,11 +44,9 @@
     "encoding": "^0.1.13",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.1.4",
-    "eslint-plugin-storybook": "^0.8.0",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.1",
-    "storybook": "^8.1.5",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5"
   }
