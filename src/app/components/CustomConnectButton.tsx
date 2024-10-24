@@ -252,7 +252,7 @@ export const CustomConnectButton = ({
                 isLoading={isLoading}
                 data-testid='get-tokens-button'
               >
-                Get Tokens
+                {signedData ? 'Get More Tokens' : 'Get Tokens'}
               </Button>
             ) : (
               <Button
