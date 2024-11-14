@@ -1,5 +1,5 @@
 import { sendGAEvent } from '@next/third-parties/google';
-import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
+import { FaucetTokenType } from '@/app/lib/types';
 
 export const connectWalletButtonClicked = () => {
   sendEvent('connect_wallet_button_clicked');
