@@ -1,23 +1,19 @@
 'use client';
 
-import { FC, ReactElement, useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 
 import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
 import { watchAsset } from 'viem/actions';
 
 import { FaucetIcon } from '@/app/icons/FaucetIcon';
-import { FaucetTokenType, FaucetToken } from '@/app/lib/types';
+import { FaucetTokenType } from '@/app/lib/types';
 import CustomConnectButton from './CustomConnectButton';
 import { RadioCard, RadioCardList } from '@/app/components/RadioCardList';
-import { PIcon } from '@/app/icons/PIcon';
-import { UsdcIcon } from '@/app/icons/UsdcIcon';
 import { EthIcon } from '@/app/icons/EthIcon';
-import { DaiIcon } from '@/app/icons/DaiIcon';
-import { UsdtIcon } from '@/app/icons/UsdtIcon';
+import { PusdIcon } from '@/app/icons/PusdIcon';
 import { useFaucetWallet } from '@/app/hooks/useFaucetWallet';
 import { config } from '@/app/config';
 import { tokenRadioCardSelected } from '@/app/analytics';
-import { GoonIcon } from '../icons/GoonIcon';
 import { useAccount } from 'wagmi';
 import { useWagmiConfig } from '../hooks/useWagmiConfig';
 import { getConnectorClient } from '@wagmi/core';
@@ -31,10 +27,10 @@ const faucetTokenConfigs: {
     decimals: number;
   };
 } = {
-  [FaucetTokenType.GOON]: {
-    address: '0xbA22114ec75f0D55C34A5E5A3cf384484Ad9e733',
-    symbol: 'GOON',
-    decimals: 18,
+  [FaucetTokenType.pUSD]: {
+    address: '0xe644F07B1316f28a7F134998e021eA9f7135F351',
+    symbol: 'pUSD',
+    decimals: 6,
   },
 };
 
@@ -42,7 +38,7 @@ const CoreFaucet: FC = () => {
   const { connector } = useAccount();
   const { wagmiConfig } = useWagmiConfig();
   const [verified, setVerified] = useState<string | null>(null);
-  const [token, setToken] = useState<FaucetTokenType>(FaucetToken.ETH);
+  const [token, setToken] = useState<FaucetTokenType>(FaucetTokenType.ETH);
   const turnstileInstanceRef = useRef<TurnstileInstance | null>(null);
   const { toast } = useToast();
 
@@ -59,7 +55,7 @@ const CoreFaucet: FC = () => {
           </div>
           <div className='max-w-[280px] font-lufga font-medium sm:max-w-[400px]'>
             You can get
-            {token === FaucetToken.ETH
+            {token === FaucetTokenType.ETH
               ? ' free testnet gas '
               : ` testnet ${token} tokens `}
             once per day to ensure a smooth experience for all users.
@@ -68,68 +64,26 @@ const CoreFaucet: FC = () => {
       </div>
       <div className='my-2 h-px bg-[#e4e2df] lg:max-w-full' />
       <RadioCardList
-        label={`${Object.values(FaucetToken).length > 1 ? 'Select a' : ''} Token`}
+        label={`${Object.values(FaucetTokenType).length > 1 ? 'Select a' : ''} Token`}
         value={token}
         onChange={(token) => {
           setToken(token);
           tokenRadioCardSelected(token);
         }}
       >
-        {
-          ('ETH' in FaucetToken && (
-            <RadioCard
-              image={<EthIcon />}
-              value={FaucetToken.ETH}
-              label='ETH'
-              description='Plume Testnet Ether'
-              data-testid='eth-radio-card'
-            />
-          )) as ReactElement
-        }
-        {
-          ('USDC' in FaucetToken && (
-            <RadioCard
-              image={<UsdcIcon />}
-              value={FaucetToken.USDC}
-              label='USDC'
-              description='Testnet USD Coin'
-              data-testid='usdc-radio-card'
-            />
-          )) as ReactElement
-        }
-        {
-          ('GOON' in FaucetToken && (
-            <RadioCard
-              image={<GoonIcon />}
-              value={FaucetToken.GOON}
-              label='GOON'
-              description='Goon Testnet Token'
-              data-testid='goon-radio-card'
-            />
-          )) as ReactElement
-        }
-        {
-          ('DAI' in FaucetToken && (
-            <RadioCard
-              image={<DaiIcon />}
-              value={FaucetToken.DAI}
-              label='DAI'
-              description='Testnet DAI Stablecoin'
-              data-testid='dai-radio-card'
-            />
-          )) as ReactElement
-        }
-        {
-          ('USDT' in FaucetToken && (
-            <RadioCard
-              image={<UsdtIcon />}
-              value={FaucetToken.USDT}
-              label='USDT'
-              description='Testnet Tether USD'
-              data-testid='usdt-radio-card'
-            />
-          )) as ReactElement
-        }
+        <RadioCard
+          image={<EthIcon />}
+          value={FaucetTokenType.ETH}
+          label='ETH'
+          description='Plume Testnet Ether'
+          data-testid='eth-radio-card'
+        />
+        <RadioCard
+          image={<PusdIcon />}
+          value={FaucetTokenType.pUSD}
+          label='pUSD'
+          description='Plume USD'
+        />
       </RadioCardList>
       {isConnected && (
         <div className='flex flex-col gap-2'>
@@ -178,7 +132,7 @@ const CoreFaucet: FC = () => {
                 connector,
               });
 
-              watchAsset(connectorClient, {
+              await watchAsset(connectorClient, {
                 type: 'ERC20',
                 // okay to assert here due to check above
                 options: faucetTokenConfigs[token]!,

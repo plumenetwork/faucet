@@ -12,7 +12,7 @@ import { plumeDevnet } from '@/app/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { withConcurrencyLimiter } from '@/app/lib/concurrency';
-import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
+import { FaucetTokenType } from '@/app/lib/types';
 import Redis from 'ioredis';
 import { withCaching } from '@/app/lib/caching';
 import { sharedCorsHeaders } from '@/app/lib/utils';
@@ -59,7 +59,7 @@ export const POST = withCaching({
     const json = await request.json();
     const walletAddress = json?.walletAddress?.toLowerCase() ?? '';
     const token: FaucetTokenType =
-      json?.token?.toUpperCase() ?? FaucetToken.ETH;
+      json?.token?.toUpperCase() ?? FaucetTokenType.ETH;
 
     return [
       {
@@ -78,7 +78,7 @@ export const POST = withCaching({
   handler: async (req: Request): Promise<any> => {
     const {
       walletAddress,
-      token = FaucetToken.ETH,
+      token = FaucetTokenType.ETH,
     }: {
       walletAddress: `0x${string}`;
       token: FaucetTokenType;
@@ -96,7 +96,7 @@ export const POST = withCaching({
       );
     }
 
-    if (!Object.values(FaucetToken).includes(token)) {
+    if (!Object.values(FaucetTokenType).includes(token)) {
       return Response.json(
         { error: 'Invalid token' },
         { status: 400, headers: sharedCorsHeaders }
@@ -113,7 +113,7 @@ export const POST = withCaching({
         await limiter(async () => {
           const [faucetAddress] = await walletClient.getAddresses();
 
-          let nonce;
+          let nonce: number;
           const [walletNonce, redisNonce] = await Promise.all([
             walletClient.getTransactionCount({
               address: faucetAddress,

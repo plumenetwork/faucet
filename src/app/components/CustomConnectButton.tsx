@@ -1,4 +1,4 @@
-import { FaucetToken, FaucetTokenType } from '@/app/lib/types';
+import { FaucetTokenType } from '@/app/lib/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useConfig, usePublicClient, useWriteContract } from 'wagmi';
 import { getBalance, waitForTransactionReceipt } from '@wagmi/core';
@@ -30,7 +30,7 @@ export const CustomConnectButton = ({
   verified,
   bypassCloudflareTurnstile,
   walletAddress,
-  token = FaucetToken.ETH,
+  token = FaucetTokenType.ETH,
 }: {
   verified: string | null;
   bypassCloudflareTurnstile: boolean;
@@ -166,12 +166,13 @@ export const CustomConnectButton = ({
   };
 
   const successToast = (tokenName: FaucetTokenType) => {
+    const amount = tokenName === FaucetTokenType.ETH ? '0.001' : '1000';
     return toast({
       title: 'Mission accomplished',
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
-          You&#39;ll receive 0.001 testnet {tokenName} in your wallet within a
-          minute.
+          You&#39;ll receive {amount} testnet {tokenName} in your wallet within
+          a minute.
         </div>
       ),
       variant: 'pass',
@@ -185,7 +186,7 @@ export const CustomConnectButton = ({
       description: (
         <div className='flex flex-row text-sm text-gray-600'>
           Sorry, you can only claim
-          {tokenName === FaucetToken.ETH
+          {tokenName === FaucetTokenType.ETH
             ? ' free testnet gas '
             : ` ${tokenName} tokens `}
           once every day.
