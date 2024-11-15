@@ -46,7 +46,7 @@ const CoreFaucet: FC = () => {
   const { isConnected, address } = useFaucetWallet();
 
   return (
-    <div className='flex max-w-full flex-col justify-center gap-4 rounded-3xl border border-solid border-[#F0F0F0] bg-white px-5 py-5 md:w-[496px]'>
+    <div className='flex max-w-full flex-col justify-center gap-4 rounded-3xl border border-solid border-[#F0F0F0] bg-white px-8 py-12 md:w-[600px]'>
       <div className='flex flex-col items-center gap-2 text-center'>
         <Image
           alt='Flower icon'
