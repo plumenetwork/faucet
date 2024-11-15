@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import './site.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import { Inter } from 'next/font/google';
@@ -11,6 +10,7 @@ import { Toaster } from './components/ui/toaster';
 import { Providers } from './provider';
 import { config } from '@/app/config';
 import { Suspense } from 'react';
+import PlumeNavBar from '@/app/components/PlumeNavBar';
 
 const inter = Inter({ subsets: ['latin'] });
 const lufga = localFont({
@@ -53,12 +53,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${inter.className} ${lufga.variable}`}>
-        <div className='fixed top-[12%] z-[-1] h-[500px] w-[100vw]'>
-          <div className='marquee-content' />
-        </div>
+      <body
+        className={`${inter.className} ${lufga.variable} bg-[#F9F9F9] bg-[url('/images/flower-bg.svg')] bg-top bg-no-repeat bg-blend-screen`}
+      >
         <Suspense>
-          <Providers>{children}</Providers>
+          <Providers>
+            <div className='mx-auto flex max-w-[1080px] flex-col gap-6 px-2 py-6'>
+              <PlumeNavBar />
+              {children}
+            </div>
+          </Providers>
         </Suspense>
         <Toaster />
         <GoogleAnalytics gaId='G-0Q5M0H3E1Z' />

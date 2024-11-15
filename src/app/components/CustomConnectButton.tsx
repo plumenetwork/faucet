@@ -292,9 +292,7 @@ const Button: FC<ButtonProps> = ({
         disabled ? 'opacity-50' : 'opacity-100',
         disabled || isLoading ? 'cursor-not-allowed' : 'cursor-pointer',
         isLoading && 'animate-pulse',
-        'bg-[#ebbe49] hover:bg-[#E3A810]',
-        'shadow-[0_0_0_2px_rgba(255,255,255,0.8)_inset,6px_6px_0_0] active:shadow-none disabled:active:shadow-[0_0_0_2px_rgba(255,255,255,0.8)_inset,6px_6px_0_0]',
-        'w-full rounded-xl border-2 border-gray-800 px-10 py-3 text-center font-lufga font-bold text-gray-800'
+        'w-full rounded-full border-2 border-gray-800 bg-[#111] px-10 py-3 text-center font-lufga font-normal text-white'
       )}
       disabled={disabled || isLoading}
       {...props}

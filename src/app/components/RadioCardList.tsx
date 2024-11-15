@@ -64,13 +64,13 @@ export const RadioCard = <T,>({
       key={`${value}`}
       className={cn(
         'flex cursor-pointer rounded-md border bg-white p-2 hover:bg-gray-50',
-        selected && 'ring-2 ring-[#3F83F8]'
+        selected && 'ring-2 ring-[#111]'
       )}
       onClick={() => onChange?.(value)}
       {...props}
     >
       <div className='flex items-center'>{image}</div>
-      <div className='flex flex-col pl-2'>
+      <div className='flex flex-col justify-center pl-2'>
         <div className='font-lufga'>{label}</div>
         {description && (
           <div className='font-lufga text-xs font-medium text-gray-500'>
