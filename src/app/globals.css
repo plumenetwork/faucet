@@ -21,20 +21,3 @@
     text-wrap: balance;
   }
 }
-
-.marquee-content {
-  width: 5600px;
-  height: 100%;
-  background: url('/moving-clouds.webp') repeat-x;
-  animation: scroll 100s linear infinite;
-}
-
-@keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-2800px);
-  }
-}

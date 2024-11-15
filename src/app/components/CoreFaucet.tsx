@@ -5,7 +5,7 @@ import { FC, useRef, useState } from 'react';
 import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
 import { watchAsset } from 'viem/actions';
 
-import { FaucetIcon } from '@/app/icons/FaucetIcon';
+import Image from 'next/image';
 import { FaucetTokenType } from '@/app/lib/types';
 import CustomConnectButton from './CustomConnectButton';
 import { RadioCard, RadioCardList } from '@/app/components/RadioCardList';
@@ -46,23 +46,23 @@ const CoreFaucet: FC = () => {
   const { isConnected, address } = useFaucetWallet();
 
   return (
-    <div className='mt-8 flex max-w-full flex-col justify-center gap-4 rounded-2xl border border-solid border-gray-200 bg-neutral-50 px-5 py-5 md:w-[496px]'>
+    <div className='flex max-w-full flex-col justify-center gap-4 rounded-2xl border border-solid border-gray-200 bg-neutral-50 bg-white px-5 py-5 md:w-[496px]'>
       <div className='flex flex-col items-center gap-2 text-center'>
-        <FaucetIcon />
+        <Image
+          alt='Flower icon'
+          height={64}
+          src='/images/flower-icon.png'
+          width={64}
+        />
         <div className='flex flex-col items-center'>
-          <div className='font-lufga text-2xl font-extrabold uppercase'>
-            Get Testnet Tokens
+          <div className='font-lufga text-2xl font-extrabold'>
+            Get devnet tokens
           </div>
-          <div className='max-w-[280px] font-lufga font-medium sm:max-w-[400px]'>
-            You can get
-            {token === FaucetTokenType.ETH
-              ? ' free testnet gas '
-              : ` testnet ${token} tokens `}
-            once per day to ensure a smooth experience for all users.
+          <div className='max-w-[280px] font-lufga font-medium text-[#747474]'>
+            Drip tokens to engage with the Plume ecosystem on devnet
           </div>
         </div>
       </div>
-      <div className='my-2 h-px bg-[#e4e2df] lg:max-w-full' />
       <RadioCardList
         label={`${Object.values(FaucetTokenType).length > 1 ? 'Select a' : ''} Token`}
         value={token}
@@ -75,29 +75,13 @@ const CoreFaucet: FC = () => {
           image={<EthIcon />}
           value={FaucetTokenType.ETH}
           label='ETH'
-          description='Plume Testnet Ether'
-          data-testid='eth-radio-card'
         />
         <RadioCard
           image={<PusdIcon />}
           value={FaucetTokenType.pUSD}
           label='pUSD'
-          description='Plume USD'
         />
       </RadioCardList>
-      {isConnected && (
-        <div className='flex flex-col gap-2'>
-          <label className='font-lufga text-sm font-semibold uppercase leading-5 max-md:max-w-full'>
-            Your Address
-          </label>
-          <input
-            type='text'
-            disabled
-            className='text-gray-60 my-auto flex h-full truncate rounded-lg border border-neutral-700 bg-gray-50 px-3 py-3 text-sm outline-none disabled:border-gray-200 disabled:bg-stone-100 disabled:text-[#555]'
-            value={address}
-          />
-        </div>
-      )}
       <CustomConnectButton
         verified={verified}
         bypassCloudflareTurnstile={bypassCloudflareTurnstile}
